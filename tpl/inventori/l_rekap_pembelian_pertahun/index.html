@@ -1,0 +1,231 @@
+<div class="animated fadeIn">
+    <style>
+        td:empty::after{
+            content: "\00a0";
+        }
+    </style>
+
+    <div ng-controller="l_rekap_pembelian_pertahun">
+        <div class="card">
+            <div class="card-header">
+                <strong>Rekap Pembelian per Tahun</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.lokasi" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.tahun"
+                                                   ng-click="toggle($event, 'tahun')" ng-model="form.tahun"
+                                                   uib-datepicker-popup="yyyy" datepicker-options="{minMode: 'year'}"
+                                                   placeholder="Tahun">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group row">
+                                            <div class="btn-group">
+                                                <label ng-class="{
+                                                'btn-info': form.is_ppn == 1, 'btn-secondary' : form.is_ppn != 1}" class="btn btn-sm ng-untouched ng-valid ng-not-empty active ng-dirty ng-valid-parse" ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="1" ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 1"></i>PPN</label>
+                                                <label ng-class="{
+                                                'btn-info': form.is_ppn == 0, 'btn-secondary' : form.is_ppn != 0}" class="btn btn-sm ng-untouched ng-valid ng-not-empty ng-dirty" ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="0" ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 0"></i>Non PPN</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <br/>
+                                <center>
+                                    <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                    <h2 class="header-laporan">LAPORAN PEMBELIAN (FAKTUR PAJAK MASUKAN)</h2>
+
+                                    Periode : {{data.tahun}}
+
+                                    </br>
+                                </center>
+                                <hr/>
+                            </div>
+                        </div>
+                        <table border="1" class="table table-striped table-hover table-bordered table-print">
+                            <thead>
+                                <tr class="align-center">
+                                    <th rowspan="2">No</th>
+                                    <th rowspan="2">
+                                      <input type="text" name="" value="---Pembelian Sparepart Kendaraan" style="width:200px;visibility:hidden;">
+                                    </th>
+                                    <th ng-repeat="val in data.bulan" colspan="2">{{val}}</th>
+                                    <th colspan="2">Jumlah</th>
+                                </tr>
+                                <tr class="align-center">
+                                    <th ng-repeat-start="val in data.bulan">DPP</th>
+                                    <th ng-repeat-end="">PPN</th>
+                                    <th>DPP</th>
+                                    <th>PPN</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(k, v) in detail.kategori">
+
+                                    <td class="align-center">
+                                      <span ng-if="k != 'Jumlah' && v.is_parent != 1">{{v.no}}</span></td>
+                                    <td>
+                                        <span ng-if="k == 'Jumlah' || v.is_parent == 1"><b>{{k}}</b></span>
+                                        <span ng-if="k != 'Jumlah' && v.is_parent == 0">{{k}}</span>
+                                    </td>
+
+                                    <td ng-repeat-start="vv in v.detail" ng-hide="true"></td>
+                                    <td class="align-right">
+                                        <span ng-if="k == 'Jumlah' && vv.total > 0 "><b>{{ (vv.total | currency:"":2) || '-' }}</b></span>
+                                        <span ng-if="k != 'Jumlah' && vv.total > 0 ">{{ (vv.total | currency:"":2) || '-' }}</span>
+                                        <span ng-if="k != 'Jumlah' && vv.total == 0 ">-</span>
+                                    </td>
+                                    <td ng-repeat-end="" class="text-right">
+                                      <span ng-if="vv.ppn > 0 && k == 'Jumlah'">
+                                        <b>{{ (vv.ppn | currency:"":2) || '-' }}</b>
+                                      </span>
+                                      <span ng-if="vv.ppn > 0 && k != 'Jumlah'">
+                                        {{ (vv.ppn | currency:"":2) || '-' }}
+                                      </span>
+                                      <span ng-if="vv.ppn == 0">-</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                  <th></th>
+                                  <th>Jumlah Retur</th>
+                                  <td ng-repeat-start="vv in detail.footer['Jumlah_retur']['detail']" class="align-right">
+                                    <b>{{ vv.total > 0 ? (vv.total | currency:"":2) : '-' }}</b>
+                                  </td>
+                                  <td ng-repeat-end="" class="text-right">
+                                    <b>{{ vv.ppn > 0 ? (vv.ppn | currency:"":2) : '-' }}</b>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th></th>
+                                  <th>Jumlah Setelah Retur</th>
+                                  <td ng-repeat-start="vv in detail.footer['Jumlah_after']['detail']" class="align-right">
+                                    <b>{{ vv.total > 0 ? (vv.total | currency:"":2) : '-' }}</b>
+                                  </td>
+                                  <td ng-repeat-end="" class="text-right">
+                                    <b>{{ vv.ppn > 0 ? (vv.ppn | currency:"":2) : '-' }}</b>
+                                  </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <br/>
+                                <center>
+                                    <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                    <h2 class="header-laporan">LAPORAN PEMBELIAN IMPORT</h2>
+
+                                    Periode : {{data.tahun}}
+
+                                    </br>
+                                </center>
+                                <hr/>
+                            </div>
+                        </div>
+                        <table border="1" class="table table-striped table-hover table-bordered table-print">
+                            <thead>
+                                <tr class="align-center">
+                                    <th>No</th>
+                                    <th></th>
+                                    <th ng-repeat="val in data.bulan">{{val}}</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(k, v) in detail.barang">
+                                    <td class="align-center"><span ng-if="k != 'Jumlah'">{{$index + 1}}</span></td>
+                                    <td>
+                                        <span ng-if="k == 'Jumlah'"><b>{{k}}</b></span>
+                                        <span ng-if="k != 'Jumlah'">{{k}}</span>
+                                    </td>
+                                    <td ng-repeat-start="vv in v" ng-hide="true"></td>
+                                    <td class="align-right">
+                                        <span ng-if="k == 'Jumlah'"><b>{{vv.total| number}}</b></span>
+                                        <span ng-if="k != 'Jumlah'">{{vv.total| number}}</span>
+                                    </td>
+                                    <td ng-repeat-end="" ng-hide="true"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table border="1" class="table table-striped table-hover table-bordered table-print">
+                            <thead>
+                                <tr class="align-center">
+                                    <th>No</th>
+                                    <th></th>
+                                    <th ng-repeat="val in data.bulan">{{val}}</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(k, v) in detail.biaya">
+                                    <td class="align-center"><span ng-if="k != 'Jumlah'">{{$index + 1}}</span></td>
+                                    <td>
+                                        <span ng-if="k == 'Jumlah'"><b>{{k}}</b></span>
+                                        <span ng-if="k != 'Jumlah'">{{k}}</span>
+                                    </td>
+                                    <td ng-repeat-start="vv in v" ng-hide="true"></td>
+                                    <td class="align-right">
+                                        <span ng-if="k == 'Jumlah'"><b>{{vv.total| number}}</b></span>
+                                        <span ng-if="k != 'Jumlah'">{{vv.total| number}}</span>
+                                    </td>
+                                    <td ng-repeat-end="" ng-hide="true"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

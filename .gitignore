@@ -1,0 +1,8 @@
+vendor/
+api/vendor/
+api/sessions/
+api/userlog
+api/akutansi/
+api/config/
+api/file/
+nbproject/

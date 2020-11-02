@@ -1,0 +1,77 @@
+<div class="modal-header">
+    <h5 class="modal-title">Histori Retur Barang ({{detRetur[0].kode_penjualan}})</h5>
+    <button type="button" class="close" ng-click="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered det-trans" style="white-space: normal;">
+                <thead>
+                    <tr>
+                        <td class="align-center">
+                            <b>
+                                Tanggal
+                            </b>
+                        </td>
+                        <td class="align-center">
+                            <b>
+                                Kode Retur
+                            </b>
+                        </td>
+                        <td class="align-center">
+                            <b>
+                                Barang
+                            </b>
+                        </td>
+                        <!-- <td class="align-center">
+                            <b>
+                                Deskripsi
+                            </b>
+                        </td> -->
+                        <td class="align-center">
+                            <b>
+                                Jumlah
+                            </b>
+                        </td>
+                        <!--                        <td class="align-center" style="width: 100px;">
+                                                    <b>
+                                                        Retur
+                                                    </b>
+                                                </td>-->
+                        <!--                        <td class="align-center" style="width: 170px;">
+                                                    <b>
+                                                        Harga
+                                                    </b>
+                                                </td>
+                                                <td class="align-center" style="width: 190px;">
+                                                    <b>
+                                                        Diskon
+                                                    </b>
+                                                </td>
+                                                <td class="align-center" style="width: 170px">
+                                                    <b>
+                                                        Amount
+                                                    </b>
+                                                </td>-->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="ng-scope" ng-repeat="detail in detRetur">
+                        <td>{{detail.tanggal}}</td>
+                        <td>{{detail.kode_retur}}</td>
+                        <td>{{detail.nama}}</td>
+                        <td class="align-right">{{detail.jumlah_retur}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--<div class="modal-footer">
+    <button class="btn btn-primary btn-sm" ng-click="save()">
+        <i class="fa fa-save"></i>
+        Simpan
+    </button>
+</div>-->

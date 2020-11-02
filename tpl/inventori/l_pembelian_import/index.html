@@ -1,0 +1,206 @@
+<style>
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+
+<div class="animated fadeIn">
+    <div ng-controller="l_pembelian_import">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Pembelian Import</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <!--                                    <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <ui-select class="ui-select-sm ui-select-container" ng-model="form.lokasi" theme="bootstrap" ng-disabled="is_view">
+                                                                                    <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                                                    <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                                                                </ui-select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3">
+                                                                            <div class="form-group">
+                                                                                <ui-select class="ui-select-sm ui-select-container" ng-model="form.kategori" theme="bootstrap" ng-disabled="is_view">
+                                                                                    <ui-select-match placeholder="Pilih Kategori">{{$select.selected.nama}}</ui-select-match>
+                                                                                    <ui-select-choices position="down" repeat="val in listKategori | filter : $select.search">{{ val.nama}}</ui-select-choices>
+                                                                                </ui-select>
+                                                                            </div>
+                                                                        </div>-->
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan"
+                                                   ng-click="toggle($event, 'bulan')" ng-model="form.bulan_awal"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan2"
+                                                   ng-click="toggle($event, 'bulan2')" ng-model="form.bulan_akhir"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--                                    <div class="col-md-3">
+                                                                            <div class="form-group row">
+                                                                                <div class="btn-group">
+                                                                                    <label ng-class="{
+                                                                                    'btn-info': form.is_ppn == 1, 'btn-secondary' : form.is_ppn != 1}" class="btn btn-sm ng-untouched ng-valid ng-not-empty active ng-dirty ng-valid-parse" ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="1" ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 1"></i>PPN</label>
+                                                                                    <label ng-class="{
+                                                                                    'btn-info': form.is_ppn == 0, 'btn-secondary' : form.is_ppn != 0}" class="btn btn-sm ng-untouched ng-valid ng-not-empty ng-dirty" ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="0" ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 0"></i>Non PPN</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>-->
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                   <!-- <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button> -->
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                <h2 class="header-laporan">LAPORAN PEMBELIAN IMPORT</h2>
+
+                                {{data.periode}}
+
+                                </br>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-hover table-bordered table-print">
+                            <thead>
+                                <tr class="align-center">
+                                    <th width="10px" rowspan="2">No</th>
+                                    <th width="100px" rowspan="2" style="min-width: 200px">Nama Penjual</th>
+                                    <th rowspan="2"></th>
+                                    <th rowspan="2">Masa</th>
+                                    <th rowspan="2" style="min-width: 200px">Jenis Barang</th>
+                                    <th rowspan="2">Nomor</th>
+                                    <th rowspan="2" style="min-width: 80px">Tanggal</th>
+                                    <th rowspan="2">QTY</th>
+                                    <th rowspan="2">USD CIFF</th>
+                                    <th rowspan="2">KURS USD</th>
+                                    <th rowspan="2">Rupiah</th>
+                                    <th rowspan="2">PPN</th>
+                                    <th rowspan="2">PPH PASAL 22</th>
+                                    <th rowspan="2">BM</th>
+                                    <th rowspan="2">DENDA</th>
+                                    <th colspan="4">BIAYA PELABUHAN (FAKTUR PAJAK)</th>
+                                    <th colspan="3">BIAYA PELABUHAN NON PPN</th>
+                                    <th colspan="2">ONGKOS KIRIM / KAPAL</th>
+                                </tr>
+                                <tr align="center">
+                                    <th style="min-width: 80px">TANGGAL</th>
+                                    <th style="min-width: 200px">NAMA PENJUAL JASA (FAKTUR PAJAK)</th>
+                                    <th style="min-width: 150px">NO.FP</th>
+                                    <th>RP(DPP)</th>
+                                    <th style="min-width: 80px">TANGGAL</th>
+                                    <th style="min-width: 200px">NAMA PENJUAL(NON PPN)</th>
+                                    <th>RP(NON PPN)</th>
+                                    <th>USD</th>
+                                    <th>RP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat-start="val in detail"></tr>
+                                <tr ng-repeat="(k2, v2) in val.detail">
+                                    <td align="center" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.index + 1}}</td>
+                                    <td rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.nama}}</td>
+                                    <td align="center" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.bulan}}</td>
+                                    <td align="center" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.bulan}}</td>
+                                    <td>{{v2.nama}}</td>
+                                    <td align="center" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.pib}}</td>
+                                    <td align="center" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.tanggal | date:"dd-MM-yyyy"}}</td>
+                                    <td align="right">{{v2.jumlah | currency:"":2 }}</td>
+                                    <td align="right">{{v2.subtotal_edit / v2.kurs| number : 2}}</td>
+                                    <td align="right">{{v2.kurs}}</td>
+                                    <td align="right">{{v2.subtotal_edit| number : 2}}</td>
+                                    <td align="right" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.ppn| number : 2}}</td>
+                                    <td align="right" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.pph22| number : 2}}</td>
+                                    <td align="right" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.bea_masuk| number : 2}}</td>
+                                    <td align="right" rowspan="{{val.rowspan}}" ng-if="k2 == 0">{{val.denda_pabean| number : 2}}</td>
+                                    <td align="center">{{ val.faktur_ppn[k2].tanggal | date:"dd-MM-yyyy"}}</td>
+                                    <td>{{val.faktur_ppn[k2].nama_ppn}}</td>
+                                    <td align="center">{{val.faktur_ppn[k2].nomor}}</td>
+                                    <td align="right">{{val.faktur_ppn[k2].total| number : 2}}</td>
+                                    <td align="center">{{ val.faktur_non_ppn[k2].tanggal | date:"dd-MM-yyyy"}}</td>
+                                    <td>{{val.faktur_non_ppn[k2].nama_non_ppn}}</td>
+                                    <td align="right">{{val.faktur_non_ppn[k2].total| number : 2}}</td>
+
+                                    <td align="right">{{val.ongkos_kapal_usd | number : 2}}</td>
+                                    <td align="right">{{val.ongkos_kapal_rp | number : 2}}</td>
+                                </tr>
+                                <tr ng-repeat-end=""ng-hide="true"></tr>
+                                <tr>
+                                    <td colspan="7"></td>
+                                    <td align="right">{{data.total.qty| number : 2}}</td>
+                                    <td align="right">{{data.total.usdcif| number : 2}}</td>
+                                    <td align="right">{{data.total.usdkurs| number : 2}}</td>
+                                    <td align="right">{{data.total.rupiah| number : 2}}</td>
+                                    <td align="right">{{data.total.ppn| number : 2}}</td>
+                                    <td align="right">{{data.total.pph22| number : 2}}</td>
+                                    <td align="right">{{data.total.bm| number : 2}}</td>
+                                    <td align="right">{{data.total.denda| number : 2}}</td>
+                                    <td colspan="3"></td>
+                                    <td align="right">{{data.total.pelabuhan_ppn| number : 2}}</td>
+                                    <td colspan="2"></td>
+                                    <td align="right">{{data.total.pelabuhan_non_ppn| number : 2}}</td>
+
+                                    <td align="right">{{data.total.ongkos_kapal_usd| number : 2}}</td>
+                                    <td align="right">{{data.total.ongkos_kapal_rp| number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

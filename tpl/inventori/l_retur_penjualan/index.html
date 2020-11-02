@@ -1,0 +1,192 @@
+<style>
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+
+<div class="animated fadeIn">
+    <div ng-controller="l_retur_penjualan">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Retur Penjualan</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.tanggal"
+                                                   ng-click="toggle($event, 'tanggal')" ng-model="form.tanggal"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.customer_id" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf Nama Pembeli">
+                                                    {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down"  refresh="cariPembeli($select.search)" repeat="vals in listCustomer | filter : $select.search">
+                                                    {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <!--                                           -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.barang_id" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf Nama Barang">
+                                                    {{$select.selected.kode}} - {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down"  refresh="cariBarang($select.search)" repeat="vals in getBarang | filter : $select.search">
+                                                    {{vals.kode}} - {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <!--                                           -->
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.m_lokasi_id" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <!-- <button class="btn btn-outline-primary btn-sm pull-right" ng-click="exportData('print')">
+                        <i class="fa fa-file"></i>
+                        Excel 2
+                    </button> -->
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                <h2 class="header-laporan">LAPORAN RETUR PENJUALAN</h2>
+
+
+                                Periode : {{data.startDate| date:'dd-MM-yyyy'}} Sampai {{data.endDate| date:'dd-MM-yyyy'}}
+
+                                </br>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-hover table-bordered table-print">
+                            <thead>
+                                <tr align="center">
+                                    <th >
+                                        No
+                                    </th>
+                                    <th >
+                                        Tanggal
+                                    </th>
+                                    <th>
+                                        No. Nota
+                                    </th>
+                                    <th>
+                                        No. Faktur
+                                    </th>
+                                    <th >
+                                        Customer
+                                    </th>
+                                    <th >
+                                        NPWP
+                                    </th>
+                                    <th >
+                                        Barang
+                                    </th>
+                                    <th >
+                                        Kwt
+                                    </th>
+                                    <th >
+                                        Harga
+                                    </th>
+                                    <th >
+                                        DPP
+                                    </th>
+                                    <th >
+                                        PPN
+                                    </th>
+                                    <th >
+                                        Jumlah
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="val in detail">
+                                    <td align="center">{{val.no_urut}}</td>
+                                    <td>{{(val.inv_retur_penjualan_id != detail[$index - 1].inv_retur_penjualan_id) ? val.tanggal : ''}}</td>
+                                    <td>{{(val.inv_retur_penjualan_id != detail[$index - 1].inv_retur_penjualan_id) ? val.no_nota : ''}}</td>
+                                    <td>{{(val.inv_retur_penjualan_id != detail[$index - 1].inv_retur_penjualan_id) ? val.no_faktur_pajak : ''}}</td>
+                                    <td>{{(val.inv_retur_penjualan_id != detail[$index - 1].inv_retur_penjualan_id) ? val.kontak : ''}}</td>
+                                    <td>{{(val.inv_retur_penjualan_id != detail[$index - 1].inv_retur_penjualan_id) ? val.npwp : ''}}</td>
+                                    <td>{{val.barang}}</td>
+                                    <td align="right">{{val.jumlah_masuk | number}}</td>
+                                    <td align="right">{{val.harga_masuk| currency:"":2}}</td>
+                                    <td align="right">{{(val.inv_retur_penjualan_id != detail[$index + 1].inv_retur_penjualan_id) ? (val.sum_dpp | currency:"":2) : ''}}</td>
+                                    <td align="right">{{(val.inv_retur_penjualan_id != detail[$index + 1].inv_retur_penjualan_id) ? (val.sum_ppn | currency:"":2) : ''}}</td>
+                                    <td align="right">{{(val.inv_retur_penjualan_id != detail[$index + 1].inv_retur_penjualan_id) ? (val.sum_total | currency:"":2) : ''}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" align="right">Total</td>
+                                    <td align="right">{{data.total_kwt| currency:""}}</td>
+                                    <td align="right"></td>
+                                    <td align="right">{{data.total_dpp| currency:"":2}}</td>
+                                    <td align="right">{{data.total_ppn| currency:"":2}}</td>
+                                    <td align="right">{{data.total| currency:"":2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

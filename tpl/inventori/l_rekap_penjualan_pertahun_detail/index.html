@@ -1,0 +1,189 @@
+<style>
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+
+<div class="animated fadeIn">
+    <div ng-controller="l_rekap_penjualan_pertahun">
+        <div class="card">
+            <div class="card-header">
+                <strong>Rekap Penjualan per Tahun</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.lokasi" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.tahun"
+                                                   ng-click="toggle($event, 'tahun')" ng-model="form.tahun"
+                                                   uib-datepicker-popup="yyyy" datepicker-options="{minMode: 'year'}"
+                                                   placeholder="Tahun">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                <h2 class="header-laporan">REKAP PENJUALAN PER TAHUN</h2>
+
+                                Periode : {{data.tahun}}
+
+                                </br>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-striped table-bordered table-print">
+                            <thead>
+                                <tr class="align-center">
+                                    <th rowspan="2">
+                                        No
+                                    </th>
+                                    <th rowspan="2">
+                                        Bulan
+                                    </th>
+                                    <th ng-repeat="val in data.kategori" colspan="2">{{val.nama}}</th>
+                                    <th ng-repeat="val in data.kategori" colspan="2" style="color: red">Retur {{val.nama}}</th>
+                                    <th colspan="2">Total</th>
+                                </tr>
+                                <tr>
+                                    <th ng-repeat-start="val in data.kategori" ng-hide="true"></th>
+                                    <th class="align-center">KWT</th>
+                                    <th class="align-center">RP</th>
+                                    <th ng-repeat-end="" ng-hide="true"></th>
+                                    <th ng-repeat-start="val in data.kategori" ng-hide="true"></th>
+                                    <th class="align-center" style="color: red">KWT</th>
+                                    <th class="align-center" style="color: red">RP</th>
+                                    <th ng-repeat-end="" ng-hide="true"></th>
+                                    <th class="align-center">KWT</th>
+                                    <th class="align-center">RP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(k, v) in detail">
+                                    <td class="align-center">{{$index + 1}}</td>
+                                    <td>{{k}}</td>
+                                    <td ng-repeat-start="vv in v.stok" ng-hide="true"></td>
+                                    <td class="align-right">{{vv.qty | number}}</td>
+                                    <td class="align-right">{{vv.total | number}}</td>
+                                    <td ng-repeat-end="" ng-hide="true"></td>
+                                    <td ng-repeat-start="vv in v.retur" ng-hide="true"></td>
+                                    <td class="align-right" style="color: red">{{vv.qty | number}}</td>
+                                    <td class="align-right" style="color: red">{{vv.total | number}}</td>
+                                    <td ng-repeat-end="" ng-hide="true"></td>
+                                    <td class="align-right">{{v.total.qty | number}}</td>
+                                    <td class="align-right">{{v.total.total | number}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td ng-repeat-start="v in data.qty.stok" ng-hide="true"></td>
+                                    <td class="align-right">{{v.qty | number}}</td>
+                                    <td class="align-right">{{v.total | number}}</td>
+                                    <td ng-repeat-end="" ng-hide="true"></td>
+                                    <td ng-repeat-start="v in data.qty.retur" ng-hide="true"></td>
+                                    <td class="align-right" style="color: red">{{v.qty | number}}</td>
+                                    <td class="align-right" style="color: red">{{v.total | number}}</td>
+                                    <td ng-repeat-end="" ng-hide="true"></td>
+                                    <td class="align-right">{{data.qty.total.qty | number}}</td>
+                                    <td class="align-right">{{data.qty.total.total | number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div align="right">
+                        <table style="width:250px">
+                            <tr style="border: none" ng-repeat="(key, val) in data.qty.stok">
+                                <td class="align-right">
+                                    {{key}}
+                                </td>
+                                <td class="align-right">
+                                    {{val.qty | number}}
+                                </td>
+                                <td class="align-right">
+                                    {{val.total | number}}
+                                </td>
+                            </tr>
+                            <tr style="font-size: 0">
+                                <td></td>
+                                <td><hr></td>
+                                <td><hr></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="align-right">{{data.qty.total.stok_qty | number}}</td>
+                                <td class="align-right">{{data.qty.total.stok_total | number}}</td>
+                            </tr>
+                            <tr style="color: red">
+                                <td style="color:black">Retur Barang Jadi</td>
+                                <td class="align-right">{{data.qty.total.retur_qty | number}}</td>
+                                <td class="align-right">{{data.qty.total.retur_total | number}}</td>
+                            </tr>
+                            <tr style="font-size: 0">
+                                <td></td>
+                                <td><hr></td>
+                                <td><hr></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="align-right">{{data.qty.total.qty | number}}</td>
+                                <td class="align-right">{{data.qty.total.total | number}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

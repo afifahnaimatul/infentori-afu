@@ -1,0 +1,220 @@
+<style>
+/*    hr {
+        margin: 0
+    }*/
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+
+<div class="animated fadeIn">
+    <div ng-controller="l_stok_barang_dagang">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Stok Akhir Barang Dagangan</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan"
+                                                   ng-click="toggle($event, 'bulan')" ng-model="form.bulan"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.lokasi" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.kategori" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Kategori">{{ $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listKategori | filter : $select.search">{{ val.nama}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.barang" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf Nama Barang">
+                                                    {{$select.selected.kode}} - {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down"  refresh="cariBarang($select.search)" repeat="vals in getBarang | filter : $select.search">
+                                                    {{vals.kode}} - {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <!--                                           -->
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                <h2 class="header-laporan">LAPORAN STOK AKHIR BARANG DAGANGAN</h2>
+
+                                Periode : {{data.bulan}} {{data.tahun}}
+
+                                </br>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-hover table-bordered table-print">
+                            <thead>
+                                <tr class="align-center">
+                                    <th width="10px">
+                                        Nomor Urut
+                                    </th>
+                                    <th>
+                                        Nama Barang
+                                    </th>
+                                    <th>
+                                        Saldo Awal<br/>
+                                        <small>{{data.bulan}}</small>
+                                    </th>
+                                    <th>
+                                        Beli<br/>
+                                        <small>{{data.bulan}}</small>
+                                    </th>
+                                    <th>
+                                        Jual<br/>
+                                        <small>{{data.bulan}}</small>
+                                    </th>
+                                    <th>
+                                        Saldo Akhir<br/>
+                                        <small>{{data.bulan}}</small>
+                                    </th>
+                                    <th>
+                                        Retur Pembelian<br/>
+                                        <small>{{data.bulan}}</small>
+                                    </th>
+                                    <th>
+                                        Saldo Sesudah Retur<br/>
+                                        <small>{{data.bulan}}</small>
+                                    </th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat-start="v in detail">
+                                    <td class="align-center">{{v.no}}</td>
+                                    <td>{{v.nama}}</td>
+                                    <td class="align-right">{{v.qty_awal}}</td>
+                                    <td class="align-right">{{v.qty_beli}}</td>
+                                    <td class="align-right">{{v.qty_jual}}</td>
+                                    <td class="align-right">{{v.qty_akhir}}</td>
+                                    <td class="align-right">{{v.qty_retur_pembelian}}</td>
+                                    <td class="align-right">{{v.qty_akhir_retur}}</td>
+                                </tr>
+                                <!--                                <tr>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>-->
+                                <tr ng-repeat-end=""></tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td class="align-right">{{data.total_qty_awal}}</td>
+                                    <td class="align-right">{{data.total_qty_beli}}</td>
+                                    <td class="align-right">{{data.total_qty_jual}}</td>
+                                    <td class="align-right">{{data.total_qty_akhir}}</td>
+                                    <td class="align-right">{{data.total_qty_retur_pembelian}}</td>
+                                    <td class="align-right">{{data.total_qty_akhir_retur}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div align="right">
+                        <table style="width:250px">
+                            <tr style="border: none">
+                                <td colspan="6"></td>
+                                <td class="align-right">
+                                    S.AWAL<br/>
+                                    BELI<br/>
+                                    <hr>
+                                    <br/>
+                                    JUAL<br/>
+                                    <hr>
+                                    <br/>
+                                    RETUR<br/>
+                                    S.AKHIR
+                                </td>
+                                <td class="align-right">
+                                    {{data.total_qty_awal}}<br/>
+                                    {{data.total_qty_beli}}<br/>
+                                    <hr>
+                                    {{data.total_qty_awal + data.total_qty_beli}}
+                                    <br/>
+                                    {{data.total_qty_jual}}<br/>
+                                    <hr>
+                                    {{data.total_qty_akhir}}
+                                    <br/>
+                                    {{data.total_qty_retur_pembelian}}<br/>
+                                    {{data.total_qty_akhir_retur}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

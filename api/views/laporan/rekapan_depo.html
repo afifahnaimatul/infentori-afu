@@ -1,0 +1,92 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+
+    table{
+        /*display: table-cell;*/
+        border-collapse: collapse;width: 100%;}
+    td:empty::after{
+        content: "\00a0";
+    }
+
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center>
+                    <h2 class="header-laporan">LAPORAN REKAPAN DEPO</h2>
+                    Lokasi : {{ data.lokasi}}
+                    <br/>
+                    Periode : {{ data.tahun}}
+                    <br/>
+                    Disiapkan Tanggal : {{ data.disiapkan}}
+                    <br/>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-laporan-border" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th class="align-center"></th>
+                        {%for val in data.tanggal%}
+                        <th class="align-center">
+                            {{val}}
+                        </th>
+                        {%endfor%}
+                        <th class="align-center">JUMLAH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="left" style="vertical-align: top"><b>{{ 'SALDO AWAL'}}</b></td>
+                        {%for vv in data.tanggal%}
+                        <td align="right" style="vertical-align: top">{{data.saldo_awal[vv]| number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        <td align="right" class="text-right" style="vertical-align: top">{{ data.total_saldo_awal| number_format(2, '.', ',') }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="14" class="emptytd"></td>
+                    </tr>
+                    {%for key, val in detail%}
+                    <tr>
+                        <td colspan="14"><b>{{key}}</b></td>
+                    </tr>
+                    {%for v in val.detail%}
+                    <tr>
+                        <td align="left" style="vertical-align: top">{{ v.nama}}</td>
+                        {%for vv in data.tanggal%}
+                        <td align="right" style="vertical-align: top">{{ v['detail'][vv] | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        <td align="right" class="text-right" style="vertical-align: top">{{ v.total| number_format(2, '.', ',') }}</td>
+                    </tr>
+                    {%endfor%}
+                    <tr>
+                        <td colspan="14" class="emptytd"></td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="vertical-align: top"><b>{{ 'TOTAL ' ~ key}}</b></td>
+                        <td ng-repeat-start="vv in data.tanggal" ng-hide="true"></td>
+                        <td align="right" style="vertical-align: top">{{ val.total[vv] | number_format(2, '.', ',')}}</td>
+                        <td ng-repeat-end="" ng-hide="true"></td>
+                        <td align="right" class="text-right" style="vertical-align: top">{{ val.total2| number_format(2, '.', ',') }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="14" class="emptytd"></td>
+                    </tr>
+                    {%endfor%}
+                    <tr>
+                        <td align="left" style="vertical-align: top"><b>{{ 'SALDO AKHIR'}}</b></td>
+                        {%for vv in data.tanggal%}
+                        <td align="right" style="vertical-align: top">{{ data.saldo_akhir[vv] | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        <td align="right" class="text-right" style="vertical-align: top">{{ data.total_saldo_akhir| number_format(2, '.', ',') }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

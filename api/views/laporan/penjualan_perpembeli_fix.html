@@ -1,0 +1,302 @@
+<link href="{{ css}}?t=44" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+
+    table{
+        border-collapse: collapse;width: 100%;
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+    
+    
+
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                    <h2 class="header-laporan header-smaller">LAPORAN BUKU PENJUALAN</h2>
+
+                    Periode : {{data.tgl_mulai}} Sampai {{data.tgl_selesai}}
+
+                    </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        {%for key, val in detail%}
+        <div class="table-responsive" style="page-break-after: always; page-break-inside: avoid">
+            <table class="table-smaller" style="border-collapse: collapse; letter-spacing: -1; ">
+                <thead>
+                    <tr>
+                        {% if data.header.no == true %}
+                        <th style="width:15px">
+                            No
+                        </th>
+                        {%endif%}
+                        {% if data.header.tanggal == true %}
+                        <th style="width: 45px">
+                            Tanggal
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.no_surat_jalan == true %}
+                        <th ng-show="header.no_surat_jalan" style="width:40px">
+                            Nomor Surat Jalan
+                        </th>
+                        {%endif%}
+                        {% if data.header.depo == true %}
+                        <th ng-show="header.depo" style="width:40px">
+                            Depo
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.no_faktur == true %}
+                        <th ng-show="header.no_faktur" style="width: 125px">
+                            No. Faktur
+                        </th>
+                        {%endif%}
+                        {% if data.header.no_invoice == true %}
+                        <th ng-show="header.no_faktur" style="width: 70px; min-width: 70px">
+                            No. Invoice
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.pembeli == true %}
+                        <th ng-show="header.pembeli" style="width: 208px">
+                            Pembeli
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.npwp == true %}
+                        <th ng-show="header.npwp" style="width: 125px">
+                            NPWP
+
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.barang == true %}
+                        <th ng-show="header.barang" style="width: 200px">
+                            Nama Barang
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.kwt == true %}
+                        <th ng-show="header.kwt" style="width: 25px">
+                            KWT
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.harga_satuan == true %}
+                        <th ng-show="header.harga_satuan" style="width: 65px">
+                            Harga Satuan
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.nilai == true %}
+                        <th ng-show="header.nilai" style="width: 85px">
+                            Nilai
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.dpp == true %}
+                        <th ng-show="header.dpp" style="width: 85px">
+                            DPP
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.ppn == true %}
+                        <th ng-show="header.ppn" style="width: 85px">
+                            PPN
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.jumlah == true %}
+                        <th ng-show="header.jumlah" style="width: 85px">
+                            Jumlah
+                        </th>
+                        {%endif%}
+
+                        {% if data.header.alamat == false %}
+                        <th ng-show="!header.alamat">
+                            Paraf
+                        </th>
+                        {%endif%}
+
+                        <!-- {% if data.header.tanggal_bayar == true %}
+                        <th ng-show="header.tanggal_bayar">
+
+                            Tanggal Bayar
+                        </th>
+                        {%endif%} -->
+                    </tr>
+
+                </thead>
+                {%if key == 1%}
+                <tbody>
+                    {%for k, v in data.total%}
+                    <tr class="padding0">
+                        {% if data.header.dpp == true  %}
+                        <td align="right" colspan="{{data.panjang_header}}" >
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.dpp == true %}
+                        <td align="right" ng-show="header.dpp">
+                            {{ v.DPP | number_format(2, '.', ',')}}{{',00'}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.ppn == true %}
+                        <td align="right" ng-show="header.ppn">
+                            {{ v.PPN | number_format(2, '.', ',')}}{{',00'}}
+                        </td> {%endif%}
+
+                        {% if data.header.jumlah == true %}
+                        <td align="right" ng-show="header.jumlah">
+                            {{v.DPP_PPN| number_format(2, '.', ',')}}{{',00'}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.paraf == true %}
+                        <td align="right" ng-show="header.tanggal_bayar">
+
+                        </td>
+                        {%endif%}
+
+
+                    </tr>
+                    {%endfor%}
+                </tbody>
+                {%endif%}
+                <tbody>
+                    {%for k, v in val.data%}
+                    <tr class="{{v.class}} padding0">
+                        {% if data.header.no == true %}
+                        <td align="center" ng-show="header.no">
+                            {{v.no}}
+                        </td>
+                        {%endif%}
+                        {% if data.header.tanggal == true %}
+                        <td align="center" ng-show="header.tanggal">
+                            {{v.tanggal}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.no_surat_jalan == true %}
+                        <td ng-show="header.no_surat_jalan" align="center" style="padding-left: 0; padding-right: 0">
+                            {{v.no_surat_jalan}}
+                        </td>
+                        {%endif%}
+                        {% if data.header.depo == true %}
+                        <td ng-show="header.depo" align="center" style="padding-left: 0; padding-right: 0">
+                            {{v.lokasi}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.no_faktur == true %}
+                        <td ng-show="header.no_faktur" align="center" style="padding-left: 0; padding-right: 0">
+                            {{v.nomor_faktur}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.no_invoice == true %}
+                        <td ng-show="header.no_invoice" align="center">
+                            {{v.no_invoice}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.pembeli == true %}
+                        <td ng-show="header.pembeli" style="padding-left: 0; padding-right: 0">
+                            {{ v.namaCustomer|length > 30 ? v.namaCustomer|slice(0, 30) ~ '' : v.namaCustomer  }}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.npwp == true %}
+                        <td ng-show="header.npwp" align="center">
+                            {{not v.npwp and v.no_surat_jalan ? '00.000.000.0-000.000' : v.npwp}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.barang == true %}
+                        <td ng-show="header.barang">
+                            {{ v.namaBarang|length > 30 ? v.namaBarang|slice(0, 30) ~ '...' : v.namaBarang  }}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.kwt == true %}
+                        <td ng-show="header.kwt" align="right">
+                            {{v.jumlah}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.harga_satuan == true %}
+                        <td align="right" ng-show="header.harga_satuan">
+                            {{not v.harga_satuan ? '' : v.harga_satuan| number_format(2, '.', ',') }}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.nilai == true %}
+                        <td align="right" ng-show="header.nilai">
+                            {{not v.nilai ? '' : v.nilai| number_format(2, '.', ',')}}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.dpp == true %}
+                        <td align="right">
+                            {% if v.tampilkan  %}
+                            {{  v.DPP | number_format(2, '.', ',')  }}
+                            {% else %}
+
+                            {% endif %}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.ppn == true %}
+                        <td align="right">
+                            {% if v.tampilkan  %}
+                            {{  v.PPN | number_format(2, '.', ',') }}
+                            {% else %}
+
+                            {% endif %}
+                        </td>
+                        {%endif%}
+
+                        {% if data.header.jumlah == true %}
+                        <td align="right">
+                            {% if v.tampilkan  %}
+                            {{v.DPP_PPN| number_format(2, '.', ',') }}
+                            {% else %}
+                            {% endif %}
+
+                        </td>
+                        {%endif%}
+                        {% if data.header.alamat == true %}
+                        <td ng-show="header.alamat">
+                            {{v.alamat}}
+                        </td>
+                        {%endif%} 
+                        {% if data.header.paraf == true%}
+                        <td ng-show="!header.alamat">
+                            {{''}}
+                        </td>
+                        {%endif%} 
+                        <!--                         {% if data.header.tanggal_bayar == true %}
+                                                <td ng-show="header.tanggal_bayar">
+                        
+                                                </td>
+                                                {%endif%} -->
+
+
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+            <div style="float: right;" class="header-smaller">Halaman {{key}} dari {{detail|length}}</div>
+        </div>
+        {%endfor%}
+    </div>
+</div>

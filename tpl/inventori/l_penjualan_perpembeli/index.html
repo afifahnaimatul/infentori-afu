@@ -1,0 +1,330 @@
+<style>
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+
+<div class="animated fadeIn">
+
+    <div ng-controller="l_penjualan_perpembeli">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Buku Penjualan</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.customer_id" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf Nama Pembeli">
+                                                    {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down"  refresh="cariPembeli($select.search)" repeat="vals in listCustomer | filter : $select.search">
+                                                    {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <!--                                           -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.barang_id" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf Nama Barang">
+                                                    {{$select.selected.kode}} - {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down"  refresh="cariBarang($select.search)" repeat="vals in getBarang | filter : $select.search">
+                                                    {{vals.kode}} - {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <!--                                           -->
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.m_lokasi_id" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="">
+                                            <div ng-dropdown-multiselect="" options="example14data" selected-model="example14model" checkboxes="true" extra-settings="setting1"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="btn-group">
+                                            <label ng-class="{
+                                                    'btn-info': form.jenis == 'semua', 'btn-secondary' : form.jenis != 'semua'}" class="btn btn-sm" ng-model="form.jenis" ng-disabled="is_view" uib-btn-radio="'semua'"><i class="fa fa-check" ng-if="form.jenis == 'semua'"></i>Semua</label>
+                                            <label ng-class="{
+                                                    'btn-info': form.jenis == 'std', 'btn-secondary' : form.jenis != 'std'}" class="btn btn-sm" ng-model="form.jenis" ng-disabled="is_view" uib-btn-radio="'std'"><i class="fa fa-check" ng-if="form.jenis == 'std'"></i>Standar</label>
+                                            <label ng-class="{
+                                                    'btn- info': form.jenis == 'sederhana', 'btn-secondary' : form.jenis != 'sederhana'}" class="btn btn-sm" ng-model="form.jenis" ng-disabled="is_view" uib-btn-radio="'sederhana'"><i class="fa fa-check" ng-if="form.jenis == 'sederhana'"></i>Sederhana</label>
+                                        </div>
+                                        <div class="btn-group">
+                                            <!--                                        <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.status_rental" uib-btn-radio="'A'">
+                                                                                        <i class="fa fa-check" ng-if="form.status_rental == 'A'">
+                                                                                        </i>
+                                                                                        Available
+                                                                                    </label>
+                                                                                    <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.status_rental" uib-btn-radio="'N'">
+                                                                                        <i class="fa fa-check" ng-if="form.status_rental == 'N'">
+                                                                                        </i>
+                                                                                        No Rental
+                                                                                    </label>
+                                                                                    <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.status_rental" uib-btn-radio="'R'">
+                                                                                        <i class="fa fa-check" ng-if="form.status_rental == 'R'">
+                                                                                        </i>
+                                                                                        Rented
+                                                                                    </label>-->
+                                        </div>
+                                        <!--                                            <select class="form-control form-control-sm" ng-model="form.jenis">
+                                                                                        <option value=""></option>
+                                                                                        <option value="std">Standar</option>
+                                                                                        <option value="sederhana">sederhana</option>
+                                                                                    </select>-->
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input ng-change="clearData()" class="form-control form-control-sm" date-range-picker="" options="dateRangeOptions" ng-model="form.tanggal" placeholder="Periode" type="text"/>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group btn-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0, 'buku')">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan Buku Penjualan
+                                            </button>
+                                            <button class="btn btn-warning btn-sm" ng-click="view(0, 0, 'copy')">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan Copy Penjualan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0, tipe)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1, tipe)" ng-if="tipe == 'buku'">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                <h2 class="header-laporan">LAPORAN BUKU PENJUALAN</h2>
+
+                                Periode : {{data.tgl_mulai}} Sampai {{data.tgl_selesai}}
+
+                                </br>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-hover table-bordered table-print">
+                            <thead>
+                                <tr>
+                                    <th ng-show="header.no">
+                                        No
+                                    </th>
+                                    <th ng-show="header.tanggal" style="min-width: 80px">
+                                        Tanggal
+                                    </th>
+                                    <th ng-show="header.tanggal_faktur_pajak" style="min-width: 80px">
+                                        Tanggal Faktur Pajak
+                                    </th>
+                                    <!--                                <th ng-show="header.tanggal_penyerahan">
+                                                                        Tanggal Penyerahan
+                                                                    </th>-->
+                                    <th ng-show="header.no_surat_jalan" style="min-width: 75px">
+                                        Nomor Surat Jalan
+                                    </th>
+                                    <th ng-show="header.depo" style="min-width: 75px">
+                                        Depo
+                                    </th>
+                                    <!--                                <th ng-show="header.no_nota">
+                                                                      No.Nota
+                                                                    </th>-->
+                                    <th ng-show="header.no_faktur" style="min-width: 130px">
+                                        No. Faktur
+                                    </th>
+                                    <th ng-show="header.no_invoice">
+                                        No. Invoice
+                                    </th>
+
+                                    <th ng-show="header.pembeli" style="min-width: 180px">
+                                        Pembeli
+                                    </th>
+                                    <th ng-show="header.npwp" style="min-width: 130px">
+                                        NPWP
+
+                                    </th>
+                                    <th ng-show="header.barang" style="min-width: 200px">
+                                        Nama Barang
+                                    </th>
+                                    <th ng-show="header.kwt" >
+                                        KWT
+                                    </th>
+                                    <th ng-show="header.harga_satuan" style="min-width: 100px">
+                                        Harga Satuan
+                                    </th>
+                                    <th ng-show="header.nilai" style="min-width: 100px">
+                                        Nilai
+                                    </th>
+                                    <th ng-show="header.dpp" style="min-width: 100px">
+                                        DPP
+                                    </th>
+                                    <th ng-show="header.ppn" style="min-width: 100px">
+                                        PPN
+                                    </th>
+                                    <th ng-show="header.jumlah" style="min-width: 100px">
+                                        Jumlah
+                                    </th>
+                                    <th ng-show="header.alamat" style="min-width: 100px">
+                                        Alamat
+                                    </th>
+                                    <th ng-show="header.paraf">
+                                        Paraf
+                                    </th>
+                                    <!-- <th ng-show="header.tanggal_bayar">
+
+                                        Tanggal Bayar
+                                    </th> -->
+                                </tr>
+
+                            </thead>
+                            <tbody  ng-repeat="v in total">
+                                <tr>
+                                    <td align="right" colspan={{panjang_header}} ng-show="header.dpp || header.ppn || header.jumlah || header.tanggal_bayar">
+
+                                    <td align="right" ng-show="header.dpp">
+                                        {{ v.DPP | currency:''}}{{',00'}}
+                                    </td>
+                                    <td align="right" ng-show="header.ppn">
+                                        {{ v.PPN | currency:''  }}{{',00'}}
+                                    </td>
+                                    <td align="right" ng-show="header.jumlah">
+                                        {{v.DPP_PPN| currency:''}}{{',00'}}
+                                    </td>
+                                    <td  ng-show="header.alamat || header.paraf"></td>
+                                    <!--                                    <td align="center" ng-show="header.tanggal_bayar">
+                                    
+                                                                        </td>-->
+
+                                </tr>
+                            </tbody>
+                            <tbody ng-repeat="val in data">
+                                <tr ng-repeat-start="vv in val"></tr>
+                                <tr ng-repeat="v in vv.data">
+                                    <td align="center" ng-show="header.no">
+                                        {{$index == 0 ? vv.no : ''}}
+                                    </td>
+                                    <td align="center" ng-show="header.tanggal">
+                                        {{v.tanggal}}
+                                    </td>
+                                    <td align="center" ng-show="header.tanggal_faktur_pajak">
+
+                                    </td>
+                                    <!--                                <td ng-show="header.tanggal_penyerahan">
+
+                                                                    </td>-->
+                                    <td ng-show="header.no_surat_jalan">
+                                        {{v.no_surat_jalan}}
+                                    </td>
+                                    <td ng-show="header.depo">
+                                        {{v.lokasi}}
+                                    </td>
+                                    <!--                                <td ng-show="header.no_nota">
+
+                                                                    </td>-->
+                                    <td ng-show="header.no_faktur">
+                                        {{v.nomor_faktur}}
+                                    </td>
+                                    <td ng-show="header.no_invoice">
+                                        {{v.no_invoice}}
+                                    </td>
+
+                                    <td ng-show="header.pembeli">
+                                        {{v.namaCustomer}}
+                                    </td>
+                                    <td ng-show="header.npwp">
+                                        {{v.npwp != null && v.npwp != '' ? v.npwp : '00.000.000.0-000.000'}}
+                                    </td>
+                                    <td ng-show="header.barang">
+                                        {{v.namaBarang}}
+                                    </td>
+                                    <td ng-show="header.kwt" align="right">
+                                        {{v.jumlah}}
+                                    </td>
+                                    <td align="right" ng-show="header.harga_satuan">
+                                        {{v.harga_satuan| currency:'' }}{{',00'}}
+                                    </td>
+                                    <td align="right" ng-show="header.nilai">
+                                        {{v.nilai| currency:'' }}{{',00'}}
+                                    </td>
+                                    <td align="right" ng-show="header.dpp">
+                                        {{v.panjang == vv.data.length ? (v.DPP | currency:'') + ',00' : ''}}
+                                    </td>
+                                    <td align="right" ng-show="header.ppn">
+                                        {{v.panjang == vv.data.length ? (v.PPN | currency:'') + ',00' : ''}}
+                                    </td>
+                                    <td align="right" ng-show="header.jumlah">
+                                        {{v.panjang == vv.data.length ? (v.DPP_PPN | currency:'') + ',00' : ''}}
+                                    </td>
+                                    <td align="left" ng-show="header.alamat">
+                                        {{ v.alamat}}
+                                    </td>
+                                    <td align="left" ng-show="header.paraf">
+                                        {{ ''}}
+                                    </td>
+                                    <!--                                    <td ng-show="header.tanggal_bayar">
+                                    
+                                                                        </td>-->
+
+                                </tr>
+                                <tr>
+                                    <td colspan={{panjang_pembatas}}></td>
+                                </tr>
+                                <tr ng-repeat-end=""></tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

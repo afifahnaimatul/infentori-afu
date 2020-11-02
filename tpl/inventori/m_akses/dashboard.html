@@ -1,0 +1,58 @@
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panels panel-primary">
+            <div class="panel-heading">
+                <label class="i-checks">
+                    <input ng-disabled="is_view" ng-model="form.akses.dashboard" type="checkbox" ng-click="checkAll('dashboard', form.akses.dashboard)"/>
+                    <i></i>
+                    Dashboard
+                </label>
+            </div>
+            <div class="list-group bg-white dashboard">
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.dash_saldo_kas" type="checkbox"/>
+                        <i></i> Saldo Kas & Setara Kas
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.dash_diagram_pemasukan" type="checkbox"/>
+                        <i></i> Diagram Pengeluaran & Pemasukan Bulan Ini
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.dash_grafik_pendapatan" type="checkbox"/>
+                        <i></i> Grafik Pendapatan Tahun Ini
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.dash_grafik_beban" type="checkbox"/>
+                        <i></i> Grafik Beban Tahun Ini
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.dash_grafik_piutang" type="checkbox"/>
+                        <i></i> Grafik Piutang Tahun Ini
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.dash_grafik_hutang" type="checkbox"/>
+                        <i></i> Grafik Hutang Tahun Ini
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.dash_rekap_masuk_keluar" type="checkbox"/>
+                        <i></i> Rekapitulasi Pengeluaran & Pemasukan Tahun Ini
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

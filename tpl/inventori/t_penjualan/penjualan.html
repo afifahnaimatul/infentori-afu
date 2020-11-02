@@ -1,0 +1,835 @@
+<div class="animated fadeIn">
+    <div ng-controller="penjualanCtrl">
+        <div class="wrapper-sm" ng-show="!is_edit">
+            <div class="card" st-pipe="callServer" st-table="displayed">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <strong class="">{{ master}}</strong><br>
+
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <strong class="bg-info p-1" style="color: white">Total DPP : {{totalDpp| currency}}</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="btn-group pull-right mt-5px d-lg-none" role="group">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Menu
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <button class="dropdown-item" ng-click="create();">
+                                            <i class="fa fa-plus"></i>
+                                            &nbsp; Penjualan Baru
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="btn-group pull-right mt-5px d-md-down-none" role="group">
+                                <button class="btn btn-secondary btn-sm" ng-click="modalSinkron();">
+                                    <i class="fa fa-refresh"></i>
+                                    &nbsp; Sinkron Invoice
+                                </button>
+                                <button class="btn btn-warning btn-sm" ng-click="modalFaktur();">
+                                    <i class="fa fa-inbox"></i>
+                                    &nbsp; Cetak Invoice Penjualan
+                                </button>
+                                <button class="btn btn-success btn-sm" ng-click="modalKuitansi();">
+                                    <i class="fa fa-inbox"></i>
+                                    &nbsp; Cetak Kuitansi
+                                </button>
+                                <button class="btn btn-primary btn-sm" ng-click="create();">
+                                    <i class="fa fa-plus"></i>
+                                    &nbsp; Penjualan Baru
+                                </button>
+                                <button class="btn btn-success btn-sm" ng-click="approveAll();" ng-if="data.is_check">
+                                    <i class="fa fa-check"></i>
+                                    &nbsp; Approve
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body p-0px">
+                    <div class="pl-15px pr-15px">
+                        <div class="row mt-15px">
+                            <div class="col-md-12">
+                                <div class="alert alert-secondary">
+                                    <form name="landaform" novalidate="">
+                                        <div class="form-group row mb-0px">
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control form-control-sm"
+                                                       st-search="inv_penjualan.no_surat_jalan" placeholder="No. Surat Jalan"/>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control form-control-sm"
+                                                       st-search="acc_m_kontak.nama" placeholder="Pelanggan"/>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <select class="form-control form-control-sm"
+                                                        st-search="inv_penjualan.acc_m_lokasi_id">
+                                                    <option value=""> - Semua Lokasi -</option>
+                                                    <option value="{{ val.id}}" ng-repeat="val in listLokasi">
+                                                        {{val.nama}}
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control form-control-sm" is-open="opened.bulan"
+                                                           ng-click="toggle($event, 'bulan')" ng-model="filter.bulan"
+                                                           uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                           placeholder="Bulan">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                        <div class="btn-group" ng-if="filter.bulan != undefined">
+                                                            <button class="btn btn-sm btn-primary" title="Tampilkan" ng-click="filterBulan()">
+                                                                <i class="fa fa-search"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-danger" title="Reset Filter Bulan" ng-click="reset_bulan()">
+                                                                <i class="fa fa-trash-o"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3" style="margin-top:10px">
+                                                <input type="text" class="form-control form-control-sm" st-search="inv_m_faktur_pajak.nomor" placeholder="No. Faktur Pajak "/>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <div ng-include="'tpl/inventori/t_penjualan/table.html'" class="table-responsive"></div>
+                    </div>
+
+                    <!-- <uib-tabset active="activeForm">
+                        <uib-tab heading="Draft" index="0" ng-click="filterStatus(1)">
+                            <div ng-include="'tpl/inventori/t_penjualan/table.html'" class="table-responsive"></div>
+                        </uib-tab>
+                        <uib-tab heading="Tersimpan" index="1" ng-click="filterStatus(0)">
+                            <div ng-include="'tpl/inventori/t_penjualan/table.html'" class="table-responsive"></div>
+                        </uib-tab>
+                    </uib-tabset> -->
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="card" ng-if="is_edit">
+            <div class="card-header">
+                <strong>{{ formtitle}}</strong>
+                <div class="btn-group pull-right mt-5px d-md-down-none">
+                    <button class="btn btn-primary btn-sm" ng-click="suratJalan(form);" ng-if="form.is_draft == 0">
+                        <i class="fa fa-envelope-open-o"></i>
+                        &nbsp; Surat Jalan
+                    </button>
+                    <button class="btn btn-success btn-sm" ng-click="fakturPenjualan(form);" ng-if="form.is_draft == 0">
+                        <i class="fa fa-inbox"></i>
+                        &nbsp; Faktur Penjualan
+                    </button>
+                    <button class="btn btn-info btn-sm" ng-click="kwitansiPenjualan(form);" ng-if="form.is_draft == 0 && form.no_kuitansi != undefined && form.is_ppn == 1">
+                        <i class="fa fa-inbox"></i>
+                        &nbsp; Kwitansi Penjualan
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <form name="landaform" novalidate="">
+                    <!-- Blok Edit Data -->
+                    <div class="row mb-5" ng-if="form.inv_po_penjualan_id != 0" ng-hide="1">
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <h6>Pengajuan Penjualan</h6>
+                                <hr>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm required">Kode Pengajuan</label>
+                                    <div class="col-md-9">
+                                        <ui-select class="ui-select-sm ui-select-container" ng-model="form.inv_po_penjualan_id" theme="bootstrap" ng-disabled="!is_create"
+                                                   on-select="getPengajuan(form.inv_po_penjualan_id)">
+                                            <ui-select-match placeholder="Pilih Kode Pengajuan">{{ $select.selected.kode}}</ui-select-match>
+                                            <ui-select-choices position="down" repeat="val in listPengajuan | filter : $select.search">{{ val.kode}}</ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <h6>Data Penjualan</h6>
+                                <hr>
+                            </div>
+
+                            <!-- ROW 1 -->
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm required">Lokasi</label>
+                                    <div class="col-md-9">
+                                        <ui-select class="ui-select-sm ui-select-container" ng-model="form.acc_m_lokasi_id" theme="bootstrap" ng-disabled="is_view || form.inv_m_faktur_pajak_id.id != undefine" on-select="getKode(form.acc_m_lokasi_id)">
+                                            <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode}} - {{ $select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.kode}} - {{ val.nama}}</ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm">Tanggal</label>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control form-control-sm"
+                                                   ng-click="toggle($event, 'tanggal')" is-open="opened.tanggal"
+                                                   uib-datepicker-popup="dd-MM-yyyy" ng-model="form.tanggal"
+                                                   ng-disabled="is_view || form.inv_proses_akhir_id != undefined" datepicker-options="options"/>
+                                            <div class="input-group-append" ng-click="toggle($event, 'tanggal')" style="cursor: pointer">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--                                <div class="form-group row" ng-hide="form.is_ppn == 0">
+                                                                    <label class="col-md-3 col-form-label-sm">No. Invoice</label>
+                                                                    <div class="col-md-6">
+                                                                        <input type="text" class="form-control form-control-sm" ng-model="form.no_invoice" placeholder="-- Invoice Generate Otomatis --"
+                                                                               ng-disabled="true"/>
+                                                                    </div>
+                                                                </div>-->
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm">No. Surat Jalan</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control form-control-sm" ng-model="form.no_surat_jalan" placeholder="-- Surat Jalan Generate Otomatis --"
+                                               ng-disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm">PPN</label>
+                                    <div class="col-sm-6">
+                                        <div class="btn-group">
+                                            <label ng-class="{
+                                                    'btn-info': form.is_ppn == 1, 'btn-secondary' : form.is_ppn != 1}" class="btn btn-sm ng-untouched ng-valid ng-not-empty active ng-dirty ng-valid-parse" ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="1" ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 1"></i>Ya</label>
+                                            <label ng-class="{
+                                                    'btn-info': form.is_ppn == 0, 'btn-secondary' : form.is_ppn != 0}" class="btn btn-sm ng-untouched ng-valid ng-not-empty ng-dirty" ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="0" ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 0"></i>Tidak</label>
+                                        </div>
+                                    </div>
+                                </div>
+<!--                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm">Sisipan</label>
+                                    <div class="col-sm-6">
+                                        <div class="btn-group">
+                                            <label ng-class="{
+                                                    'btn-info': form.sisipan == 1, 'btn-secondary' : form.sisipan != 1}" class="btn btn-sm ng-untouched ng-valid ng-not-empty active ng-dirty ng-valid-parse" ng-model="form.sisipan" ng-disabled="is_view" uib-btn-radio="1" ng-click="total()"><i class="fa fa-check" ng-if="form.sisipan == 1"></i>Ya</label>
+                                            <label ng-class="{
+                                                    'btn-info': form.sisipan == 0, 'btn-secondary' : form.sisipan != 0}" class="btn btn-sm ng-untouched ng-valid ng-not-empty ng-dirty" ng-model="form.sisipan" ng-disabled="is_view" uib-btn-radio="0" ng-click="total()"><i class="fa fa-check" ng-if="form.sisipan == 0"></i>Tidak</label>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                <div class="form-group row" ng-if="!is_create">
+                                    <label class="col-md-3 col-form-label-sm">Faktur Pajak</label>
+                                    <div class="col-md-6">
+                                        <div class="btn-group" style="width: 100%; float: left">
+                                            <ui-select class="ui-select-sm ui-select-container" style="width: 100%"
+                                                       ng-model="form.inv_m_faktur_pajak_id" theme="bootstrap"
+                                                       ng-disabled="true" >
+                                                <ui-select-match placeholder="Pilih Faktur Pajak">{{ $select.selected.nomor}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listFaktur | filter : $select.search">
+                                                    {{ val.nomor}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <div class="btn btn-sm btn-warning" ng-if="form.is_koreksi" ng-click="modalEditFaktur(form.inv_m_faktur_pajak_id)">
+                                                <i class="fa fa-pencil"></i>
+                                            </div>
+                                        </div>
+                                    </div><!--
+                                    --></div>
+                                <!--                                <div class="form-group row">
+                                                                    <label class="col-md-3 col-form-label-sm">Jatuh Tempo</label>
+                                                                    <div class="col-md-6">
+                                                                        <div class="input-group input-group-sm">
+                                                                            <input type="text" class="form-control form-control-sm"
+                                                                                   ng-click="toggle($event, 'jatuh_tempo')" is-open="opened.jatuh_tempo"
+                                                                                   uib-datepicker-popup="dd-MM-yyyy" ng-model="form.jatuh_tempo"
+                                                                                   ng-disabled="is_view" datepicker-options="options"/>
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="fa fa-calendar"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>-->
+                            </div>
+                            <!--                            <div class="form-group row">
+                                                            <label class="col-md-3 col-form-label-sm required">Jenis Penjualan</label>
+                                                            <div class="col-md-4">
+                                                                <div class="btn-group">
+                                                                    <div class="btn-group">
+                                                                        <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.is_ppn" uib-btn-radio="1" ng-click="fillPPN()">
+                                                                            <i class="fa fa-check" ng-if="form.is_ppn == 1"></i>
+                                                                            PPN
+                                                                        </label>
+                                                                        <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.is_ppn" uib-btn-radio="0" ng-click="fillPPN()">
+                                                                            <i class="fa fa-check" ng-if="form.is_ppn == 0"></i>
+                                                                            Non PPN
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+                        </div>
+                        <!-- ROW 1 - END -->
+
+                        <!-- ROW 2 -->
+                        <div class="col-md-6">
+                            <div class="col-md-12">
+                                <h6>Data Customer</h6>
+                                <hr>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm required">Customer</label>
+                                    <div class="col-md-9">
+                                        <div class="btn-group" style="width: 100%; float: left">
+                                            <ui-select class="ui-select-sm ui-select-container" style="width: 100%"
+                                                 ng-model="form.acc_m_kontak_id" theme="bootstrap"
+                                                 ng-disabled="is_view || form.inv_proses_akhir_id != undefined" on-select="fillAlamat()">
+                                                <ui-select-match placeholder="Pilih Customer">
+                                                  {{ $select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down" refresh="cariCustomer($select.search)" repeat="val in listCustomer">
+                                                    {{ val.nama}} - {{val.alamat}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <div class="btn btn-sm btn-info" ng-if="!is_view && form.inv_proses_akhir_id == undefined" ng-click="modalCustomer(form.acc_m_lokasi_id)">
+                                                <i class="fa fa-plus"></i>
+                                            </div>
+                                            <div class="btn btn-sm btn-warning" ng-if="!is_view && form.inv_proses_akhir_id == undefined && form.acc_m_kontak_id != undefined" ng-click="modalCustomer(form.acc_m_lokasi_id, form.acc_m_kontak_id)">
+                                                <i class="fa fa-pencil"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--                                <div class="form-group row">
+                                                                    <label class="col-md-3 col-form-label-sm">No. HP</label>
+                                                                    <div class="col-md-6">
+                                                                        <div class="input-group input-group-sm">
+                                                                            <input type="text" class="form-control form-control-sm" ng-model="form.acc_m_kontak_id.tlp"
+                                                                                   ng-disabled="true"/>
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="fa fa-phone"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group row">
+                                                                    <label class="col-md-3 col-form-label-sm">Email</label>
+                                                                    <div class="col-md-6">
+                                                                        <div class="input-group input-group-sm">
+                                                                            <input type="text" class="form-control form-control-sm" ng-model="form.acc_m_kontak_id.email"
+                                                                                   ng-disabled="true"/>
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text">
+                                                                                    <i class="fa fa-envelope-o"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>-->
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm">NIK</label>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control form-control-sm" ng-model="form.acc_m_kontak_id.nik"
+                                                   ng-disabled="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm">NPWP</label>
+                                    <div class="col-md-6">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control form-control-sm" ng-model="form.acc_m_kontak_id.npwp"
+                                                   ng-disabled="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm">Alamat</label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control form-control-sm" ng-model="form.acc_m_kontak_id.alamat"
+                                                  ng-disabled="true" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm">Kota</label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control form-control-sm" ng-model="form.acc_m_kontak_id.kota"
+                                               ng-disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row" ng-hide="true">
+                                    <label class="col-md-3 col-form-label-sm"></label>
+                                    <div class="col-md-9">
+                                        <label class="i-checks" style="padding-top: 10px">
+                                            <input class="ng-valid ng-dirty ng-valid-parse ng-touched ng-empty" ng-change="fillAlamat()" ng-disabled="is_view" ng-model="form.is_same" type="checkbox">
+                                            <i>
+                                            </i>
+                                            <b>
+                                                Gunakan Alamat Customer Sebagai Alamat Pengiriman ?
+                                            </b>
+
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row" ng-hide="true">
+                                    <label class="col-md-3 col-form-label-sm">Alamat Pengiriman</label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control form-control-sm" ng-model="form.alamat_pengiriman"
+                                                  ng-disabled="is_view || form.is_same" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ROW 2 - END -->
+
+                        <!-- ROW 3 -->
+                        <div class="col-md-12 row" ng-hide="form.acc_m_lokasi_id == undefined || form.acc_m_kontak_id == undefined">
+                            <br>
+                            <h6 class="col-md-4 pull-left">Detail Penjualan</h6>
+                            <h6 class="col-md-4 bg-info p-1 text-center">TOTAL DPP : {{totalDpp| currency}}</h6>
+                            <h6 class="col-md-4 pull-left"></h6>
+                            <!--<hr>-->
+                        </div>
+                        <div class="col-md-12"><hr></div>
+                        <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined || form.acc_m_kontak_id == undefined">
+                            <table class="table table-bordered det-trans" style="white-space: normal;">
+                                <thead>
+                                    <tr>
+                                        <td class="align-center pl-1 pr-1"  style="width: 5px">
+                                            <button class="btn btn-sm btn-success" type="button" ng-click="addDetail()" ng-disabled="is_view" uib-tooltip="Tambah Produk">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </td>
+                                        <td class="align-center" style="width: 170px">
+                                            <b>
+                                                Barang
+                                            </b>
+                                        </td>
+                                        <!-- <td class="align-center">
+                                            <b>
+                                                Deskripsi
+                                            </b>
+                                        </td> -->
+                                        <td class="align-center" style="width: 100px;">
+                                            <b>
+                                                Jumlah
+                                            </b>
+                                        </td>
+                                        <td class="align-center" style="width: 100px;" ng-if="form.is_koreksi">
+                                            <b>
+                                                Koreksi
+                                            </b>
+                                        </td>
+                                        <td class="align-center" style="width: 170px;">
+                                            <b>
+                                                Harga Satuan
+                                            </b>
+                                        </td>
+                                        <td class="align-center" style="width: 170px;" ng-if="form.is_koreksi">
+                                            <b>
+                                                Koreksi
+                                            </b>
+                                        </td>
+                                        <!--                                        <td class="align-center" style="width: 190px;">
+                                                                                    <b>
+                                                                                        Diskon
+                                                                                    </b>
+                                                                                </td>-->
+                                        <td class="align-center" style="width: 170px">
+                                            <b>
+                                                Amount
+                                            </b>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="ng-scope" ng-repeat="detail in detPenjualan">
+                                        <td class="align-center">
+                                            <button class="btn btn-sm btn-danger" type="button" ng-click="removeRow($index)" ng-disabled="is_view">
+                                                <i class="fa fa-trash-o"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <ui-select class="ui-select-sm ui-select-container" ng-disabled="is_view"
+                                                           ng-model="detail.inv_m_barang_id"
+                                                           on-select="changeBarang(detail.inv_m_barang_id, $index, '', $select)"
+                                                           theme="bootstrap">
+                                                    <ui-select-match placeholder="Cari Barang">
+                                                        {{$select.selected.kode}} - {{$select.selected.nama}}
+                                                        ({{$select.selected.stok}}) {{$select.selected.nama_satuan}}
+                                                    </ui-select-match>
+                                                    <ui-select-choices refresh="cariBarang($select.search,$index,$select,1)" repeat="vals in listBarang">
+                                                        {{vals.nama}}
+                                                        ({{vals.stok}}) {{vals.nama_satuan}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm" style="margin:0px;">
+                                                <input class="form-control form-control-sm angka stok" id="jumlah" name="jumlah" maxlength="4"
+                                                       ng-change="total()" ng-disabled="form.is_koreksi || is_view"
+                                                       ng-model="detail.jumlah" type="text"/>
+
+                                                <span class="input-group-text" ng-if="detail.inv_m_barang_id.type_barcode != 'serial'">
+                                                    {{detail.inv_m_barang_id.nama_satuan}}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td ng-if="form.is_koreksi">
+                                            <div class="input-group input-group-sm" style="margin:0px;">
+                                                <input class="form-control form-control-sm angka stok" id="jumlah" name="jumlah" maxlength="4"
+                                                       ng-change="total()" ng-disabled="is_view"
+                                                       ng-model="detail.koreksi" type="text"/>
+
+                                                <span class="input-group-text" ng-if="detail.inv_m_barang_id.type_barcode != 'serial'">
+                                                    {{detail.inv_m_barang_id.nama_satuan}}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm" style="margin:0px;">
+                                                <div class="input-group-prepend bg-success" ng-click="modalHarga(detail)">
+                                                    <span class="input-group-text" style="font-size: 10px">
+                                                        Rp
+                                                    </span>
+                                                </div>
+                                                <input class="form-control form-control-sm angka rp" maxlength="12"
+                                                       ng-change="total()" ng-disabled="form.is_koreksi || is_view" ng-model="detail.harga"
+                                                       type="text" ui-number-mask="0">
+                                            </div>
+                                        </td>
+                                        <td ng-if="form.is_koreksi">
+                                            <div class="input-group input-group-sm" style="margin:0px;">
+                                                <div class="input-group-prepend bg-success" ng-click="modalHarga(detail)">
+                                                    <span class="input-group-text" style="font-size: 10px">
+                                                        Rp
+                                                    </span>
+                                                </div>
+                                                <input class="form-control form-control-sm angka rp" maxlength="12"
+                                                       ng-change="total()" ng-disabled="is_view" ng-model="detail.koreksi_harga"
+                                                       type="text" ui-number-mask="0">
+                                            </div>
+                                        </td>
+                                        <!--                                <td>
+                                                                            <div class="row">
+                                                                                <div class="col-sm-5" style="padding-right: 0px">
+                                                                                    <div class="input-group input-group-sm" style="margin:0px;">
+                                                                                        <input class="form-control form-control-sm  angka" maxlength="12" ng-change="total('persen')" ng-disabled="is_view" ng-model="detail.diskon_persen" style="text-align: center;">
+                                                                                        <span class="input-group-text">%</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-sm-7">
+                                                                                    <div class="input-group input-group-sm" style="margin:0px;">
+                                                                                        <span class="input-group-text">
+                                                                                            Rp
+                                                                                        </span>
+                                                                                        <input class="form-control form-control-sm" maxlength="12" ng-change="total('rupiah')" ng-disabled="is_view" ng-model="detail.diskon" type="text" ui-number-mask="0">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>-->
+                                        <td style="width:135px;">
+                                            <div class="input-group input-group-sm" style="margin:0px;">
+                                                <span class="input-group-text">
+                                                    Rp
+                                                </span>
+                                                <input class="form-control form-control-sm w100 angka rp" name="total" ng-disabled="is_view" ng-model="detail.subtotal" ng-readonly="true" readonly="readonly" type="text" ui-number-mask="0">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="align-center pl-1 pr-1"  style="width: 5px">
+                                            <button class="btn btn-sm btn-success" type="button" ng-click="addDetail()" ng-disabled="is_view" uib-tooltip="Tambah Produk">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </td>
+                                        <td colspan="{{form.is_koreksi ? 6 : 4}}"></td>
+                                    </tr>
+                                    <!--                                <tr>
+                                                                        <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                            Akun Biaya
+                                                                        </th>
+                                                                    <style>
+                                                                        .open{
+                                                                            overflow: visible;
+                                                                        }
+                                                                    </style>
+                                                                    <td>
+                                                                        <select class="form-control form-control-sm w100" ng-change="prepareJurnal(true)" ng-disabled="is_view" ng-model="form.m_akun_biaya_id" placeholder="Pilih Cabang">
+                                                                            <option value="">.: Pilih Akun :.</option>
+                                                                            <option ng-repeat="(key, value) in getAkunBiaya" ng-selected="value.id == form.m_akun_biaya_id.id" ng-value="{{value}}">
+                                                                                {{value.kode}} - {{value.nama}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                            Biaya - Biaya Lain :
+                                                                        </th>
+                                                                        <td>
+                                                                            <div class="input-group input-group-sm">
+                                                                                <span class="input-group-text">
+                                                                                    Rp
+                                                                                </span>
+                                                                                <input class="form-control form-control-sm w100 angka rp" ng-change="kalkulasi(); total_lama = form.grand_total; prepareJurnal()" ng-disabled="is_view" ng-model="form.ongkos_kirim" type="text" ui-number-mask="0">
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>-->
+                                    <!--                                <tr>
+                                                                        <th class="ng-scope" colspan="4" style="text-align: right;">
+                                                                            Diskon :
+                                                                        </th>
+                                                                        <td>
+                                                                            <div class="input-group input-group-sm">
+                                                                                <span class="input-group-text">
+                                                                                    Rp
+                                                                                </span>
+                                                                                <input class="form-control form-control-sm text-right" ng-disabled="is_view" ng-model="form.diskon" ng-readonly="true" readonly="readonly" type="text" ui-number-mask="0">
+                                                                                </input>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>-->
+                                    <!--                                <tr>
+                                                                        <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                            PPN :
+                                                                        </th>
+                                                                        <td>
+                                                                            <div class="row">
+                                                                                <div class="col-sm-5">
+                                                                                    <div class="input-group input-group-sm">
+                                                                                        <input class="form-control form-control-sm text-right" ng-disabled="is_view" ng-model="form.persen_ppn" ng-readonly="true" readonly="readonly" type="text" ui-number-mask="0">
+                                                                                        </input>
+                                                                                        <span class="input-group-text">
+                                                                                            %
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-sm-7">
+                                                                                    <div class="input-group input-group-sm">
+                                                                                        <span class="input-group-text">
+                                                                                            Rp
+                                                                                        </span>
+                                                                                        <input class="form-control form-control-sm text-right" ng-disabled="is_view" ng-model="form.ppn" ng-readonly="true" readonly="readonly" type="text" ui-number-mask="0">
+                                                                                        </input>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>-->
+                                    <tr>
+                                        <th class="ng-scope" colspan="{{form.is_koreksi ? 6 : 4}}" style="text-align: right;">
+                                            Total :
+                                        </th>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">
+                                                    Rp
+                                                </span>
+                                                <input class="form-control form-control-sm text-right" ng-disabled="is_view" ng-model="form.grand_total" ng-readonly="true" readonly="readonly" type="text" ui-number-mask="0">
+                                                </input>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="ng-scope" colspan="{{form.is_koreksi ? 6 : 4}}" style="text-align: right;">
+                                            PPN :
+                                        </th>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">
+                                                    Rp
+                                                </span>
+                                                <input class="form-control form-control-sm text-right" ng-disabled="is_view" ng-model="form.ppn" ng-readonly="true" readonly="readonly" type="text" ui-number-mask="0">
+                                                </input>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="ng-scope" colspan="{{form.is_koreksi ? 6 : 4}}" style="text-align: right;">
+                                            Total + PPN :
+                                        </th>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">
+                                                    Rp
+                                                </span>
+                                                <input class="form-control form-control-sm text-right" ng-disabled="is_view" ng-model="form.grand_total2" ng-readonly="true" readonly="readonly" type="text" ui-number-mask="0">
+                                                </input>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!--                                <tr>
+                                                                        <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                            Masuk Ke
+                                                                        </th>
+                                                                    <style>
+                                                                        .open{
+                                                                            overflow: visible;
+                                                                        }
+                                                                    </style>
+                                                                    <td>
+                                                                        <select class="form-control form-control-sm w100" ng-change="prepareJurnal(true)" ng-disabled="is_view" ng-model="form.m_akun_id" placeholder="Pilih Cabang">
+                                                                            <option value="">.: Pilih Akun :.</option>
+                                                                            <option ng-repeat="(key, value) in getAkun" ng-selected="value.id == form.m_akun_id.id" ng-value="{{value}}">
+                                                                                {{value.kode}} - {{value.nama}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                    </tr>-->
+                                    <tr ng-hide="true">
+                                        <th class="ng-scope" colspan="5" style="text-align: right; width:80px;">
+                                            Uang Muka :
+                                        </th>
+                                        <td style="width:135px;">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">
+                                                    Rp
+                                                </span>
+                                                <input class="form-control form-control-sm w100 angka rp" ng-change="bayarBlur(); bayar()" ng-disabled="is_view" ng-model="form.cash" type="text" ui-number-mask="0"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr ng-hide="true">
+                                        <th class="ng-scope" colspan="5" style="text-align: right;">
+                                            Saldo Terutang :
+                                        </th>
+                                        <td style="width:135px;">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">
+                                                    Rp
+                                                </span>
+                                                <input class="form-control form-control-sm text-right" ng-disabled="is_view" ng-model="form.piutang" ng-readonly="true" readonly="readonly" type="text" ui-number-mask="0"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- ROW 3 - END -->
+
+                        <!--JURNAL AKUNTANSI-->
+                        <!-- <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined || form.acc_m_kontak_id == undefined">
+                            <br>
+                            <h6>Jurnal Akuntansi</h6>
+                            <hr>
+                        </div>
+                        <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined || form.acc_m_kontak_id == undefined">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered det-trans">
+                                        <thead>
+                                            <tr>
+                                                <th>Akun</th>
+                                                <th>Keterangan</th>
+                                                <th>Debit</th>
+                                                <th>Kredit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="val in listJurnal">
+                                                <td ng-style="{
+                                                        'padding-left':val.debit == 0 ? '50px' : '0px' }">{{val.akun.kode}} - {{val.akun.nama}}</td>
+                                                <td>{{val.keterangan}}</td>
+                                                <td align='right'>{{val.debit| number : 2}}</td>
+                                                <td align='right'>{{val.kredit| number : 2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan='2' class='text-right'>TOTAL</th>
+                                                <td align='right'>{{totalDebit| number : 2}}</td>
+                                                <td align='right'>{{totalKredit| number : 2}}</td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!--JURNAL AKUNTANSI - END-->
+
+                        <!-- Blok Edit Data -->
+                </form>
+            </div>
+        </div>
+        <div class="card-footer">
+          <div class="btn-group pull-left">
+            <button class="btn btn-danger btn-sm" ng-click="hapusFaktur(form)" ng-show="is_view && form.inv_proses_akhir_id == undefined">
+                <i class="fa fa-trash-o"></i>
+                &nbsp;Hapus Faktur
+            </button>
+          </div>
+            <div class="btn-group pull-right">
+                <button type="submit" class="btn btn-secondary btn-sm" ng-click="cancel()">
+                    <i class="fa fa-arrow-left"></i>
+                    &nbsp;Kembali
+                </button>
+                <button type="submit" class="btn btn-danger btn-sm" ng-click="unpost(form)" ng-if="form.status == 'approved1'">
+                    <i class="fa fa-refresh"></i>
+                    &nbsp;Unpost
+                </button>
+                <button type="submit" class="btn btn-success btn-sm" ng-if="form.status == 'pending' && user.akses.approve_penjualan" ng-click="approve(form, 'approved1')">
+                    <i class="fa fa-check"></i>
+                    &nbsp;Approved 1
+                </button>
+                <button type="submit" class="btn btn-success btn-sm" ng-if="form.status == 'approved1' && user.akses.approve_penjualan" ng-click="approve(form, 'approved2')">
+                    <i class="fa fa-check"></i>
+                    &nbsp;Approved 2
+                </button>
+                <button type="submit" class="btn btn-success btn-sm" ng-if="!is_view && form.is_koreksi == 0" button-spinner="loading" ng-click="save(form, 'draft')">
+                    <i class="fa fa-save"></i>
+                    &nbsp;Simpan & Draft
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm" ng-if="!is_view && form.is_koreksi == 0" button-spinner="loading" ng-click="save(form, 'terposting')">
+                    <i class="fa fa-check"></i>
+                    &nbsp;Simpan & Posting
+                </button>
+                <button type="submit" class="btn btn-primary btn-sm" ng-if="!is_view && form.is_koreksi == 1" button-spinner="loading" ng-click="save(form, 'koreksi')">
+                    <i class="fa fa-check"></i>
+                    &nbsp;Simpan Koreksi
+                </button>
+                <button type="submit" class="btn btn-success btn-sm" ng-if="!is_view && form.is_koreksi == 1" button-spinner="loading" ng-click="save(form, 'koreksi', 1)">
+                    <i class="fa fa-check"></i>
+                    &nbsp;Simpan Sisipan
+                </button>
+                <button type="submit" class="btn btn-danger btn-sm" ng-if="is_view && form.status != 'draft' && form.status != 'dibatalkan' && form.inv_m_faktur_pajak_id.id != undefined" button-spinner="loading" ng-click="cancel_data(form)">
+                    <i class="fa fa-remove"></i>
+                    &nbsp;Batalkan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

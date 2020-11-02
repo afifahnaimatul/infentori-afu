@@ -1,0 +1,131 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+
+<style type="text/css">
+    table {
+        display: table;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+    .align-center {
+        text-align: center;
+    }
+
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                    <h2 class="header-laporan header-smaller">LAPORAN PEMBELIAN IMPORT</h2>
+
+                    {{data.periode}}
+
+                    </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller">
+                <thead>
+                    <tr class="align-center">
+                        <th width="10px" rowspan="2">No</th>
+                        <th width="100px" rowspan="2" style="min-width: 200px">Nama Penjual</th>
+                        <th rowspan="2"></th>
+                        <th rowspan="2">Masa</th>
+                        <th rowspan="2" style="min-width: 200px">Jenis Barang</th>
+                        <th rowspan="2">Nomor</th>
+                        <th rowspan="2" style="min-width: 80px">Tanggal</th>
+                        <th rowspan="2">QTY</th>
+                        <th rowspan="2">USD CIFF</th>
+                        <th rowspan="2">KURS USD</th>
+                        <th rowspan="2">Rupiah</th>
+                        <th rowspan="2">PPN</th>
+                        <th rowspan="2">PPH PASAL 22</th>
+                        <th rowspan="2">BM</th>
+                        <th rowspan="2">DENDA</th>
+                        <th colspan="4">BIAYA PELABUHAN (FAKTUR PAJAK)</th>
+                        <th colspan="3">BIAYA PELABUHAN NON PPN</th>
+                    </tr>
+                    <tr align="center">
+                        <th style="min-width: 80px">TANGGAL</th>
+                        <th style="min-width: 200px">NAMA PENJUAL JASA (FAKTUR PAJAK)</th>
+                        <th style="min-width: 150px">NO.FP</th>
+                        <th>RP(DPP)</th>
+                        <th style="min-width: 80px">TANGGAL</th>
+                        <th style="min-width: 200px">NAMA PENJUAL(NON PPN)</th>
+                        <th>RP(NON PPN)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr></tr>
+                    {%for key, val in detail%}
+                    {%for k2, v2 in val.detail%}
+                    <tr>
+                        {%if k2 == 0%}<td align="center" rowspan="{{val.rowspan}}">{{val.index + 1}}</td>{%endif%}
+                        {%if k2 == 0%}<td rowspan="{{val.rowspan}}">{{val.nama}}</td>{%endif%}
+                        {%if k2 == 0%}<td align="center" rowspan="{{val.rowspan}}">{{val.bulan}}</td>{%endif%}
+                        {%if k2 == 0%}<td align="center" rowspan="{{val.rowspan}}">{{val.bulan}}</td>{%endif%}
+                        <td>{{v2.nama}}</td>
+                        {%if k2 == 0%}<td align="center" rowspan="{{val.rowspan}}">{{val.pib}}</td>{%endif%}
+                        {%if k2 == 0%}<td align="center" rowspan="{{val.rowspan}}">{{val.tanggal}}</td>{%endif%}
+                        <td align="right">{{v2.jumlah}}</td>
+                        <td align="right">{{not v2.kurs ? '' : (v2.harga * v2.jumlah / v2.kurs) | number_format(2, '.', ',')}}</td>
+                        <td align="right">{{v2.kurs}}</td>
+                        <td align="right">{{not v2.harga ? '' : (v2.harga * v2.jumlah) | number_format(2, '.', ',')}}</td>
+                        {%if k2 == 0%}<td align="right" rowspan="{{val.rowspan}}">{{val.ppn | number_format(2, '.', ',')}}</td>{%endif%}
+                        {%if k2 == 0%}<td align="right" rowspan="{{val.rowspan}}">{{val.pph22 | number_format(2, '.', ',')}}</td>{%endif%}
+                        {%if k2 == 0%}<td align="right" rowspan="{{val.rowspan}}">{{val.bea_masuk | number_format(2, '.', ',')}}</td>{%endif%}
+                        {%if k2 == 0%}<td align="right" rowspan="{{val.rowspan}}">{{val.denda_pabean | number_format(2, '.', ',')}}</td>{%endif%}
+                        <td align="center">{{val.faktur_ppn[k2].tanggal}}</td>
+                        <td>{{val.faktur_ppn[k2].nama_ppn}}</td>
+                        <td align="center">{{val.faktur_ppn[k2].nomor}}</td>
+                        <td align="right">{{val.faktur_ppn[k2].total | number_format(2, '.', ',')}}</td>
+                        <td align="center">{{val.faktur_non_ppn[k2].tanggal}}</td>
+                        <td>{{val.faktur_non_ppn[k2].nama_non_ppn}}</td>
+                        <td align="right">{{not val.faktur_non_ppn[k2].total ? '' : val.faktur_non_ppn[k2].total | number_format(2, '.', ',')}}</td>
+                    </tr>
+                    {%endfor%}
+                    {%endfor%}
+                    <tr>
+                        <td colspan="7"></td>
+                        <td align="right">{{data.total.qty | number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total.usdcif | number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total.usdkurs | number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total.rupiah | number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total.ppn | number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total.pph22 | number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total.bm | number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total.denda | number_format(2, '.', ',')}}</td>
+                        <td colspan="3"></td>
+                        <td align="right">{{data.total.pelabuhan_ppn | number_format(2, '.', ',')}}</td>
+                        <td colspan="2"></td>
+                        <td align="right">{{data.total.pelabuhan_non_ppn | number_format(2, '.', ',')}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+
+<style type="text/css">
+    table {
+        display: table;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+    .align-center {
+        text-align: center;
+    }
+
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                  <b >{{data.lokasi}}</b> <br>
+                  <b >REKAP PEMBELIAN {{data.periode}}</b> <br>
+                  <b>{{data.kategori}}</b>
+                  </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="align-center">
+                        <th width="10px">
+                            Nomor Urut
+                        </th>
+                        <th style="min-width:180px">
+                            Nama Barang
+                        </th>
+                        {%for k, v in data.list_bulan%}
+                        {%for kk, vv in v%}
+                        {%if kk == 0%}
+                        <th style="min-width:50px">{{vv}}</th>
+                        {%else%}
+                        <th style="min-width:80px">{{vv}}</th>
+                        {%endif%}
+                        {%endfor%}
+                        {%endfor%}
+                        <th style="min-width:50px">Jumlah (kwt)</th>
+                        <th style="min-width:80px">Jumlah (rp)</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    {%for v in detail%}
+                    <tr class="padding0">
+                        <td class="align-center">{{v.no}}</td>
+                        <td style="letter-spacing: -1">{{v.nama}}</td>
+                        {%for kk, vv in v.detail%}
+                        <td class="align-right">{{vv.jumlah_masuk | number_format}}</td>
+                        <td class="align-right">{{vv.total | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        <td class="align-right">{{v.total_akhir | number_format}}</td>
+                        <td class="align-right">{{(v.total_akhir_rp) | number_format(2, '.', ',')}}</td>
+                    </tr>
+                    {%endfor%}
+                    <tr>
+                      <th></th>
+                      <th>Total</th>
+                      {%for val in data.totalPerBulan%}
+                      <th style="text-align:right">
+                        {{ loop.index % 2 == 0 ? (val | number_format(2, '.', ',') ) : ""  }}
+                        {{ loop.index % 2 == 1 ? (val | number_format) : "" }}
+                      </th>
+                      {%endfor%}
+                      <th style="text-align:right"> {{ data.totalSemua.kwt | number_format }} </th>
+                      <th style="text-align:right"> {{ data.totalSemua.total | number_format(2, '.', ',') }}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

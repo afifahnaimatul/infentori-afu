@@ -1,0 +1,229 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+
+<style type="text/css">
+    table {
+        display: table;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+    .align-center {
+        text-align: center;
+    }
+
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="table-responsive">
+            <div class="row">
+                <div class="col-md-12">
+                    <br/>
+                    <center class="header-smaller">
+                        <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                        <h2 class="header-laporan header-smaller">LAPORAN PEMBELIAN (FAKTUR PAJAK MASUKAN)</h2>
+
+                        Periode : {{data.tahun}}
+
+                        </br>
+                    </center>
+                    <hr/>
+                </div>
+            </div>
+            <table class="table-smaller" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="align-center">
+                      <th rowspan="2">No</th>
+                      <th rowspan="2">
+                        <input type="text" name="" value="---Pembelian Sparepart Kendaraan" style="width:200px;visibility:hidden;">
+                      </th>
+                        {%for val in data.bulan%}
+                        <th colspan="2" ng-repeat="val in data.bulan">{{val}}</th>
+                        {%endfor%}
+                        <th colspan="2">Jumlah</th>
+                    </tr>
+                    <tr class="align-center">
+                      {%for val in data.bulan%}
+                        <th>DPP</th>
+                        <th>PPN</th>
+                      {%endfor%}
+                        <th>DPP</th>
+                        <th>PPN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for k, v in detail.kategori%}
+                    <tr>
+                        <td class="align-center">
+                            {%if k != 'Jumlah' and v.is_parent != 1%}
+                            <span ng-if="k != 'Jumlah'">{{v.no}}</span>
+                            {%endif%}
+                        </td>
+                        <td>
+                            {%if k == 'Jumlah' or v.is_parent == 1%}
+                            <span ng-if="k == 'Jumlah'"><b>{{k}}</b></span>
+                            {%else%}
+                            <span ng-if="k != 'Jumlah'">{{k}}</span>
+                            {%endif%}
+                        </td>
+                        {%for vv in v.detail%}
+                        <td class="align-right">
+                            {%if k == 'Jumlah'%}
+                            <span ng-if="k == 'Jumlah'"><b>{{vv.total| number_format(2, '.', ',')}}</b></span>
+                            {%else%}
+                            <span ng-if="k != 'Jumlah'">{{vv.total| number_format(2, '.', ',')}}</span>
+                            {%endif%}
+                        </td>
+                        <td class="align-right">
+                            {%if k == 'Jumlah'%}
+                              <span ng-if="k == 'Jumlah'">
+                                <b>{{vv.ppn | number_format(2, '.', ',')}}</b>
+                              </span>
+                            {%else%}
+                              <span ng-if="k != 'Jumlah'">
+                                {{vv.ppn | number_format(2, '.', ',')}}
+                              </span>
+                            {%endif%}
+                        </td>
+                        {%endfor%}
+                    </tr>
+                    {%endfor%}
+                    <tr>
+                      <th></th>
+                      <td><b>Jumlah Retur</b></td>
+                      {%for vv in detail.footer['Jumlah_retur']['detail'] %}
+                      <td ng-repeat-start="vv in detail.footer['Jumlah_retur']['detail']" class="align-right">
+                        <b>{{ vv.total > 0 ? (vv.total | number_format(2, '.', ',')) : '-' }}</b>
+                      </td>
+                      <td class="align-right">
+                        <b>{{ vv.ppn > 0 ? (vv.ppn | number_format(2, '.', ',')) : '-' }}</b>
+                      </td>
+                      {%endfor%}
+                    </tr>
+                    <tr>
+                      <th></th>
+                      <td><b>Jumlah Setelah Retur</b></td>
+                      {%for vv in detail.footer['Jumlah_after']['detail'] %}
+                      <td class="align-right">
+                        <b>{{ vv.total > 0 ? (vv.total | number_format(2, '.', ',')) : '-' }}</b>
+                      </td>
+                      <td class="align-right">
+                        <b>{{ vv.ppn > 0 ? (vv.ppn | number_format(2, '.', ',')) : '-' }}</b>
+                      </td>
+                      {%endfor%}
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-12">
+                    <br/>
+                    <center class="header-smaller">
+                        <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                        <h2 class="header-laporan header-smaller">LAPORAN PEMBELIAN IMPORT</h2>
+
+                        Periode : {{data.tahun}}
+
+                        </br>
+                    </center>
+                    <hr/>
+                </div>
+            </div>
+            <table border="1" class="table table-striped table-hover table-bordered table-print table-smaller">
+                <thead>
+                    <tr class="align-center">
+                        <th>No</th>
+                        <th></th>
+                        {%for val in data.bulan%}
+                        <th ng-repeat="val in data.bulan">{{val}}</th>
+                        {%endfor%}
+                        <th>Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for k, v in detail.barang%}
+                    <tr>
+                                                <td class="align-center">
+                                                    {%if k != 'Jumlah'%}
+                                                    <span ng-if="k != 'Jumlah'">{{loop.index}}</span>
+                                                    {%endif%}</td>
+                        <td>
+                            {%if k == 'Jumlah'%}
+                            <span ng-if="k == 'Jumlah'"><b>{{k}}</b></span>
+                            {%else%}
+                            <span ng-if="k != 'Jumlah'">{{k}}</span>
+                            {%endif%}
+                        </td>
+                        {%for vv in v%}
+                        <td class="align-right">
+                            {%if k == 'Jumlah'%}
+                            <span ng-if="k == 'Jumlah'"><b>{{vv.total| number_format(2, '.', ',')}}</b></span>
+                            {%else%}
+                            <span ng-if="k != 'Jumlah'">{{vv.total| number_format(2, '.', ',')}}</span>
+                            {%endif%}
+                        </td>
+                        {%endfor%}
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+            <br/>
+            <table border="1" class="table table-striped table-hover table-bordered table-print table-smaller">
+                <thead>
+                    <tr class="align-center">
+                        <th>No</th>
+                        <th></th>
+                        {%for val in data.bulan%}
+                        <th ng-repeat="val in data.bulan">{{val}}</th>
+                        {%endfor%}
+                        <th>Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for k, v in detail.biaya%}
+                    <tr>
+                        <td class="align-center">
+                            {%if k != 'Jumlah'%}
+                            <span ng-if="k != 'Jumlah'">{{loop.index}}</span>
+                            {%endif%}
+                        </td>
+                        <td>
+                            {%if k == 'Jumlah'%}
+                            <span ng-if="k == 'Jumlah'"><b>{{k}}</b></span>
+                            {%else%}
+                            <span ng-if="k != 'Jumlah'">{{k}}</span>
+                            {%endif%}
+                        </td>
+                        {%for vv in v%}
+                        <td class="align-right">
+                            {%if k == 'Jumlah'%}
+                            <span ng-if="k == 'Jumlah'"><b>{{vv.total| number_format(2, '.', ',')}}</b></span>
+                            {%else%}
+                            <span ng-if="k != 'Jumlah'">{{vv.total| number_format(2, '.', ',')}}</span>
+                            {%endif%}
+                        </td>
+                        {%endfor%}
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

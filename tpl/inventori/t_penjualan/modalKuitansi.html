@@ -1,0 +1,126 @@
+<div class="modal-header bg-success">
+    <h5 class="modal-title">Print Kuitansi</h5>
+    <button type="button" class="close" ng-click="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <form name="landaform" novalidate="">
+        <div class="row">
+            <div class="col-md-12 alert-success" style="margin-bottom: 10px">Pastikan settingan print menggunakan print mode berwarna</div>
+            <div class="col-md-12 alert-success" style="margin-bottom: 10px">Jumlah Kuitansi : {{jumlah}}</div>
+        </div>
+
+        <div class="row">
+            <!--            <div class="col-md-3">
+                            <div class="input-group">
+                                <input ng-change="clearData()" class="form-control form-control-sm" date-range-picker="" options="dateRangeOptions" ng-model="form.tanggal" placeholder="Periode" type="text"/>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>-->
+            <label class="col-md-2 col-form-label-sm required">Filter</label>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" is-open="opened.bulan_akhir"
+                           ng-click="toggle($event, 'bulan_akhir')" ng-model="form.bulan"
+                           uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                           placeholder="Bulan">
+                    <div class="input-group-append" style="cursor: pointer" ng-click="getPenjualan(form.bulan)">
+                        <span class="input-group-text bg-success">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-6" style="height: 360px; overflow: auto">
+                <div class="panel panels panel-success">
+                    <div class="panel-heading">
+                        <label class="i-checks">
+                            <input ng-disabled="is_view" ng-model="form.checkall" type="checkbox" ng-click="checkAll('inv_penjualan', form.checkall)"/>
+                            <i></i>
+                            No. Kuitansi
+                        </label>
+                    </div>
+                    <div class="list-group bg-white inv_penjualan">
+                        <div class="list-group-item" ng-repeat="val in listPenjualan" style="padding-left: 6px">
+                            <label class="i-checks">
+                                <input ng-disabled="val.is_kecuali" ng-model="val.checkbox" type="checkbox"/>
+                                <i></i>
+                                {{val.no_kuitansi}} - {{val.kontak}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panels panel-success">
+                    <div class="panel-heading">
+                        Range No. Kuitansi
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label-sm">Mulai Dari</label>
+                            <div class="col-md-8">
+                                <div class="btn-group" style="width: 100%; float: left">
+                                    <ui-select class="ui-select-sm ui-select-container" style="width: 100%"
+                                               ng-model="form.penjualan_mulai" theme="bootstrap">
+                                        <ui-select-match placeholder="Pilih No. Kuitansi">{{ $select.selected.no_kuitansi}}</ui-select-match>
+                                        <ui-select-choices position="down" repeat="val in listPenjualan | filter : $select.search">
+                                            {{ val.no_kuitansi}} - {{val.kontak}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label-sm">Sampai</label>
+                            <div class="col-md-8">
+                                <div class="btn-group" style="width: 100%; float: left">
+                                    <ui-select class="ui-select-sm ui-select-container" style="width: 100%"
+                                               ng-model="form.penjualan_sampai" theme="bootstrap">
+                                        <ui-select-match placeholder="Pilih No. Kuitansi">{{ $select.selected.no_kuitansi}}</ui-select-match>
+                                        <ui-select-choices position="down" repeat="val in listPenjualan | filter : $select.search">
+                                            {{ val.no_kuitansi}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label-sm">Kecuali</label>
+                            <div class="col-md-8">
+                                <div class="btn-group" style="width: 100%; float: left">
+                                  <ui-select multiple class="ui-select-sm ui-select-container" ng-model="form.kecuali" theme="bootstrap"
+                                  on-select="kecualiCustomer()" ng-disabled="is_view">
+                                      <ui-select-match placeholder="Kecuali Customer Berikut">{{ $item.nama}}</ui-select-match>
+                                      <ui-select-choices position="down" repeat="val in listCustomer | filter : $select.search">
+                                        {{ val.nama}}
+                                      </ui-select-choices>
+                                  </ui-select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success btn-sm" ng-click="kwitansiPenjualan()">
+        <i class="fa fa-print"></i>
+        Cetak
+    </button>
+</div>

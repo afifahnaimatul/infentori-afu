@@ -1,0 +1,219 @@
+<div class="animated fadeIn">
+    <div ng-controller="l_aruskasCtrl">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Arus Kas</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <input ng-change="clearData()" class="form-control form-control-sm" date-range-picker="" options="dateRangeOptions" ng-model="form.tanggal" placeholder="Periode" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.m_lokasi_id" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row header-laporan-wrapper">
+                        <div class="col-md-12 relative-div">
+                            <center>
+                                <img src="{{data.img}}" class="absolute-div-center" style="width:200px">
+                                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                <h3 class="header-laporan">Laporan Arus Kas</h3>
+                                <p style="margin-top:3px">Periode {{ data.tanggal}}</p>
+                                <!--<br/>-->
+                            </center>
+                            <!--<hr/>-->
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-laporan-striped" style="border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <b>Akun</b>
+                                    </th>
+                                    <th width="100">
+                                        <b>Saldo</b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td align="left" style="vertical-align: top" colspan="2">
+                                        <b>Aktivitas Operasi</b>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat-start="(key, val) in detail['Aktivitas Operasi']">
+                                    <td align="left" style="vertical-align: top; font-weight: bold" colspan="2">{{ val.kode + " - " + val.nama}}</td>
+                                </tr>  
+                                <tr ng-repeat="vals in val.detail">
+                                    <td align="left" style="vertical-align: top"><span style="margin-left:50px">{{ vals.nama}}</span></td>
+                                    <td align="right" class="text-right" style="vertical-align: top">{{vals.saldo| number}}</td>
+                                </tr>
+                                <tr ng-repeat-end style="display: none;">
+                                    <td></td>
+                                </tr> 
+                                <tr>
+                                    <td align="left" style="vertical-align: top" colspan="2">
+                                        <b>Investasi</b>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat-start="(key, val) in detail['Investasi']">
+                                    <td align="left" style="vertical-align: top; font-weight: bold" colspan="2">{{ val.kode + " - " + val.nama}}</td>
+                                </tr>  
+                                <tr ng-repeat="vals in val.detail">
+                                    <td align="left" style="vertical-align: top"><span style="margin-left:50px">{{ vals.nama}}</span></td>
+                                    <td align="right" class="text-right" style="vertical-align: top">{{vals.saldo| number}}</td>
+                                </tr>
+                                <tr ng-repeat-end style="display: none;">
+                                    <td></td>
+                                </tr> 
+                                <tr>
+                                    <td align="left" style="vertical-align: top" colspan="2">
+                                        <b>Pendanaan</b>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat-start="(key, val) in detail['Pendanaan']">
+                                    <td align="left" style="vertical-align: top; font-weight: bold" colspan="2">{{ val.kode + " - " + val.nama}}</td>
+                                </tr>  
+                                <tr ng-repeat="vals in val.detail">
+                                    <td align="left" style="vertical-align: top"><span style="margin-left:50px">{{ vals.nama}}</span></td>
+                                    <td align="right" class="text-right" style="vertical-align: top">{{vals.saldo| number}}</td>
+                                </tr>
+                                <tr ng-repeat-end style="display: none;">
+                                    <td></td>
+                                </tr> 
+                            </tbody>
+                            <!-- <tbody ng-repeat="(key, val) in detail['Aktivitas Operasi']">
+
+                                <tr>
+                                    <td align="left" style="vertical-align: top; font-weight: bold" colspan="2">{{ val.kode + " - " + val.nama}}</td>
+                                </tr>
+                                <tr ng-repeat="vals in val.detail">
+                                    <td align="left" style="vertical-align: top"><span style="margin-left:50px">{{ vals.nama}}</span></td>
+                                    <td align="right" class="text-right" style="vertical-align: top">{{vals.saldo | number}}</td>
+                                </tr>
+                            </tbody> -->
+                            <!-- <tbody>
+                                <tr>
+                                    <td align="left" style="vertical-align: top" colspan="2">
+                                        <b>Investasi</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-repeat="(key, val) in detail['Investasi']">
+
+                                <tr>
+                                    <td align="left" style="vertical-align: top; font-weight: bold" colspan="2">{{ val.kode + " - " + val.nama}}</td>
+                                </tr>
+                                <tr ng-repeat="vals in val.detail">
+                                    <td align="left" style="vertical-align: top"><span style="margin-left:50px">{{ vals.nama}}</span></td>
+                                    <td align="right" class="text-right" style="vertical-align: top">{{vals.saldo | number}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td align="left" style="vertical-align: top" colspan="2">
+                                        <b>Pendanaan</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-repeat="(key, val) in detail['Pendanaan']">
+
+                                <tr>
+                                    <td align="left" style="vertical-align: top; font-weight: bold" colspan="2">{{ val.kode + " - " + val.nama}}</td>
+                                </tr>
+                                <tr ng-repeat="vals in val.detail">
+                                    <td align="left" style="vertical-align: top"><span style="margin-left:50px">{{ vals.nama}}</span></td>
+                                    <td align="right" class="text-right" style="vertical-align: top">{{vals.saldo | number}}</td>
+                                </tr>
+                            </tbody> -->
+                            <tfoot>
+                                <tr>
+                                    <td align="left">
+                                        <b>Total Aktivitas Kas</b>
+                                    </td>
+                                    <td align="right" class="text-right">
+                                        <b>{{ data.total_saldo| number }}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        <b>Saldo Awal Kas</b>
+                                    </td>
+                                    <td align="right" class="text-right">
+                                        <b>{{ data.saldo_awal| number }}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        <b>Saldo Kas Seharusnya</b>
+                                    </td>
+                                    <td align="right" class="text-right">
+                                        <b>{{ data.saldo_akhir | number }}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        <b>Saldo Akhir Kenyataan</b>
+                                    </td>
+                                    <td align="right" class="text-right">
+                                        <b>{{ data.saldo_akhir_neraca | number }}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        <b>Selisih</b>
+                                    </td>
+                                    <td align="right" class="text-right">
+                                        <b>{{ data.saldo_akhir - data.saldo_akhir_neraca| number }}</b>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

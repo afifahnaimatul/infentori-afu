@@ -1,0 +1,175 @@
+
+<style type="text/css">
+
+    table{display: table-cell;border-collapse: collapse;width: 100%;}
+
+
+</style>
+<div class="card-body" id="print" >
+
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">LAPORAN KARTU STOK</h2>
+                    Lokasi : {{data.lokasi}}
+                    <br/>
+                    Barang : {{data.barang}}
+                    <br/>
+                    Tipe Stok : {{data.harga_pokok|upper}}
+                    <br/>
+                    Periode : {{data.tanggal_mulai| date ("d-M-Y")}} Sampai {{data.tanggal_selesai|  date ("d-M-Y")}}
+                    <br/>
+                    Disiapkan Tanggal : {{data.disiapkan}}
+                    </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse;">
+                <thead>
+                <tr>
+                    <th rowspan="2">
+                        Tanggal
+                    </th>
+                    <th rowspan="2">
+                        Nomor Referensi
+                    </th>
+                    <th rowspan="2">
+                        Keterangan
+                    </th>
+                    <th colspan="3">
+                        Masuk
+                    </th>
+                    <th colspan="3">
+                        Keluar
+                    </th>
+                    <th colspan="3">
+                        Saldo
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        Jumlah
+                    </th>
+                    <th>
+                        Harga
+                    </th>
+                    <th>
+                        Saldo
+                    </th>
+                    <th>
+                        Jumlah
+                    </th>
+                    <th>
+                        Harga
+                    </th>
+                    <th>
+                        Saldo
+                    </th>
+                    <th>
+                        Jumlah
+                    </th>
+                    <th>
+                        Harga
+                    </th>
+                    <th>
+                        Saldo
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {%for key, val in data.model.detail%}
+                <tr>
+                    <td align="center">
+                        {{val.tanggal}}
+                    </td>
+                    <td align="center">
+                        {{val.kode}}
+                    </td>
+                    <td>
+                        {{val.catatan}}
+                    </td>
+                    <td align="center">
+                        {%for key, v in  val.jumlah_masuk%}
+                                                    <span >
+                                                        {{v.nilai}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+                    <td align="right">
+                        {%for key, v in  val.harga_masuk%}
+                                                    <span>
+                                                        {{v.nilai| number_format}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+                    <td align="right">
+
+                        {%for key, v in  val.total_masuk%}
+                                                    <span >
+                                                        {{v.nilai| number_format}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+                    <td align="center">
+                        {%for key, v in  val.jumlah_keluar%}
+                                                    <span>
+                                                        {{v.nilai}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+
+                    <td align="right">
+                        {%for key, v in  val.hargas_keluar%}
+                                                    <span>
+                                                        {{v.nilai| number_format}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+                    <td align="right">
+                        {%for key, v in  val.total_keluar%}
+                                                    <span>
+                                                        {{v.nilai| number_format}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+                    <td align="center">
+                        {%for key, v in  val.jumlah_saldo%}
+                                                    <span >
+                                                        {{v.nilai}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+                    <td align="right">
+                        {%for key, v in  val.harga_saldo%}
+                                                    <span >
+                                                        {{v.nilai| number_format}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+                    <td align="right">
+                        {%for key, v in  val.total_saldo%}
+                                                    <span >
+                                                        {{v.nilai|  number_format}}
+                                                        <br/>
+                                                    </span>
+                        {%endfor%}
+                    </td>
+                </tr>
+                {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

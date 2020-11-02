@@ -1,0 +1,132 @@
+<div class="animated fadeIn">
+    <div ng-controller="l_rekappenjualanCtrl">
+        <div class="card">
+            <div class="card-header">
+                <strong>Rekap Penjualan Barang Dagang</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.lokasi" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan_awal"
+                                                   ng-click="toggle($event, 'bulan_awal')" ng-model="form.bulan_awal"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan Awal">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan_akhir"
+                                                   ng-click="toggle($event, 'bulan_akhir')" ng-model="form.bulan_akhir"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan Akhir">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h3>{{data.lokasi}}</h3>
+                                <h5 class="text-uppercase">REKAP PENJUALAN {{ form.bulan_awal | date:'MMMM'}} S/D {{ form.bulan_akhir | date:'MMMM yyyy' }} </h5>
+                                <h5>BARANG DAGANGAN</h5>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-striped table-hover table-bordered table-print">
+                            <thead>
+                            <tr>
+                                <th class="align-center" style="width: 10px">Nomor Urut</th>
+                                <th style="width: 262px">Nama Barang</th>
+                                <th class="align-center" ng-repeat="val in bulan">
+                                    Jual {{ val.nama }}
+                                </th>
+                                <th class="align-center">Jumlah Jual Kwantum</th>
+                                <th class="align-center">Jumlah Jual Harga</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="val in rekapPenjualan">
+                                <td class="align-center">{{ $index + 1 }}.</td>
+                                <td>{{ val.nama }}</td>
+                                <td class="align-right" ng-repeat="detail in val.detail">
+                                    {{ detail | currency:'' }}{{',00'}}
+                                </td>
+                                <td class="align-right">{{ val.total | currency:'' }}{{',00'}}</td>
+                                <td class="align-right">{{ val.harga_total | currency:'' }}{{',00'}}</td>
+                            </tr>
+                            <tr>
+                              <th></th>
+                              <th>Total</th>
+                              <th ng-repeat="(key, val) in totalPerBulan" class="text-right">
+                                {{ $index % 2 == 1 ? (val.subtotal | currency:"") : "" }}{{ $index % 2 == 1 ? ",00" : ""}}
+                                {{ $index % 2 == 0 ? (val.kwt | currency:"") : "" }}
+                              </th>
+                              <th class="text-right"> {{ allTotal.kwt | currency:"" }} </th>
+                              <th class="text-right"> {{ allTotal.total | currency:""}}{{',00'}} </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

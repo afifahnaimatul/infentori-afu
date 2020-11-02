@@ -1,0 +1,211 @@
+<style>
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+
+<div class="animated fadeIn">
+
+    <div ng-controller="l_template_penjualan">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Template Penjualan</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input ng-change="clearData()" class="form-control form-control-sm" date-range-picker="" options="dateRangeOptions" ng-model="form.tanggal" placeholder="Periode" type="text"/>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.customer_id" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf Nama Pembeli">
+                                                    {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down"  refresh="cariPembeli($select.search)" repeat="vals in listCustomer | filter : $select.search">
+                                                    {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <!--                                           -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.barang_id" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf Nama Barang">
+                                                    {{$select.selected.kode}} - {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down"  refresh="cariBarang($select.search)" repeat="vals in getBarang | filter : $select.search">
+                                                    {{vals.kode}} - {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <!--                                           -->
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.m_lokasi_id" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+<!--                                    <div class="col-md-3">
+                                        <div class="">
+                                            <div ng-dropdown-multiselect="" options="example14data" selected-model="example14model" checkboxes="true" extra-settings="setting1"></div>
+                                        </div>
+                                    </div>-->
+
+                                    <div class="col-md-3">
+                                        <div class="btn-group">
+                                            <label ng-class="{'btn-info': form.jenis == 'semua', 'btn-secondary' : form.jenis != 'semua'}" class="btn btn-sm" ng-model="form.jenis" ng-disabled="is_view" uib-btn-radio="'semua'"><i class="fa fa-check" ng-if="form.jenis == 'semua'"></i>Semua</label>
+                                            <label ng-class="{'btn-info': form.jenis == 'std', 'btn-secondary' : form.jenis != 'std'}" class="btn btn-sm" ng-model="form.jenis" ng-disabled="is_view" uib-btn-radio="'std'"><i class="fa fa-check" ng-if="form.jenis == 'std'"></i>Standar</label>
+                                            <label ng-class="{'btn-info': form.jenis == 'sederhana', 'btn-secondary' : form.jenis != 'sederhana'}" class="btn btn-sm" ng-model="form.jenis" ng-disabled="is_view" uib-btn-radio="'sederhana'"><i class="fa fa-check" ng-if="form.jenis == 'sederhana'"></i>Sederhana</label>
+                                        </div>
+                                        <div class="btn-group">
+                                            <!--                                        <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.status_rental" uib-btn-radio="'A'">
+                                                                                        <i class="fa fa-check" ng-if="form.status_rental == 'A'">
+                                                                                        </i>
+                                                                                        Available
+                                                                                    </label>
+                                                                                    <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.status_rental" uib-btn-radio="'N'">
+                                                                                        <i class="fa fa-check" ng-if="form.status_rental == 'N'">
+                                                                                        </i>
+                                                                                        No Rental
+                                                                                    </label>
+                                                                                    <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.status_rental" uib-btn-radio="'R'">
+                                                                                        <i class="fa fa-check" ng-if="form.status_rental == 'R'">
+                                                                                        </i>
+                                                                                        Rented
+                                                                                    </label>-->
+                                        </div>
+                                        <!--                                            <select class="form-control form-control-sm" ng-model="form.jenis">
+                                                                                        <option value=""></option>
+                                                                                        <option value="std">Standar</option>
+                                                                                        <option value="sederhana">sederhana</option>
+                                                                                    </select>-->
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+<!--                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>-->
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="table-responsive">
+                        <table border="1" class="table table-hover table-bordered table-print">
+                            <thead>
+                                <tr>
+                                    <th>KD_JENIS_TRANSAKSI</th>
+                                    <th>FG_PENGGANTI</th>
+                                    <th>NOMOR_FAKTUR</th>
+                                    <th>MASA_PAJAK</th>
+                                    <th>TAHUN_PAJAK</th>
+                                    <th>TANGGAL_FAKTUR</th>
+                                    <th>NPWP</th>
+                                    <th>NIK</th>
+                                    <th>NAMA</th>
+                                    <th>ALAMAT_LENGKAP</th>
+                                    <th>JUMLAH_DPP</th>
+                                    <th>JUMLAH_PPN</th>
+                                    <th>JUMLAH_PPNBM</th>
+                                    <th>ID_KETERANGAN_TAMBAHAN</th>
+                                    <th>FG_UANG_MUKA</th>
+                                    <th>UANG_MUKA_DPP</th>
+                                    <th>UANG_MUKA_PPN</th>
+                                    <th>UANG_MUKA_PPNBM</th>
+                                    <th>REFERENSI</th>
+                                    <th>KODE_OBJEK</th>
+                                    <th>NAMA_OBJEK</th>
+                                    <th>HARGA_SATUAN</th>
+                                    <th>JUMLAH_BARANG</th>
+                                    <th>HARGA_TOTAL</th>
+                                    <th>DISKON</th>
+                                    <th>DPP</th>
+                                    <th>PPN</th>
+                                    <th>TARIF_PPNBM</th>
+                                    <th>PPNBM</th>
+                                </tr>
+
+                            </thead>
+                            <tbody ng-repeat="val in data">
+                                <tr ng-repeat-start="vv in val"></tr>
+                                <tr ng-repeat="v in vv.data">
+                                    <td>{{v.KD_JENIS_TRANSAKSI}}</td>
+                                    <td>{{v.FG_PENGGANTI}}</td>
+                                    <td>{{v.NOMOR_FAKTUR}}</td>
+                                    <td>{{v.MASA_PAJAK}}</td>
+                                    <td>{{v.TAHUN_PAJAK}}</td>
+                                    <td>{{v.tanggal}}</td>
+                                    <td>{{v.NPWP}}</td>
+                                    <td>{{v.NIK}}</td>
+                                    <td>{{v.namaCustomer}}</td>
+                                    <td>{{v.alamat}}</td>
+                                    <td>{{v.JUMLAH_DPP | number : 2}}</td>
+                                    <td>{{v.JUMLAH_PPN | number : 2}}</td>
+                                    <td>{{0}}</td>
+                                    <td>{{''}}</td>
+                                    <td>{{0}}</td>
+                                    <td>{{0}}</td>
+                                    <td>{{0}}</td>
+                                    <td>{{0}}</td>
+                                    <td>{{''}}</td>
+                                    <td>{{v.kodeBarang}}</td>
+                                    <td>{{v.namaBarang}}</td>
+                                    <td>{{v.harga | number : 2}}</td>
+                                    <td>{{v.jumlah | number : 2}}</td>
+                                    <td>{{(v.harga * v.jumlah) + v.diskon | number : 2}}</td>
+                                    <td>{{v.diskon | number : 2}}</td>
+                                    <td>{{v.harga * v.jumlah | number : 2}}</td>
+                                    <td>{{v.harga * v.jumlah * 10/100 | number : 2}}</td>
+                                    <td>{{0}}</td>
+                                    <td>{{0}}</td>
+                                </tr>
+                                <tr ng-repeat-end=""></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

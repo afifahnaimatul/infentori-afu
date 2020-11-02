@@ -1,0 +1,131 @@
+<style type="text/css">
+    table {
+        /*display: table-cell;*/
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .ml-60 {
+        margin-left: 75%;
+    }
+    .align-center {
+        text-align: center !important;
+    }
+    .row {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        margin-right: -5px;
+        margin-left: -5px
+    }
+    .col-md-1 {
+        position: relative;
+        width: 100%;
+        min-height: 1px;
+        -ms-flex: 0 0 8.33333%;
+        flex: 0 0 8.33333%;
+        max-width: 8.33333%
+    }
+    .col-md-2 {
+        position: relative;
+        width: 100%;
+        min-height: 1px;
+        -ms-flex: 0 0 16.66667%;
+        flex: 0 0 16.66667%;
+        max-width: 16.66667%
+    }
+    .col-md-8 {
+        position: relative;
+        width: 100%;
+        min-height: 1px;
+        -ms-flex: 0 0 66.66667%;
+        flex: 0 0 66.66667%;
+        max-width: 66.66667%
+    }
+    .font-sm {
+        font-size: 11px;
+    }
+    .pull-right {
+        float: right;
+    }
+</style>
+<div class="card-body font-sm" id="print">
+        <div class="row" style="margin-bottom: 75px">
+            <div class="col-md-1" style="margin-bottom: 10px">
+                <div>
+                    No. Surat Jalan 
+                </div>
+                <div>
+                    Kode 
+                </div>
+                <div>
+                    Lokasi  
+                </div>
+            </div>
+            <div class="col-md-8" style="margin-bottom: 10px">
+                <div>
+                    : {{ data.no_surat_jalan }}
+                </div>
+                <div>
+                    : {{ data.kode }}
+                </div>
+                <div>
+                    : {{ data.nama_lokasi }}
+                </div>
+            </div>
+            <div style="margin-bottom: 10px">
+                <div>
+                    Tanggal
+                </div>
+                <div>
+                    Kepada
+                </div>
+                <div>
+                </div>
+            </div>
+            <div class="pull-right" style="margin-bottom: 10px">
+                <div>
+                    : {{ data.tanggal | date('d M Y') }}
+                </div>
+                <div>
+                    : {{ data.nama_customer }}
+                </div>
+                <div>
+                    &nbsp;&nbsp;{{ data.alamat }}
+                </div>
+            </div>
+            <div class="table-responsive" style="width:100%">
+                <table border="1" class="table table-striped table-hover table-bordered table-print" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px">QT</th>
+                        <th style="width: 800px">Nama Barang</th>
+                        <th style="width: 100px"></th>
+                        <th style="width: 120px">Harga</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, val in data.barang %}
+                    <tr>
+                        <td class="align-center">{{ val.total }}</td>
+                        <td>{{ val.nama }}</td>
+                        <td></td>
+                        <td align="right">{{ val.harga_total | number_format(2) }}/{{ val.nama_satuan }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 100px">
+            <div class="col-md-1">Tanggal Penerimaan</div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1"></div>
+            <div class="col-md-2 align-center">TTD Gudang 1</div>
+            <div class="col-md-2 align-center">TTD Sopir</div>
+            <div class="col-md-2 align-center">TTD Gudang 2</div>
+        </div>
+</div>

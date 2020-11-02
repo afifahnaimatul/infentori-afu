@@ -1,0 +1,158 @@
+<div class="animated fadeIn">
+    <div ng-controller="l_penjualanCtrl">
+        <div class="card">
+            <div class="card-header">
+                <strong>Rekap Penjualan Barang Jadi & Barang Dagang</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan"
+                                                   ng-click="toggle($event, 'bulan')" ng-model="form.bulan"
+                                                   uib-datepicker-popup="MMMM-yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.lokasi" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <!-- <ui-select class="ui-select-sm ui-select-container" ng-model="form.kategori" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Kategori">{{$select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listKategori | filter : $select.search">{{ val.nama}}</ui-select-choices>
+                                            </ui-select> -->
+                                            <select class="form-control form-control-sm" ng-model="form.kategori">
+                                              <option value=""> Brg Dagangan & Jadi </option>
+                                              <option value="2">Jadi</option>
+                                              <option value="3">Dagangan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h3 ng-if="form.lokasi != undefined">{{form.lokasi.nama}}</h3>
+                                <h3 ng-if="form.lokasi == undefined">PT. AMAK FIRDAUS UTOMO</h3>
+                                <h5 class="text-uppercase">REKAP PENJUALAN BARANG JADI & BARANG DAGANG {{ form.bulan | date:'MMMM yyyy'}}</h5>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-striped table-hover table-bordered table-print">
+                            <thead>
+                                <tr>
+<!--                                    <th class="align-center">Tgl</th>
+                                    <th class="align-center">No. Faktur</th>
+                                    <th class="align-center">Pembeli</th>
+                                    <th class="align-center">NPWP</th>-->
+                                    <th class="align-center">Nama Barang</th>
+                                    <th class="align-center">QT</th>
+                                    <th class="align-center">DPP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="val in penjualanJadi" ng-hide="kategori == 'dagangan'">
+<!--                                    <td>{{ val.tanggal * 1000 | date: 'dd/MM/yyyy'}}</td>
+                                    <td>{{ val.no_faktur}}</td>
+                                    <td>{{ val.nama_pembeli}}</td>
+                                    <td>{{ val.npwp}}</td>-->
+                                    <td>{{ val.nama}}</td>
+                                    <td class="align-right">{{ val.jumlah | currency:'' }}</td>
+                                    <td class="align-right">{{ val.harga_total | currency:'' }}{{ ',00'}}</td>
+                                </tr>
+                                <tr ng-hide="kategori == 'dagangan'">
+<!--                                    <td class="bg-green"></td>
+                                    <td class="bg-green"></td>
+                                    <td class="bg-green"></td>
+                                    <td class="bg-green"></td>-->
+                                    <td class="bg-green text-uppercase align-right font-weight-bold">
+                                        JUMLAH BARANG JADI
+                                    </td>
+                                    <td class="bg-green align-right">{{ qt_jadi | currency:""}}</td>
+                                    <td class="bg-green align-right">{{ dpp_jadi | currency:'' }}{{ ',00'}}</td>
+                                </tr>
+                                <tr ng-repeat="val in penjualanDagang" ng-hide="kategori == 'jadi'">
+<!--                                    <td>{{ val.tanggal * 1000 | date: 'dd/MM/yyyy'}}</td>
+                                    <td>{{ val.no_faktur}}</td>
+                                    <td>{{ val.nama_pembeli}}</td>
+                                    <td>{{ val.npwp}}</td>-->
+                                    <td>{{ val.nama}}</td>
+                                    <td class="align-right">{{ val.jumlah | currency:'' }}</td>
+                                    <td class="align-right">{{ val.harga_total | currency:'' }}{{ ',00'}}</td>
+                                </tr>
+                                <tr ng-hide="kategori == 'jadi'">
+<!--                                    <td class="bg-yellow"></td>
+                                    <td class="bg-yellow"></td>
+                                    <td class="bg-yellow"></td>
+                                    <td class="bg-yellow"></td>-->
+                                    <td class="bg-yellow text-uppercase align-right font-weight-bold">
+                                        JUMLAH BARANG DAGANGAN
+                                    </td>
+                                    <td class="bg-yellow align-right">{{ qt_dagangan | currency:'' }}</td>
+                                    <td class="bg-yellow align-right">{{ dpp_dagangan | currency:'' }}{{ ',00'}}</td>
+                                </tr>
+                            </tbody>
+                            <tr ng-show="kategori != 'jadi' && kategori != 'dagangan'">
+                                <td class="text-uppercase align-right font-weight-bold">
+                                    JUMLAH SEMUA BARANG
+                                </td>
+                                <td class="align-right">{{ qt_total | currency:''  }}</td>
+                                <td class="align-right">{{ dpp_total | currency:'' }}{{ ',00'}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

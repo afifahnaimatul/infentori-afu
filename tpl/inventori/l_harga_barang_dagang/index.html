@@ -1,0 +1,214 @@
+<style>
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+
+<div class="animated fadeIn">
+    <div ng-controller="l_harga_barang_dagang">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Stok Akhir Barang Dagangan (Dengan Harga)</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan"
+                                                   ng-click="toggle($event, 'bulan')" ng-model="form.bulan"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan_akhir"
+                                                   ng-click="toggle($event, 'bulan_akhir')" ng-model="form.bulan_akhir"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan Akhir">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <!-- <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.lokasi" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.kategori" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Kategori">{{ $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listKategori | filter : $select.search">{{ val.nama}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.barang" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf Nama Barang">
+                                                    {{$select.selected.kode}} - {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down"  refresh="cariBarang($select.search)" repeat="vals in getBarang | filter : $select.search">
+                                                    {{vals.kode}} - {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                <h2 class="header-laporan">LAPORAN STOK AKHIR BARANG DAGANGAN (DENGAN HARGA)</h2>
+
+                                Periode : {{data.periode}}
+
+                                </br>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr class="align-center">
+                                    <!-- <th width="10px">
+                                        Nomor Urut
+                                    </th> -->
+                                    <th style="min-width:200px">Nama Barang</th>
+                                    <!-- <th style="min-width:100px">
+                                      Saldo<br>Awal
+                                    </th> -->
+                                    <th ng-repeat-start="(k, v) in data.list_bulan" ng-hide="true"></th>
+                                    <th style="min-width:90px" ng-repeat="vv in v">
+                                      <span ng-bind-html="vv"></span>
+                                    </th>
+                                    <th ng-repeat-end=""  ng-hide="true"></th>
+                                    <th style="min-width:100px">Saldo Akhir</th>
+                                    <th style="min-width:100px">Total Harga</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="v2 in detail">
+                                    <!--<td class="align-center">-</td>-->
+                                    <td>{{v2.nama}}</td>
+                                    <!-- <td class="align-right">{{v2.qty_awal | number}}</td> -->
+                                    <td ng-repeat-start="(kk, vv) in v2.detail" ng-hide="true"></td>
+                                    <td class="align-right">
+                                        <span ng-if="vv.sisa > 0">{{vv.sisa | currency:"":2}}</span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="vv.sisa > 0">{{vv.format_bulan}}</span>
+                                    </td>
+                                    <td class="align-right">
+                                        <span ng-if="vv.sisa > 0">{{vv.harga_masuk_avg  | currency:"":2}}</span>
+                                    </td>
+                                    <td class="align-right">
+                                        <span ng-if="vv.sisa > 0">{{vv.saldo_rp | currency:"":2}}</span>
+                                    </td>
+                                    <td ng-repeat-end="" ng-hide="true"></td>
+                                    <td class="text-right">{{v2.saldo_akhir  | currency:"":2}}</td>
+                                    <td class="align-right">{{v2.saldo_rp  | currency:"":2}}</td>
+                                </tr>
+                            </tbody>
+                            <tr>
+                              <th class="text-right">Total</th>
+                              <th ng-repeat-start="(k, footer) in data.total_footer" ng-hide="1"></th>
+                              <th class="text-right">{{ footer.sisa | currency:""}}</th>
+                              <th> </th>
+                              <th> </th>
+                              <th class="text-right">{{ footer.saldo_rp | currency:"":2 }}</th>
+                              <th ng-repeat-end="" ng-show="0"></th>
+                              <th class="text-right">{{ data.total_all.saldo_akhir | currency:""}}</th>
+                              <th class="text-right">{{ data.total_all.saldo_rp | currency:"":2 }}</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div align="right">
+                        <table style="width: 250px">
+                            <tr style="border: none">
+                                <td colspan="6"></td>
+                                <td class="align-right">
+                                    S.AWAL<br/>
+                                    BELI<br/>
+                                    <hr>
+                                    <br/>
+                                    JUAL<br/>
+                                    <hr>
+                                    <br/>
+                                    RETUR<br/>
+                                    S.AKHIR
+                                </td>
+                                <td class="align-right">
+                                    {{data.total_qty_awal | number}}<br/>
+                                    {{data.total_qty_beli | number}}<br/>
+                                    <hr>
+                                    {{data.total_qty_awal + data.total_qty_beli | number}}
+                                    <br/>
+                                    {{data.total_qty_jual | number}}<br/>
+                                    <hr>
+                                    {{data.total_qty_akhir | number}}
+                                    <br/>
+                                    {{data.total_qty_retur_pembelian | number}}<br/>
+                                    {{data.total_qty_akhir_retur | number}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

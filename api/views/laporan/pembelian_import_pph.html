@@ -1,0 +1,81 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+
+<style type="text/css">
+    table {
+        display: table;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+    .align-center {
+        text-align: center;
+    }
+
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                    <h2 class="header-laporan header-smaller">LAPORAN PEMBELIAN IMPORT (PPh22)</h2>
+
+                    {{data.periode}}
+
+                    </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse;">
+                <thead>
+                    <tr align="center">
+                        <th>NO</th>
+                        <th>NAMA DAN PWP</th>
+                        <th>NPWP</th>
+                        <th>JENIS PENGHASILAN</th>
+                        <th>RUPIAH PIB</th>
+                        <th>PPH YG DIPOTONG</th>
+                        <th>NTPN</th>
+                        <th>TANGGAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for k, v in detail%}
+                    <tr>
+                        <td align="center">{{v.no}}</td>
+                        <td align="left">{{v.total != '' ? 'DIRJEN BEA & CUKAI' : ''}}</td>
+                        <td align="center">{{v.total != '' ? (not v.npwp ? '00.000.000.0-000.000' : v.npwp) : ''}}</td>
+                        <td align="left">{{v.total != '' ? 'IMPORT' : ''}}</td>
+                        <td align="right">{{v.total != '' ? (v.total| number_format(2, '.', ',')) : ''}}</td>
+                        <td align="right">{{v.pph22| number_format(2, '.', ',')}}</td>
+                        <td align="center">{{v.ntpn}}</td>
+                        <td align="center">{{v.tanggal_ntpn}}</td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

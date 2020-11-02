@@ -1,0 +1,90 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+
+    table{
+        /*display: table-cell;*/
+        border-collapse: collapse;width: 100%;}
+    td:empty::after{
+        content: "\00a0";
+    }
+
+
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="table-responsive">
+            <table border="1" class="table table-striped table-hover table-bordered table-print table-smaller">
+                <thead>
+                    <tr>
+                        <th>KD_JENIS_TRANSAKSI</th>
+                        <th>FG_PENGGANTI</th>
+                        <th>NOMOR_FAKTUR</th>
+                        <th>MASA_PAJAK</th>
+                        <th>TAHUN_PAJAK</th>
+                        <th>TANGGAL_FAKTUR</th>
+                        <th>NPWP</th>
+                        <th>NAMA</th>
+                        <th>ALAMAT_LENGKAP</th>
+                        <th>JUMLAH_DPP</th>
+                        <th>JUMLAH_PPN</th>
+                        <th>JUMLAH_PPNBM</th>
+                        <th>ID_KETERANGAN_TAMBAHAN</th>
+                        <th>FG_UANG_MUKA</th>
+                        <th>UANG_MUKA_DPP</th>
+                        <th>UANG_MUKA_PPN</th>
+                        <th>UANG_MUKA_PPNBM</th>
+                        <th>REFERENSI</th>
+                        <th>KODE_OBJEK</th>
+                        <th>NAMA_OBJEK</th>
+                        <th>HARGA_SATUAN</th>
+                        <th>JUMLAH_BARANG</th>
+                        <th>HARGA_TOTAL</th>
+                        <th>DISKON</th>
+                        <th>DPP</th>
+                        <th>PPN</th>
+                        <th>TARIF_PPNBM</th>
+                        <th>PPNBM</th>
+                    </tr>
+
+                </thead>
+                    {%for val in data.data%}
+                    {%for vv in val%}
+                    {%for v in vv.data%}
+                    <tr>
+                        <td>{{v.KD_JENIS_TRANSAKSI}}</td>
+                        <td>{{v.FG_PENGGANTI}}</td>
+                        <td>{{v.NOMOR_FAKTUR}}</td>
+                        <td>{{10}}</td>
+                        <td>{{2019}}</td>
+                        <td>{{''}}</td>
+                        <td>{{v.NPWP}}</td>
+                        <td>{{v.namaCustomer}}</td>
+                        <td>{{v.alamat}}</td>
+                        <td>{{v.JUMLAH_DPP| number_format(2, '.', ',')}}</td>
+                        <td>{{v.JUMLAH_PPN| number_format(2, '.', ',')}}</td>
+                        <td>{{0}}</td>
+                        <td>{{''}}</td>
+                        <td>{{0}}</td>
+                        <td>{{0}}</td>
+                        <td>{{0}}</td>
+                        <td>{{''}}</td>
+                        <td>{{v.kode}}</td>
+                        <td>{{v.kodeBarang}}</td>
+                        <td>{{v.namaBarang}}</td>
+                        <td>{{v.harga| number_format(2, '.', ',')}}</td>
+                        <td>{{v.jumlah| number_format(2, '.', ',')}}</td>
+                        <td>{{(v.DPP + v.diskon)| number_format(2, '.', ',')}}</td>
+                        <td>{{v.diskon| number_format(2, '.', ',')}}</td>
+                        <td>{{v.DPP| number_format(2, '.', ',')}}</td>
+                        <td>{{v.PPN| number_format(2, '.', ',')}}</td>
+                        <td>{{0}}</td>
+                        <td>{{0}}</td>
+                    </tr>
+                    {%endfor%}
+                    {%endfor%}
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

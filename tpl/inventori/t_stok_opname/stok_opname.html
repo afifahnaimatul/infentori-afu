@@ -1,0 +1,316 @@
+<div class="animated fadeIn">
+    <div ng-controller="stokOpnameCtrl">
+        <div class="card" st-pipe="callServer" st-table="displayed" ng-show="!is_edit">
+            <div class="card-header">
+                <strong class="">{{ master}}</strong>
+                <div class="btn-group pull-right mt-5px d-lg-none" role="group">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Menu
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button class="dropdown-item" ng-click="create();">
+                                <i class="fa fa-plus"></i>
+                                &nbsp; Buat Penyesuaian Persediaan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group pull-right mt-5px d-md-down-none" role="group">
+                    <button class="btn btn-primary btn-sm" ng-click="create();">
+                        <i class="fa fa-plus"></i>
+                        &nbsp; Buat Penyesuaian Persediaan
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <div class="alert alert-secondary">
+                                <form name="landaform" novalidate="">
+                                    <div class="form-group row mb-0px">
+                                        <div class="col-md-3 mb-2">
+                                            <input type="text" class="form-control form-control-sm" st-search="inv_stok_opname.kode" placeholder="Kode"/>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <select class="form-control form-control-sm" st-search="inv_stok_opname.acc_m_lokasi_id">
+                                                <option value=""> - Semua Lokasi - </option>
+                                                <option value="{{ val.id}}" ng-repeat="val in listLokasi"> {{val.nama}} </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="table-responsive"> -->
+
+                <table class="table table-striped table-hover table-mobile">
+                    <thead>
+                        <tr>
+                            <th class="align-left" scope="col">Status</th>
+                            <th st-sort="inv_stok_opname.kode" class="align-left" scope="col">Kode</th>
+                            <th st-sort="acc_m_lokasi.nama" class="align-left" scope="col">Lokasi</th>
+                            <th st-sort="inv_stok_opname.tanggal" class="align-left" scope="col">Tanggal</th>
+                            <th st-sort="inv_stok_opname.total" class="align-left" scope="col">Total</th>
+                            <th st-sort="inv_stok_opname.created_at" class="align-left" scope="col">Dibuat Pada</th>
+                            <th st-sort="inv_stok_opname.created_by" class="align-left" scope="col">Dibuat Oleh</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <td class="align-left">
+                                <span class="bg-success p-1" ng-if="row.is_draft == 0 && row.is_unpost == 0">
+                                    {{'Tersimpan'}}
+                                </span>
+                                <span class="bg-warning p-1" ng-if="row.is_draft == 1 && row.is_unpost == 0">
+                                    {{'Draft'}}
+                                </span>
+                                <span class="bg-danger p-1" ng-if="row.is_unpost == 1">
+                                    {{'Unpost'}}
+                                </span>
+                            </td>
+                            <td class="align-left"><span>{{ row.kode}}</span></td>
+                            <td class="align-left"><span>{{ row.acc_m_lokasi_id.nama}}</span></td>
+                            <td class="align-left"><span>{{ row.tanggal | date }}</span></td>
+                            <td class="align-left"><span>{{ row.total | currency:undifine:"0" }}</span> </td>
+                            <td class="align-left"><span>{{ row.created_at * 1000 | date }}</span></td>
+                            <td class="align-left"><span>{{ row.pembuat}}</span></td>
+                            <td>
+                                <div class="btn btn-group pull-right">
+                                    <button class="btn btn-sm btn-primary" ng-if="row.is_draft == 1" uib-tooltip="Edit" ng-click="update(row)">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" ng-if="row.is_draft == 1" uib-tooltip="Hapus" ng-click="delete(row)">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div st-pagination="" st-items-by-page="20" st-template="tpl/common/pagination.custom.html"></div>
+                <!-- </div> -->
+            </div>
+        </div>
+        <div class="card" ng-if="is_edit">
+            <div class="card-header">
+                <strong>{{ formtitle}}</strong>
+            </div>
+            <div class="card-body">
+                <form name="landaform" novalidate="">
+                    <!-- Blok Edit Data -->
+                    <div class="row">
+
+                        <!-- Kolom 1 -->
+                        <div class="col-md-6">
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm required">Lokasi</label>
+                                <div class="col-md-9">
+                                    <ui-select class="ui-select-sm ui-select-container" ng-model="form.acc_m_lokasi_id"
+                                               on-select="" theme="bootstrap" ng-disabled="is_view">
+                                        <ui-select-match placeholder="Pilih Lokasi">
+                                            {{ $select.selected.kode}} - {{ $select.selected.nama}}
+                                        </ui-select-match>
+                                        <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">
+                                            {{ val.kode}} - {{ val.nama}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm required">Kategori</label>
+                                <div class="col-md-9">
+                                    <ui-select class="ui-select-sm ui-select-container" ng-model="form.inv_m_kategori_id"
+                                               on-select="getBarang()" theme="bootstrap" ng-disabled="is_view">
+                                        <ui-select-match placeholder="Pilih Kategori">
+                                            {{ $select.selected.nama}}
+                                        </ui-select-match>
+                                        <ui-select-choices position="down" repeat="val in listKategori | filter : $select.search">
+                                            {{ val.nama}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Kolom 1 - END -->
+
+                        <!-- Kolom 2 -->
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm required">Kode</label>
+                                <div class="col-md-9">
+                                    <input class="form-control form-control-sm" ng-disabled="1"
+                                           ng-model="form.kode" type="text" placeholder="-- Kode Generate Otomatis --">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm required">Tanggal</label>
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm">
+                                        <input class="form-control form-control-sm" is-open="opened.tanggal" ng-click="toggle($event, 'tanggal')" ng-disabled="is_view" ng-model="form.tanggal" type="text" uib-datepicker-popup="dd-MM-yyyy"  datepicker-options="options_min"/>
+                                        <div class="input-group-text">
+                                            <i class="icon icon-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Kolom 2 - END -->
+                        <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined">
+                            <br>
+                            <h6>Detail Penyesuaian</h6>
+                            <hr>
+                        </div>
+
+                        <!-- Detail Pembelian -->
+                        <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    Cari Barang :
+                                </div>
+                                <div class="col-md-4">
+                                    <ui-select ng-model="form.inv_m_barang_id" on-select="addDetail(form.inv_m_barang_id)" theme="bootstrap" ng-disabled="is_view">
+                                        <ui-select-match placeholder="Cari Barang">
+                                            {{$select.selected.kode}} - {{$select.selected.nama}}
+                                            <!-- ({{$select.selected.stok}}) {{$select.selected.nama_satuan}} -->
+                                        </ui-select-match>
+                                        <ui-select-choices refresh="cariBarang($select.search, $index,$select)" repeat="vals in listBarang">
+                                            {{vals.kode}} - {{vals.nama}}
+                                            <!-- ({{vals.stok}}) {{vals.nama_satuan}} -->
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="col-md-6 text-right">Total Nilai Penyesuaian : {{form.total| currency}}</div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered det-trans">
+                                        <thead>
+                                            <tr align="center">
+                                                <th rowspan="2"></th>
+                                                <th rowspan="2" align="center">Barang</th>
+                                                <th rowspan="2" align="center">Satuan</th>
+                                                <th rowspan="2" align="center">Kategori</th>
+                                                <th colspan="3" align="center">Stok</th>
+                                                <th rowspan="2" align="center">Biaya Per Unit</th>
+                                                <th rowspan="2" align="center">Nilai Penyesuaian</th>
+                                                <th rowspan="2" align="center">Keterangan</th>
+                                            </tr>
+                                            <tr align="center">
+                                                <th>On Hand</th>
+                                                <th>Sistem</th>
+                                                <th>Selisih</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="detail in detBarang">
+                                                <td class="">
+                                                    <button class="btn btn-sm btn-danger" ng-click="removeRow($index)" ng-disabled="is_view">
+                                                        <i class="fa fa-trash-o"></i>
+                                                    </button>
+                                                </td>
+                                                <td>{{detail.kode}} - {{detail.nama}}</td>
+                                                <td align="center">{{detail.satuan}}</td>
+                                                <td align="center">{{detail.kategori}}</td>
+                                                <td>
+                                                    <input class="form-control form-control-sm rp" ng-change="total()" ng-disabled="is_view" ng-model="detail.stock_real"
+                                                    type="text" ui-number-mask="2"/>
+                                                </td>
+                                                <td align="right">{{detail.stock_app| number}}</td>
+                                                <td align="right">{{detail.selisih| number}}</td>
+                                                <td>
+                                                    <div class="input-group input-group-sm" style="margin:0px;">
+                                                        <span class="input-group-text">
+                                                            Rp
+                                                        </span>
+                                                        <input class="form-control form-control-sm rp " ng-change="total()" ng-disabled="detail.stock_real < detail.stock_selisih || is_view"
+                                                        ng-model="detail.hpp" type="text" ui-number-mask="2"/>
+                                                    </div>
+                                                </td>
+                                                <td align="right">{{ detail.nilai_penyesuaian | currency:"":2 }}</td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" maxlength="12" ng-disabled="is_view" ng-model="detail.alasan" type="text"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Detail Pembelian - END -->
+
+                        <!--JURNAL AKUNTANSI-->
+                        <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined">
+                            <br>
+                            <h6>Jurnal Akuntansi</h6>
+                            <hr>
+                        </div>
+                        <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered det-trans">
+                                        <thead>
+                                            <tr>
+                                                <th>Akun</th>
+                                                <th>Keterangan</th>
+                                                <th>Debit</th>
+                                                <th>Kredit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="val in listJurnal">
+                                                <td ng-style="{
+                                                        'padding-left':val.debit == 0 ? '50px' : '0px' }">{{val.akun.kode}} - {{val.akun.nama}}</td>
+                                                <td>{{val.keterangan}}</td>
+                                                <td align='right'>{{val.debit| number : 2}}</td>
+                                                <td align='right'>{{val.kredit| number : 2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan='2' class='text-right'>TOTAL</th>
+                                                <td align='right'>{{totalDebit| number : 2}}</td>
+                                                <td align='right'>{{totalKredit| number : 2}}</td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--JURNAL AKUNTANSI - END-->
+                    </div>
+                    <!-- Blok Edit Data -->
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group pull-right">
+                    <button type="submit" class="btn btn-secondary btn-sm" ng-click="cancel()">
+                        <i class="fa fa-arrow-left"></i>
+                        &nbsp;Kembali
+                    </button>
+                    <button type="submit" class="btn btn-success btn-sm" ng-if="!is_view" button-spinner="loading" ng-disabled="cek <= 3 || loading" ng-click="save(form, 'draft')">
+                        <i class="fa fa-save"></i>
+                        &nbsp;Simpan & Draft
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" ng-if="!is_view" button-spinner="loading" ng-disabled="cek <= 3 || loading" ng-click="save(form, 'terposting')">
+                        <i class="fa fa-check"></i>
+                        &nbsp;Simpan & Posting
+                    </button>
+                    <button type="submit" class="btn btn-danger btn-sm" ng-if="is_view && form.is_draft == 0 && form.is_unpost == 0" button-spinner="loading" ng-disabled="cek <= 3 || loading" ng-click="unpost(form)">
+                        <i class="fa fa-rotate-left"></i>
+                        &nbsp;Unpost
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

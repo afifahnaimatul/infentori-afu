@@ -1,0 +1,1395 @@
+<div class="animated fadeIn">
+    <div ng-controller="pembelianCtrl">
+        <div class="card" st-pipe="callServer" st-table="displayed" ng-show="!is_edit">
+            <div class="card-header">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <strong class="">{{ master}}</strong>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <strong class="bg-info p-1 ng-binding" style="color: white">Total DPP : Rp.
+                            {{ totalDpp | currency:""}} </strong>
+                    </div>
+                    <div class="col-md-4">
+
+                        <div class="btn-group pull-right mt-5px d-lg-none" role="group">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-default dropdown-toggle" type="button"
+                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                    Menu
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <button class="dropdown-item" ng-click="create();">
+                                        <i class="fa fa-plus"></i>
+                                        &nbsp; Pembelian Baru
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-group pull-right mt-5px d-md-down-none" role="group">
+                            <button class="btn btn-primary btn-sm" ng-click="create();">
+                                <i class="fa fa-plus"></i>
+                                &nbsp; Pembelian Baru
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+
+                            <div class="alert alert-secondary">
+                                <form name="landaform" novalidate="">
+                                    <div class="form-group row mb-0px">
+                                        <div class="col-md-3 mb-2">
+                                            <input type="text" class="form-control form-control-sm"
+                                                   st-search="inv_m_faktur_pajak.nomor" placeholder="Nomor Faktur"/>
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+                                            <input type="text" class="form-control form-control-sm"
+                                                   st-search="inv_pembelian.invoice" placeholder="No. Invoice"/>
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+                                            <input type="text" class="form-control form-control-sm"
+                                                   st-search="inv_pembelian.pib" placeholder="No. PIB"/>
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+                                            <select class="form-control form-control-sm"
+                                                    st-search="inv_pembelian.acc_m_lokasi_id">
+                                                <option value=""> - Semua Lokasi -</option>
+                                                <option value="{{ val.id}}" ng-repeat="val in listLokasi">
+                                                    {{val.nama}}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+                                            <input type="text" class="form-control form-control-sm"
+                                                   st-search="acc_m_kontak.nama" placeholder="Supplier"/>
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+                                            <select class="form-control form-control-sm"
+                                                    st-search="inv_pembelian.is_ppn">
+                                                <option value=""> - PPN / Non PPN -</option>
+                                                <option value="1"> PPN</option>
+                                                <option value="0"> Non PPN</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+                                            <select class="form-control form-control-sm"
+                                                    st-search="inv_pembelian.status">
+                                                <option value=""> - Semua Status -</option>
+                                                <option value="lunas"> Lunas</option>
+                                                <option value="belum lunas"> Belum Lunas</option>
+                                                <option value="draft"> Draft</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control form-control-sm"
+                                                       is-open="opened.bulan"
+                                                       ng-click="toggle($event, 'bulan')" ng-model="filter.bulan"
+                                                       uib-datepicker-popup="MMMM yyyy"
+                                                       datepicker-options="{minMode: 'month'}"
+                                                       placeholder="Bulan">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                    <div class="btn-group" ng-if="filter.bulan != undefined">
+                                                        <button class="btn btn-sm btn-primary" title="Tampilkan"
+                                                                ng-click="filterBulan()">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-danger" title="Reset Filter Bulan"
+                                                                ng-click="reset_bulan()">
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th class="align-left" scope="col">Status</th>
+                            <th st-sort="acc_m_lokasi.nama" class="align-left" scope="col">Lokasi</th>
+                            <!--<th st-sort="inv_pembelian.kode" class="align-left" scope="col">Kode</th>-->
+                            <th st-sort="inv_m_faktur_pajak.nomor" class="align-left" scope="col">No Faktur Pajak</th>
+                            <th ng-if="!is_import" st-sort="inv_pembelian.invoice" class="align-left" scope="col">
+                                Invoice
+                            </th>
+                            <th ng-if="is_import" st-sort="inv_pembelian.pib" class="align-left" scope="col">PIB</th>
+                            <th st-sort="inv_pembelian.tanggal" class="align-left" scope="col">Tanggal</th>
+                            <!--<th st-sort="inv_pembelian.jatuh_tempo" class="align-left" scope="col">Jatuh Tempo</th>-->
+                            <th st-sort="inv_m_supplier.nama" class="align-left" scope="col">Supplier</th>
+                            <th st-sort="inv_pembelian.total" class="text-right" scope="col">Total</th>
+                            <th st-sort="inv_pembelian.cash" class="text-right" scope="col">Terbayar</th>
+                            <th st-sort="inv_pembelian.hutang" class="text-right" scope="col">Kekurangan</th>
+                            <!-- <th st-sort="inv_pembelian.created_at" class="align-left" scope="col">Dibuat Pada</th> -->
+                            <!-- <th st-sort="inv_pembelian.created_by" class="align-left" scope="col">Dibuat Oleh</th> -->
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <td class="align-left">
+                                    <span class="bg-success p-1" ng-if="row.status == 'lunas'">
+                                        Tersimpan
+                                    </span>
+                                <span class="bg-warning p-1" ng-if="row.status == 'belum lunas'">
+                                        Tersimpan
+                                    </span>
+                                <!-- <span class="bg-info p-1" ng-if="row.status == 'draft'" ng-click="update(row)" uib-tooltip="Edit Draft"> -->
+                                <span class="bg-info p-1" ng-if="row.status == 'draft'">
+                                        <!-- <i class="fa fa-edit"> {{row.status}}</i> -->
+                                        {{row.status}}
+                                    </span>
+                            </td>
+                            <td class="align-left"><span>{{ row.acc_m_lokasi_id.nama}}</span></td>
+                            <!--<td class="align-left"><span>{{ row.kode}}</span></td>-->
+                            <td class="align-left"><span>{{ row.inv_m_faktur_pajak_id.nomor}}</span></td>
+                            <td ng-if="!is_import" class="align-left"><span>{{ row.no_invoice}}</span></td>
+                            <td ng-if="is_import" class="align-left"><span>{{ row.pib}}</span></td>
+                            <td class="align-left"><span>{{ row.tanggal_formated}}</span></td>
+                            <!--<td class="align-left"><span>{{ row.jatuh_tempo * 1000 | date }}</span></td>-->
+                            <td class="align-left"><span>{{ row.acc_m_kontak_id.nama}}</span></td>
+                            <td class="text-right"><span>{{ row.total | number }}</span></td>
+                            <td class="text-right"><span>{{ row.terbayar | number }}</span></td>
+                            <td class="text-right"><span>{{ row.hutang | number }}</span></td>
+                            <!-- <td class="align-left"><span>{{ row.created_at * 1000 | date }}</span></td> -->
+                            <!-- <td class="align-left"><span>{{ row.pembuat}}</span></td> -->
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-primary" ng-if="row.status == 'draft'"
+                                            uib-tooltip="Edit Draft" ng-click="update(row)">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" ng-if="row.status == 'draft'"
+                                            uib-tooltip="Hapus Pembelian" ng-click="delete(row)">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div st-pagination="" st-items-by-page="20" st-template="tpl/common/pagination.custom.html"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card" ng-if="is_edit">
+            <div class="card-header">
+                <strong>{{ formtitle}}</strong>
+            </div>
+            <div class="card-body">
+                <form name="landaform" novalidate="">
+                    <!-- Blok Edit Data -->
+                    <div class="row">
+                        <!--                        <div class="col-md-6">
+                                                    <h6>Jenis Pembelian</h6>
+                                                    <hr>
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-md-3 col-form-label-sm">Kode Pengajuan</label>
+                                                                                    <div class="col-md-9">
+                                                                                        <ui-select class="ui-select-sm ui-select-container" ng-model="form.inv_po_pembelian_id" theme="bootstrap" ng-disabled="is_view" on-select="fill(form.inv_po_pembelian_id)">
+                                                                                            <ui-select-match placeholder="Pilih Kode Pengajuan">
+                                                                                                {{ $select.selected.kode}}
+                                                                                            </ui-select-match>
+                                                                                            <ui-select-choices position="down" repeat="val in poPembelian | filter : $select.search">
+                                                                                                {{ val.kode}}
+                                                                                            </ui-select-choices>
+                                                                                        </ui-select>
+                                                                                    </div>
+                                                                                </div>
+
+                                                </div>
+                                                <div class="col-md-6"></div>-->
+
+                        <!-- Kolom 1 -->
+                        <div class="col-md-6">
+                            <h6>Data Pembelian</h6>
+                            <hr>
+                            <div class="form-group row" ng-hide="is_import == 1">
+                                <label class="col-md-3 col-form-label-sm" ng-hide="is_import == 1">Jenis
+                                    Pembelian</label>
+                                <div class="col-md-9">
+                                    <select class="form-control form-control-sm" ng-model="form.jenis_pembelian"
+                                            ng-change="resetDetail()" ng-disabled="is_view">
+                                        <option value="barang">Barang</option>
+                                        <option value="jasa">Jasa</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm required">Lokasi</label>
+                                <div class="col-md-9">
+                                    <ui-select class="ui-select-sm ui-select-container" ng-model="form.acc_m_lokasi_id"
+                                               on-select="cariBarangAll()" theme="bootstrap" ng-disabled="is_view">
+                                        <ui-select-match placeholder="Pilih Lokasi">
+                                            {{ $select.selected.kode}} - {{ $select.selected.nama}}
+                                        </ui-select-match>
+                                        <ui-select-choices position="down"
+                                                           repeat="val in listLokasi | filter : $select.search">
+                                            {{ val.kode}} - {{ val.nama}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" ng-if="!is_import">
+                                <label class="col-md-3 col-form-label-sm">No. Invoice</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control form-control-sm" ng-model="form.no_invoice"
+                                           ng-disabled="is_view" required/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" ng-if="is_import">
+                                <label class="col-md-3 col-form-label-sm required">No. PIB</label>
+                                <div class="col-md-9">
+                                    <!--<input type="text" class="form-control form-control-sm" ng-model="form.pib" ng-disabled="is_view" required/>-->
+                                    <div class="form-group row">
+                                        <!--<label class="col-md-3 col-form-label-sm required">No Faktur</label>-->
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control form-control-sm angka" id="form1"
+                                                   maxlength="6" ng-model="form.form1" ng-disabled="false" required
+                                                   ng-keyup="setFaktur(1, 6)"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control form-control-sm angka" id="form2"
+                                                   maxlength="6" ng-model="form.form2" ng-disabled="false" required
+                                                   ng-keyup="setFaktur(2, 6)"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control form-control-sm angka" id="form3"
+                                                   maxlength="8" ng-model="form.form3" ng-disabled="false" required
+                                                   ng-keyup="setFaktur(3, 8)"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control form-control-sm angka" id="form4"
+                                                   maxlength="6" ng-model="form.form4" ng-disabled="false" required
+                                                   ng-keyup="setFaktur(4, 6)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm required">Tanggal</label>
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm">
+                                        <input class="form-control form-control-sm" is-open="opened.tanggal"
+                                               ng-change="getFP()" ng-click="toggle($event, 'tanggal')"
+                                               ng-disabled="is_view" ng-model="form.tanggal" type="text"
+                                               uib-datepicker-popup="dd-MM-yyyy" datepicker-options="options_min"/>
+                                        <div class="input-group-text" ng-click="toggle($event, 'tanggal')">
+                                            <i class="icon icon-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--                            <div class="form-group row">
+                                                            <label class="col-md-3 col-form-label-sm required">Jatuh Tempo</label>
+                                                            <div class="col-md-4">
+                                                                <div class="input-group input-group-sm">
+                                                                    <input class="form-control form-control-sm" is-open="opened.jatuh_tempo" ng-click="toggle($event, 'jatuh_tempo')" ng-disabled="is_view" ng-model="form.jatuh_tempo" type="text" uib-datepicker-popup="dd-MM-yyyy"  datepicker-options="options_min"/>
+                                                                    <div class="input-group-text">
+                                                                        <i class="icon icon-calendar"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+                            <div class="form-group row" ng-if="form.is_ppn == 1">
+                                <label class="col-md-3 col-form-label-sm">Faktur Pajak</label>
+                                <div class="col-md-6">
+                                    <div class="btn-group" style="width: 100%; float: left">
+                                        <ui-select class="ui-select-sm ui-select-container" style="width: 100%"
+                                                   ng-model="form.inv_m_faktur_pajak_id" theme="bootstrap"
+                                                   ng-disabled="1">
+                                            <ui-select-match placeholder="Pilih Faktur Pajak">
+                                                {{ $select.selected.nomor}}
+                                            </ui-select-match>
+                                            <ui-select-choices position="down"
+                                                               repeat="val in listFaktur | filter : $select.search">
+                                                {{ val.nomor}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <div class="btn btn-sm btn-info"
+                                             ng-if="!is_view && form.inv_m_faktur_pajak_id == undefined"
+                                             ng-click="modalFaktur()">
+                                            <i class="fa fa-plus"></i>
+                                        </div>
+                                        <div class="btn btn-sm btn-warning"
+                                             ng-if="!is_view && form.inv_m_faktur_pajak_id != undefined"
+                                             ng-click="modalFaktur(form.inv_m_faktur_pajak_id)">
+                                            <i class="fa fa-pencil"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row" ng-hide="true">
+                                <label class="col-md-3 col-form-label-sm required">Akun</label>
+                                <div class="col-md-9">
+                                    <ui-select class="ui-select-sm ui-select-container" ng-model="form.acc_m_akun_id"
+                                               theme="bootstrap" ng-disabled="is_view" on-select="prepareJurnal()">
+                                        <ui-select-match placeholder="Pilih Akun">
+                                            {{ $select.selected.kode}} - {{ $select.selected.nama}}
+                                        </ui-select-match>
+                                        <ui-select-choices position="down" repeat="val in listAkun | filter : $search">
+                                            {{ val.kode}} - {{ val.nama}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm">Catatan</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control form-control-sm" ng-value="form.catatan"
+                                              ng-disabled="is_view" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm required">Lokal / Import</label>
+                                <div class="col-md-4">
+                                    <div class="btn-group">
+                                        <div class="btn-group">
+                                            <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.is_import" uib-btn-radio="0">
+                                                <i class="fa fa-check" ng-if="form.is_import == 0"></i>
+                                                Lokal
+                                            </label>
+                                            <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.is_import" uib-btn-radio="1">
+                                                <i class="fa fa-check" ng-if="form.is_import == 1"></i>
+                                                Import
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <!-- Kolom 1 - END -->
+
+                        <!-- Kolom 2 -->
+                        <div class="col-md-6">
+                            <h6>Data Supplier</h6>
+                            <hr>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm required">Supplier</label>
+                                <div class="col-md-9">
+                                    <div class="btn-group" style="width: 100%; float: left">
+                                        <ui-select class="ui-select-sm ui-select-container" style="width: 100%"
+                                                   ng-model="form.acc_m_kontak_id" theme="bootstrap"
+                                                   ng-disabled="is_view"
+                                                   on-select="changeSupplier(form.acc_m_kontak_id)">
+                                            <ui-select-match placeholder="Pilih Supplier">
+                                                {{ $select.selected.kode}} - {{ $select.selected.nama}}
+                                            </ui-select-match>
+                                            <ui-select-choices position="down" refresh="checkJenis2($select.search)"
+                                                               repeat="val in listSupplier">
+                                                {{ val.kode}} - {{ val.nama}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <div class="btn btn-sm btn-info" ng-if="!is_view"
+                                             ng-click="modalSupplier('supplier')">
+                                            <i class="fa fa-plus"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--                            <div class="form-group row">
+                                                            <label class="col-md-3 col-form-label-sm">No. Telp</label>
+                                                            <div class="col-md-9">
+                                                                <input type="text" class="form-control form-control-sm" ng-value="form.acc_m_kontak_id.tlp" ng-disabled="1"/>
+                                                            </div>
+                                                        </div>-->
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm">NIK</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control form-control-sm"
+                                           ng-value="form.acc_m_kontak_id.nik" ng-disabled="1"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm">NPWP</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control form-control-sm"
+                                           ng-value="form.acc_m_kontak_id.npwp" ng-disabled="1"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm">Kota</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control form-control-sm"
+                                           ng-value="form.acc_m_kontak_id.kota" ng-disabled="1"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm">Alamat</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control form-control-sm"
+                                              ng-value="form.acc_m_kontak_id.alamat" ng-disabled="1"
+                                              rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row" ng-hide="is_import == 1">
+                                <label class="col-md-3 col-form-label-sm">PPN</label>
+                                <div class="col-sm-6">
+                                    <div class="btn-group">
+                                        <label ng-class="{
+                                                'btn-info': form.is_ppn == 1, 'btn-secondary' : form.is_ppn != 1}"
+                                               class="btn btn-sm ng-untouched ng-valid ng-not-empty active ng-dirty ng-valid-parse"
+                                               ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="1"
+                                               ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 1"></i>Ya</label>
+                                        <label ng-class="{
+                                                'btn-info': form.is_ppn == 0, 'btn-secondary' : form.is_ppn != 0}"
+                                               class="btn btn-sm ng-untouched ng-valid ng-not-empty ng-dirty"
+                                               ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="0"
+                                               ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 0"></i>Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row" ng-if="form.is_ppn == 1" ng-hide="is_import == 1">
+                                <label class="col-md-3 col-form-label-sm">Jenis PPN</label>
+                                <div class="col-sm-6">
+                                    <div class="btn-group">
+                                        <label ng-class="{
+                                                'btn-info': form.jenis_ppn == 1, 'btn-secondary' : form.jenis_ppn != 1}"
+                                               class="btn btn-sm ng-untouched ng-valid ng-not-empty active ng-dirty ng-valid-parse"
+                                               ng-model="form.jenis_ppn" ng-disabled="is_view" uib-btn-radio="1"
+                                               ng-click="total()"><i class="fa fa-check"
+                                                                     ng-if="form.jenis_ppn == 1"></i>1%</label>
+                                        <label ng-class="{
+                                                'btn-info': form.jenis_ppn == 10, 'btn-secondary' : form.jenis_ppn != 10}"
+                                               class="btn btn-sm ng-untouched ng-valid ng-not-empty ng-dirty"
+                                               ng-model="form.jenis_ppn" ng-disabled="is_view" uib-btn-radio="10"
+                                               ng-click="total()"><i class="fa fa-check"
+                                                                     ng-if="form.jenis_ppn == 10"></i>10%</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 row"
+                             ng-hide="form.acc_m_lokasi_id == undefined || form.acc_m_kontak_id == undefined"
+                             style="padding-top:30px">
+                            <br>
+                            <h6 class="col-md-4">Detail Pembelian
+                                <button class="btn btn-sm btn-success" type="button" ng-click="modalBarangJasa()"
+                                        ng-disabled="is_view"><i class="fa fa-plus"></i> Tambah Barang / Jasa Lain-lain
+                                </button>
+                            </h6>
+                            <h6 class="col-md-4 offset-md-4 bg-info p-1 text-center">TOTAL DPP : Rp.
+                                {{totalDpp | currency:""}} </h6>
+                            <hr>
+                        </div>
+                        <!-- Detail Pembelian -->
+                        <div class="col-md-12"
+                             ng-hide="form.acc_m_lokasi_id == undefined || form.acc_m_kontak_id == undefined">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered det-trans">
+                                        <thead>
+                                        <tr>
+                                            <td class="text-center" style="width: 5px;">
+                                                <button class="btn btn-sm btn-success" ng-click="addDetail()"
+                                                        ng-disabled="is_view" uib-tooltip="Tambah Barang">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </td>
+                                            <td align="center" style="width: 200px">
+                                                <b> Barang </b>
+                                            </td>
+                                            <td align="center" style="width: 150px;">
+                                                <b>Jumlah</b>
+                                            </td>
+                                            <td align="center" style="width: 200px;">
+                                                <b>Harga Satuan (Rp.)</b>
+                                            </td>
+                                            <td align="center" ng-if="is_import" style="width: 300px;">
+                                                <b>{{is_import ? 'Kurs (Rp.)' : 'Diskon'}}</b>
+                                            </td>
+                                            <td align="center" ng-if="!is_import" style="width: 150px;">
+                                                <b>{{is_import ? 'Kurs (Rp.)' : 'Diskon'}}</b>
+                                            </td>
+                                            <td align="center" style="width: 200px;">
+                                                <b>Amount (Rp.)</b>
+                                            </td>
+                                            <td align="center" style="width: 200px;">
+                                                <b>Edit (Rp.)</b>
+                                            </td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="detail in detPembelian">
+                                            <td class="">
+                                                <button class="btn btn-sm btn-danger" ng-click="removeRow($index)"
+                                                        ng-disabled="is_view">
+                                                    <i class="fa fa-trash-o"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <div ng-if="detail.inv_m_barang_id.is_pakai != 1">
+                                                    <ui-select ng-model="detail.inv_m_barang_id"
+                                                               on-select="changeBarang(detail.inv_m_barang_id, $index, $select)"
+                                                               theme="bootstrap" ng-disabled="is_view">
+                                                        <ui-select-match placeholder="Cari Barang"
+                                                                         style="width: 200px!important">
+                                                            {{$select.selected.nama}}
+                                                            <!-- ({{$select.selected.stok}}) {{$select.selected.nama_satuan}} -->
+                                                        </ui-select-match>
+                                                        <ui-select-choices
+                                                                refresh="cariBarang($select.search, $index,$select)"
+                                                                repeat="vals in listBarang">
+                                                            {{vals.nama}}
+                                                            <!-- ({{vals.stok}}) {{vals.nama_satuan}} -->
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                <div ng-if="detail.inv_m_barang_id.is_pakai == 1" ng-disabled="true">
+                                                    <input class="form-control form-control-sm" ng-change=""
+                                                           ng-disabled="is_view" ng-model="detail.inv_m_barang_id.nama"
+                                                           type="text"/>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="input-group input-group-sm">
+                                                    <input class="form-control form-control-sm rp" ng-change="total()"
+                                                           ng-disabled="is_view" ng-model="detail.jumlah" type="text"
+                                                           ui-number-mask="2"/>
+                                                    <span class="input-group-text">
+                                                            {{detail.nama_satuan}}
+                                                        </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm" style="margin:0px;">
+                                                        <span class="input-group-text bg-success"
+                                                              ng-click="!is_view && modalHarga(detail, 'Harga', $index)"
+                                                              ng-disabled="is_view">
+                                                            {{is_import ? 'Rp' : 'Rp'}}
+                                                        </span>
+                                                    <input class="form-control form-control-sm rp " ng-blur="total()"
+                                                           ng-disabled="is_view" ng-model="detail.harga" type="text"
+                                                           ui-number-mask="2"/>
+                                                </div>
+                                            </td>
+                                            <td ng-if="is_import">
+                                                <div class="row">
+                                                    <div class="col-sm-6" style="padding-right: 0px">
+                                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                            <!--<span class="input-group-text">Kurs (Rp.)</span>-->
+                                                            <input class="form-control form-control-sm rp"
+                                                                   ng-disabled="is_view" ng-blur="total('kurs_edit')"
+                                                                   ng-model="detail.kurs" ui-number-mask="2">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                            <!--                                                                <span class="input-group-text">
+                                                                                                                                $
+                                                                                                                            </span>-->
+                                                            <input class="form-control form-control-sm rp"
+                                                                   ng-disabled="true" ng-model="detail.dollar"
+                                                                   type="text" ui-number-mask="2">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td ng-if="!is_import">
+                                                <div class="row">
+                                                    <!--                                                        <div class="col-sm-5" style="padding-right: 0px">
+                                                                                                                <div class="input-group input-group-sm" style="margin:0px;">
+                                                                                                                    <input class="form-control form-control-sm  angka"  ng-change="total('persen')" ng-disabled="is_view" ng-model="detail.diskon_persen" style="text-align: center;">
+                                                                                                                    <span class="input-group-text">%</span>
+                                                                                                                </div>
+                                                                                                            </div>-->
+                                                    <!--                                                        <div class="col-sm-5">
+                                                                                                                <div class="input-group input-group-sm" style="margin:0px;">
+                                                                                                                    <span class="input-group-text bg-success" ng-click="!is_view && modalHarga(detail, 'Diskon')" ng-disabled="is_view">
+                                                                                                                        Rp
+                                                                                                                    </span>
+                                                                                                                    <input class="form-control form-control-sm rp"  ng-change="total('rupiah')" ng-disabled="is_view" ng-model="detail.diskon" type="text" ui-number-mask="2">
+                                                                                                                </div>
+                                                                                                            </div>-->
+                                                    <div class="col-sm-12">
+                                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                                <span class="input-group-text" ng-disabled="is_view">
+                                                                    Rp
+                                                                </span>
+                                                            <input class="form-control form-control-sm rp"
+                                                                   ng-change="total()" ng-disabled="is_view"
+                                                                   ng-model="detail.diskon" type="text"
+                                                                   ui-number-mask="2">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm" style="margin:0px;">
+                                                        <span class="input-group-text"
+                                                              ng-click="copyValue(detail.subtotal_edit, detail.subtotal, detail)">
+                                                            Rp
+                                                        </span>
+                                                    <input class="form-control form-control-sm rp" ng-disabled="true"
+                                                           ng-model="detail.subtotal" ng-change="total('', true)"
+                                                           type="text" ui-number-mask="2"/>
+                                                    <!--                                                        <span ng-if="//detail.selisih < 0 || detail.selisih > 0" class="input-group-text {{detail.bg}}">
+                                                                                                                {{//detail.selisih}}
+                                                                                                            </span>-->
+                                                </div>
+                                            </td>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm" style="margin:0px;">
+                                                    <!--                                                        <span class="input-group-text {{detail.bg}}" title="{{detail.selisih}}" ng-click="!is_view && resetPPN()" ng-disabled="is_view">
+                                                                                                                Rp
+                                                                                                            </span>-->
+                                                    <input class="form-control form-control-sm rp {{detail.bg}}"
+                                                           ng-disabled="is_view" ng-model="detail.subtotal_edit"
+                                                           ng-change="total('', true)" type="text" ui-number-mask="2"/>
+                                                    <!--                                                        <span ng-if="//detail.selisih < 0 || detail.selisih > 0" class="input-group-text {{detail.bg}}">
+                                                                                                                {{//detail.selisih}}
+                                                                                                            </span>-->
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!--                                        <tr ng-if="form.biaya_lain == undefined">
+                                                                                    <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                                        Akun Biaya
+                                                                                    </th>
+                                                                                <style>
+                                                                                    .open{
+                                                                                        overflow: visible;
+                                                                                    }
+                                                                                </style>
+                                                                                <td>
+                                                                                    <select class="form-control form-control-sm " ng-change="prepareJurnal()" ng-disabled="is_view" ng-model="form.m_akun_biaya_id" placeholder="Pilih Cabang">
+                                                                                        <option value="">.: Pilih Akun :.</option>
+                                                                                        <option ng-repeat="(key, value) in listAkunBeban" ng-selected="value.id == form.m_akun_biaya_id.id" ng-value="{{value.id}}">
+                                                                                            {{value.kode}} - {{value.nama}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                </tr>
+                                                                                <tr ng-if="form.biaya_lain != undefined">
+                                                                                    <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                                        Akun Biaya
+                                                                                    </th>
+                                                                                <style>
+                                                                                    .open{
+                                                                                        overflow: visible;
+                                                                                    }
+                                                                                </style>
+                                                                                <td>
+                                                                                    <select class="form-control form-control-sm " ng-change="prepareJurnal()" ng-disabled="is_view" ng-model="form.m_akun_biaya_id" placeholder="Pilih Cabang" required="required">
+                                                                                        <option value="">.: Pilih Akun :.</option>
+                                                                                        <option ng-repeat="(key, value) in listAkunBeban" ng-selected="value.id == form.m_akun_biaya_id" ng-value="{{value}}">
+                                                                                            {{value.kode}} - {{value.nama}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                                        Biaya - Biaya Lain :
+                                                                                    </th>
+                                                                                    <td style="width:135px;">
+                                                                                        <div class="input-group input-group-sm">
+                                                                                            <span class="input-group-text">
+                                                                                                Rp
+                                                                                            </span>
+                                                                                            <input class="form-control form-control-sm" ng-change="total('')" ng-disabled="is_view" ng-model="form.biaya_lain" type="text" ui-number-mask="0"/>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                                        Akun Potongan
+                                                                                    </th>
+                                                                                <style>
+                                                                                    .open{
+                                                                                        overflow: visible;
+                                                                                    }
+                                                                                </style>
+                                                                                <td>
+                                                                                    <select class="form-control form-control-sm " ng-change="prepareJurnal()" ng-disabled="is_view" ng-model="form.m_akun_potongan_id" placeholder="Pilih Cabang" required="required">
+                                                                                        <option value="">.: Pilih Akun :.</option>
+                                                                                        <option ng-repeat="(key, value) in listAkunPendapatan" ng-selected="value.id == form.m_akun_potongan_id" ng-value="{{value.id}}">
+                                                                                            {{value.kode}} - {{value.nama}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                                        Potongan :
+                                                                                    </th>
+                                                                                    <td style="width:135px;">
+                                                                                        <div class="input-group input-group-sm">
+                                                                                            <span class="input-group-text">
+                                                                                                Rp
+                                                                                            </span>
+                                                                                            <input class="form-control form-control-sm" ng-change="total('')" ng-disabled="is_view" ng-model="form.potongan" type="text" ui-number-mask="0"/>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>-->
+                                        <tr>
+                                            <td class="text-center" style="width: 5px;">
+                                                <button class="btn btn-sm btn-success" ng-click="checkJenis()"
+                                                        ng-disabled="is_view" uib-tooltip="Tambah Barang">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-success" type="button"
+                                                        ng-if="form.jenis_pembelian == 'barang'"
+                                                        ng-click="modalBarangJasa()" ng-disabled="is_view">
+                                                    <i class="fa fa-plus"></i>
+                                                    Tambah Barang Lain-lain
+                                                </button>
+                                            </td>
+                                            <td colspan="5"></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                Harga Jual / Penggantian :
+                                            </th>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm">
+                                                        <span class="input-group-text"
+                                                              ng-click="copyValue(form.total_edit, form.total)">
+                                                            Rp
+                                                        </span>
+                                                    <input class="form-control form-control-sm rp" ng-change="total('')"
+                                                           ng-disabled="true" ng-model="form.total" type="text"
+                                                           ui-number-mask="2"/>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm">
+                                                    <!--                                                        <span class="input-group-text">
+                                                                                                                Rp
+                                                                                                            </span>-->
+                                                    <input class="form-control form-control-sm rp {{form.bg_total}}"
+                                                           ng-change="total('', false, true)" ng-disabled="is_view"
+                                                           ng-model="form.total_edit" type="text" ui-number-mask="2"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                Dikurangi Potongan Harga :
+                                            </th>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm">
+                                                    <!--                                                        <span class="input-group-text">
+                                                                                                                Rp
+                                                                                                            </span>-->
+                                                    <input class="form-control form-control-sm rp" ng-change="total('')"
+                                                           ng-disabled="true" ng-model="form.diskon" type="text"
+                                                           ui-number-mask="2"/>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-hide="is_tunai">
+                                            <th class="ng-scope" colspan="5" style="text-align: right; width:80px;">
+                                                Uang Muka :
+                                            </th>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm">
+                                                    <!--                                                        <span class="input-group-text">
+                                                                                                                Rp
+                                                                                                            </span>-->
+                                                    <input class="form-control form-control-sm rp" ng-change="total()"
+                                                           ng-disabled="is_view" ng-model="form.cash" type="text"
+                                                           ui-number-mask="2"/>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                Dasar Pengenaan Pajak :
+                                            </th>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm">
+                                                    <!--                                                        <span class="input-group-text">
+                                                                                                                Rp
+                                                                                                            </span>-->
+                                                    <input class="form-control form-control-sm rp" ng-disabled="true"
+                                                           ng-model="form.grand_total" type="text" ui-number-mask="2"/>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr ng-if="form.acc_m_kontak_id.npwp != ''">
+                                            <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                PPN = {{form.jenis_ppn}}% x Dasar Pengenaan Pajak :
+                                            </th>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm">
+                                                    <!--                                                        <span class="input-group-text">
+                                                                                                                Rp
+                                                                                                            </span>-->
+                                                    <input class="form-control form-control-sm rp" ng-disabled="true"
+                                                           ng-model="form.form_ppn" type="text" ui-number-mask="2"
+                                                           ng-change="bayar(true)"/>
+                                                    <!--                                                        <span ng-if="form.selisih < 0 || form.selisih > 0" class="input-group-text {{form.bg}}">
+                                                                                                                {{form.selisih| number : 2}}
+                                                                                                            </span>-->
+                                                </div>
+                                            </td>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm">
+                                                    <!--                                                        <span class="input-group-text {{form.bg}}" title="{{form.selisih| number:2}}">
+                                                                                                                Rp
+                                                                                                            </span>-->
+                                                    <input class="form-control form-control-sm rp" ng-disabled="is_view"
+                                                           ng-model="form.ppn_edit" type="text" ui-number-mask="2"
+                                                           ng-change="bayar(true)"/>
+                                                    <!--                                                        <span ng-if="form.selisih < 0 || form.selisih > 0" class="input-group-text {{form.bg}}">
+                                                                                                                {{form.selisih| number : 2}}
+                                                                                                            </span>-->
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!--                                        <tr>
+                                                                                    <th class="ng-scope" colspan="5" style="text-align: right;" required>
+                                                                                        Keluar Dari :
+                                                                                    </th>
+                                                                                    <td>
+                                                                                        <div class="input-group input-group-sm" style="width: 100%">
+                                                                                            <select class="form-control form-control-sm " ng-change="prepareJurnal()" ng-disabled="is_view" ng-model="form.m_akun_id" required="">
+                                                                                                <option value="">  .: Pilih Akun :. </option>
+                                                                                                <option ng-repeat="(key, value) in listAkunHarta" ng-selected="value.id == form.m_akun_id" ng-value="{{value.id}}">
+                                                                                                    {{value.kode}} - {{value.nama}}
+                                                                                                </option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>-->
+                                        <!--                                            <tr>
+                                                                                        <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                                                            Total PPnBM (Pajak Penjualan Barang Mewah) :
+                                                                                        </th>
+                                                                                        <td style="width:135px;">
+                                                                                            <div class="input-group input-group-sm">
+                                                                                                <span class="input-group-text">
+                                                                                                    Rp
+                                                                                                </span>
+                                                                                                <input class="form-control form-control-sm rp" ng-disabled="true" ng-model="form.ppnbm" type="text" ui-number-mask="2"/>
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    </tr>-->
+                                        <tr>
+                                            <th class="ng-scope" colspan="5" style="text-align: right;">
+                                                Total Terutang :
+                                            </th>
+                                            <td style="width:135px;">
+                                                <div class="input-group input-group-sm">
+                                                    <!--                                                        <span class="input-group-text">
+                                                                                                                Rp
+                                                                                                            </span>-->
+                                                    <input class="form-control form-control-sm rp" ng-disabled="true"
+                                                           ng-model="form.hutang" type="text" ui-number-mask="2"/>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Detail Pembelian - END -->
+
+                        <!--JURNAL AKUNTANSI-->
+                        <!-- <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined || form.acc_m_kontak_id == undefined">
+                            <br>
+                            <h6>Jurnal Akuntansi</h6>
+                            <hr>
+                        </div>
+                        <div class="col-md-12" ng-hide="form.acc_m_lokasi_id == undefined || form.acc_m_kontak_id == undefined">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered det-trans">
+                                        <thead>
+                                            <tr>
+                                                <th>Akun</th>
+                                                <th>Keterangan</th>
+                                                <th>Debit</th>
+                                                <th>Kredit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="val in listJurnal">
+                                                <td ng-style="{
+                                                        'padding-left':val.debit == 0 ? '50px' : '0px' }">{{val.akun.kode}} - {{val.akun.nama}}</td>
+                                                <td>{{val.keterangan}}</td>
+                                                <td align='right'>{{val.debit| number : 2}}</td>
+                                                <td align='right'>{{val.kredit| number : 2}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th colspan='2' class='text-right'>TOTAL</th>
+                                                <td align='right'>{{totalDebit| number : 2}}</td>
+                                                <td align='right'>{{totalKredit| number : 2}}</td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!--JURNAL AKUNTANSI - END-->
+
+                        <!-- Kolom 1 -->
+                        <div class="offset-md-6 col-md-6" ng-if="is_import == 1">
+                            <!-- <h6>Biaya Kapal</h6>
+                            <hr> -->
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label-sm">Ongkos Kirim / Kapal</label>
+                                <div class="col-md-5">
+                                    <div class="input-group input-group-sm" style="margin:0px;">
+                                      <span class="input-group-text" style="font-size: 10px">
+                                          Rp
+                                      </span>
+                                        <input class="form-control form-control-sm text-right" ng-disabled="is_view"
+                                               ng-model="form.ongkos_kapal_rp" type="text" ui-number-mask="2"
+                                               ng-change="total()">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm" style="margin:0px;">
+                                      <span class="input-group-text" style="font-size: 10px">
+                                          $
+                                      </span>
+                                        <input class="form-control form-control-sm text-right" ng-disabled="is_view"
+                                               ng-model="form.ongkos_kapal_usd" type="text" ui-number-mask="2">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Kolom 1 - END -->
+
+                        <!-- Kolom 2 - END -->
+                        <div class="col-md-12" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                            <br>
+                            <h6>Daftar Faktur Pajak Bea Pelabuhan PPN</h6>
+                            <hr>
+                        </div>
+                        <div class="col-md-12" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                            <table class="table table-bordered det-trans" style="white-space: normal;">
+                                <thead>
+                                <tr>
+                                    <th style="width:10px">
+                                        <button type="button" class="btn btn-info fa fa-plus"
+                                                ng-click="addDetailPajak()" ng-disabled="is_view"></button>
+                                    </th>
+                                    <th class="text-center">No.</th>
+                                    <th class="text-center" style="width:50%">Penyedia Jasa</th>
+                                    <th class="text-center">Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="row in listDetailPajak">
+                                    <td>
+                                        <button type="button" class="btn btn-danger fa fa-remove"
+                                                ng-click="removeRowPajak($index)" ng-disabled="is_view"></button>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <ui-select ng-model="row.faktur" on-select="setDetPajak(row.faktur, $index)"
+                                                       theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Cari Nomor Faktur Pajak">
+                                                    {{$select.selected.inv_m_faktur_pajak_id.nomor}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="vals in getListFP | filter : $select.search">
+                                                    {{vals.inv_m_faktur_pajak_id.nomor}} - {{vals.acc_m_kontak_id.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{row.faktur.acc_m_kontak_id.nama}}
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                <span class="input-group-text" style="font-size: 10px">
+                                                    Rp
+                                                </span>
+                                            <input class="form-control form-control-sm text-right" ng-disabled="1"
+                                                   ng-model="row.faktur.total" type="text" ui-number-mask="2">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="width:10px">
+                                        <button type="button" class="btn btn-info fa fa-plus"
+                                                ng-click="addDetailPajak()" ng-disabled="is_view"></button>
+                                    </th>
+                                    <th colspan="3"></th>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <th colspan="3" class="text-right">Total Bea Pelabuhan</th>
+                                <th>
+                                    <div class="input-group input-group-sm" style="margin:0px;">
+                                        <span class="input-group-text" style="font-size: 10px">
+                                            Rp
+                                        </span>
+                                        <input class="form-control form-control-sm text-right" ng-disabled="1"
+                                               ng-model="totalPajakPelabuhan" type="text" ui-number-mask="2">
+                                    </div>
+                                </th>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="col-md-12" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                            <br>
+                            <h6>Daftar Bea Pelabuhan Non PPN</button></h6>
+                            <hr>
+                        </div>
+
+                        <div class="col-md-12" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                            <table class="table table-bordered det-trans">
+                                <thead>
+                                <tr>
+                                    <th style="width:10px">
+                                        <button type="button" class="btn btn-info fa fa-plus"
+                                                ng-click="addDetailPajak('listDetailPajakNonPPN')"
+                                                ng-disabled="is_view"></button>
+                                    </th>
+                                    <th class="text-center">No. Invoice</th>
+                                    <th class="text-center">Tanggal</th>
+                                    <th class="text-center" style="width:50%">Penyedia Jasa</th>
+                                    <th class="text-center">Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="row in listDetailPajakNonPPN">
+                                    <td>
+                                        <button type="button" class="btn btn-danger fa fa-remove"
+                                                ng-click="removeRowPajak($index, 'listDetailPajakNonPPN')"
+                                                ng-disabled="is_view"></button>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm"
+                                               ng-model="row.no_invoice">
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm" is-open="row.opened"
+                                               ng-click="date_open($event, row)" ng-disabled="is_view"
+                                               ng-model="row.tanggal" type="text" uib-datepicker-popup="dd-MM-yyyy"
+                                               datepicker-options="options_min"/>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" style="width: 100%; float: left">
+                                            <ui-select ng-model="row.acc_m_kontak_id" theme="bootstrap"
+                                                       ng-disabled="is_view" style="width: 100%">
+                                                <ui-select-match placeholder="Cari Supplier">
+                                                    {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices
+                                                        repeat="vals in listSupplier2 | filter : $select.search">
+                                                    {{vals.kode}} - {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <div class="btn btn-sm btn-info" ng-if="!is_view"
+                                                 ng-click="modalSupplier('pelabuhan', row)">
+                                                <i class="fa fa-plus"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                <span class="input-group-text" style="font-size: 10px">
+                                                    Rp
+                                                </span>
+                                            <input class="form-control form-control-sm text-right" ng-disabled="is_view"
+                                                   ng-model="row.total" type="text" ui-number-mask="0"
+                                                   ng-change="totalPajak()">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="width:10px">
+                                        <button type="button" class="btn btn-info fa fa-plus"
+                                                ng-click="addDetailPajak('listDetailPajakNonPPN')"
+                                                ng-disabled="is_view"></button>
+                                    </th>
+                                    <th colspan="4"></th>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <th colspan="4" class="text-right">Total Bea Pelabuhan</th>
+                                <th>
+                                    <div class="input-group input-group-sm" style="margin:0px;">
+                                        <span class="input-group-text" style="font-size: 10px">
+                                            Rp
+                                        </span>
+                                        <input class="form-control form-control-sm text-right" ng-disabled="1"
+                                               ng-model="totalPajakPelabuhanNonPPN" type="text" ui-number-mask="0">
+                                    </div>
+                                </th>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="col-md-12" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                            <br>
+                            <h6>Biaya Tambahan</h6>
+                            <hr>
+                        </div>
+
+                        <div class="col-md-12" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                            <table class="table table-bordered det-trans">
+                                <thead>
+                                <tr>
+                                    <th style="width:10px">
+                                        <button type="button" class="btn btn-info fa fa-plus"
+                                                ng-click="addDetailBiaya('listBiayaTambahan')"
+                                                ng-disabled="is_view"></button>
+                                    </th>
+                                    <th class="text-center">Bea Masuk</th>
+                                    <th class="text-center">PPN</th>
+                                    <th class="text-center">PPh22</th>
+                                    <th class="text-center">Denda Pabean</th>
+                                    <th class="text-center">NTPN</th>
+                                    <th class="text-center">Tanggal NTPN</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="row in listBiayaTambahan">
+                                    <td>
+                                        <button type="button" class="btn btn-danger fa fa-remove"
+                                                ng-click="removeRowBiaya($index, 'listBiayaTambahan')"
+                                                ng-disabled="is_view"></button>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                <span class="input-group-text" style="font-size: 10px">
+                                                    Rp
+                                                </span>
+                                            <input class="form-control form-control-sm text-right" ng-disabled="is_view"
+                                                   ng-model="row.bea_masuk" type="text" ui-number-mask="2">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                <span class="input-group-text" style="font-size: 10px">
+                                                    Rp
+                                                </span>
+                                            <input class="form-control form-control-sm text-right" ng-disabled="is_view"
+                                                   ng-model="row.ppn" type="text" ui-number-mask="2">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                <span class="input-group-text" style="font-size: 10px">
+                                                    Rp
+                                                </span>
+                                            <input class="form-control form-control-sm text-right" ng-disabled="is_view"
+                                                   ng-model="row.pph22" type="text" ui-number-mask="2">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm" style="margin:0px;">
+                                                <span class="input-group-text" style="font-size: 10px">
+                                                    Rp
+                                                </span>
+                                            <input class="form-control form-control-sm text-right" ng-disabled="is_view"
+                                                   ng-model="row.denda_pabean" type="text" ui-number-mask="2">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm" ng-model="row.ntpn"
+                                               ng-disabled="is_view">
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm" is-open="row.opened"
+                                               ng-click="date_open($event, row)" ng-disabled="is_view"
+                                               ng-model="row.tanggal_ntpn" type="text" uib-datepicker-popup="dd-MM-yyyy"
+                                               datepicker-options="options_min"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="width:10px">
+                                        <button type="button" class="btn btn-info fa fa-plus"
+                                                ng-click="addDetailBiaya('listBiayaTambahan')"
+                                                ng-disabled="is_view"></button>
+                                    </th>
+                                    <th colspan="6"></th>
+                                </tr>
+                                </tbody>
+                                <!--                                <tfoot>
+                                                                <th colspan="4" class="text-right">Total Biaya Tambahan</th>
+                                                                <th>
+                                                                    <div class="input-group input-group-sm" style="margin:0px;">
+                                                                        <span class="input-group-text" style="font-size: 10px">
+                                                                            Rp
+                                                                        </span>
+                                                                        <input class="form-control form-control-sm text-right" ng-disabled="1"
+                                                                               ng-model="totalBiayaTambahan" type="text" ui-number-mask="2">
+                                                                    </div></th>
+                                                                </tfoot>-->
+                            </table>
+                        </div>
+
+                        <!--                        <div class="col-md-12" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                                                    <h6>Biaya Tambahan</h6>
+                                                    <hr>
+                                                </div>
+                                                <div class="col-md-4" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                                                    <div class="form-group row">
+                                                        <label class="col-md-6 col-form-label-sm">Bea Masuk</label>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="input-group-text">
+                                                                    Rp
+                                                                </div>
+                                                                <input type="text" class="form-control form-control-sm rp" ng-model="form.bea_masuk" ng-disabled="is_view" required ui-number-mask="0"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-6 col-form-label-sm">PPN</label>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="input-group-text">
+                                                                    Rp
+                                                                </div>
+                                                                <input type="text" class="form-control form-control-sm rp" ng-model="form.ppn" ng-disabled="is_view" required ui-number-mask="0"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-6 col-form-label-sm">NTPN</label>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group input-group-sm">
+                                                                                                        <div class="input-group-text">
+                                                                                                            Rp
+                                                                                                        </div>
+                                                                <input type="text" class="form-control form-control-sm" ng-model="form.ntpn" ng-disabled="is_view" required/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-6 col-form-label-sm">Tanggal NTPN</label>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group input-group-sm">
+                                                                <input class="form-control form-control-sm" is-open="opened.tanggal_ntpn" ng-click="toggle($event, 'tanggal_ntpn')" ng-disabled="is_view" ng-model="form.tanggal_ntpn" type="text" uib-datepicker-popup="dd-MM-yyyy"  datepicker-options="options_min"/>
+                                                                <div class="input-group-text">
+                                                                    <i class="fa fa-calendar" ng-click="toggle($event, 'tanggal_ntpn')"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4" ng-if="form.is_import == 1">
+                                                    <div class="form-group row">
+                                                        <label class="col-md-6 col-form-label-sm">PPH Pasal 22</label>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="input-group-text">
+                                                                    Rp
+                                                                </div>
+                                                                <input type="text" class="form-control form-control-sm rp" ng-model="form.pph22" ng-disabled="is_view" required ui-number-mask="0"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-6 col-form-label-sm">Denda Pabean</label>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="input-group-text">
+                                                                    Rp
+                                                                </div>
+                                                                <input type="text" class="form-control form-control-sm rp" ng-model="form.denda_pabean" ng-disabled="is_view" required ui-number-mask="0"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4" ng-if="form.is_import == 1 && form.jenis_pembelian == 'barang'">
+                                                    <div class="form-group row">
+                                                        <label class="col-md-6 col-form-label-sm">Pelabulan (PPN)</label>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="input-group-text">
+                                                                    Rp
+                                                                </div>
+                                                                <input type="text" class="form-control form-control-sm rp" ng-model="form.pelabuhan_ppn" ng-disabled="1" required ui-number-mask="0"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-md-6 col-form-label-sm">Pelabuhan (Non PPN)</label>
+                                                        <div class="col-md-6">
+                                                            <div class="input-group input-group-sm">
+                                                                <div class="input-group-text">
+                                                                    Rp
+                                                                </div>
+                                                                <input type="text" class="form-control form-control-sm rp" ng-model="form.pelabuhan_non_ppn" ng-disabled="1" required ui-number-mask="0"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+
+                    </div>
+                    <!-- Blok Edit Data -->
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group pull-right">
+                    <button type="submit" class="btn btn-secondary btn-sm" ng-click="cancel()">
+                        <i class="fa fa-arrow-left"></i>
+                        &nbsp;Kembali
+                    </button>
+                    <button type="submit" class="btn btn-danger btn-sm" ng-click="unpost(form)"
+                            ng-if="is_view && form.status != 'draft'">
+                        <i class="fa fa-refresh"></i>
+                        &nbsp;Unpost
+                    </button>
+                    <button type="submit" class="btn btn-success btn-sm" ng-if="!is_view" button-spinner="loading"
+                            ng-disabled="cek <= 3 || loading" ng-click="save(form, 'draft')">
+                        <i class="fa fa-save"></i>
+                        &nbsp;Simpan & Draft
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" ng-if="!is_view" button-spinner="loading"
+                            ng-disabled="cek <= 3 || loading" ng-click="save(form, 'terposting')">
+                        <i class="fa fa-check"></i>
+                        &nbsp;Simpan & Posting
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

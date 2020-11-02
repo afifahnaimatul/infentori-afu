@@ -1,0 +1,102 @@
+<div class="animated fadeIn">
+    <div ng-controller="monitoringPengajuanCtrl">
+        <div class="card">
+            <div class="card-header">
+                <strong>Monitoring Pengajuan</strong>
+            </div>
+            <div class="card-body">
+                <div class="row mt-15px">
+                    <div class="col-md-12">
+                        <form name="landaform" novalidate="">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label-sm required">Periode Approval</label>
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <input ng-change="clearData()" class="form-control form-control-sm" date-range-picker="" options="dateOptions" ng-model="form.periode" placeholder="Periode" type="text"/>
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="col-sm-1 col-form-label-sm required">Lokasi</label>
+                                        <div class="col-md-3">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.m_lokasi_id" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama }}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap }}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary btn-sm" ng-click="tampilkan()">Tampilkan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <hr/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-12">
+                        <form name="landaform" novalidate="">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-info" ng-if="user.akses.monitoring_pengajuan_transfer">
+                                        Untuk mentransfer uang ke <b>{{ form.lokasi }}</b> silahkan <a href="#!/transfer" target="_blank">Klik Di Sini</a> 
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label-sm"><b>Saldo uang di {{ form.lokasi }}</b></label>
+                                        <div class="col-md-3"><b>{{ form.saldo_bak | currency }}</b></div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label-sm"><b>Total Pengajuan Saat Ini</b></label>
+                                        <div class="col-md-3"><b>{{ form.total_pengajuan | currency }}</b></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Lokasi</th>
+                                <th style="text-align: center;" width="100">Budget</th>
+                                <th style="text-align: center;" width="100">Non Budgeting</th>
+                                <th width="10"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in displayed">
+                                <td style="text-align: left;">{{ row.nama }}</td>
+                                <td style="text-align: right;">{{ row.used_budget| number }}</td>
+                                <td style="text-align: right;">{{ row.used_budget2 | number }}</td>
+                                <td>
+                                    <div class="btn-group pull-right" role="group">
+                                        <button type="button" class="btn btn-sm btn-info fa fa-list" ui-sref="transaksi.pengajuan({tahun: form.tahun, lokasi:row.id})"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="align-center">
+                                    <b>Total</b>
+                                </td>
+                                <td class="align-right">
+                                    <b>{{ form.total_budget | number }}</b>
+                                </td>
+                                <td class="align-right">
+                                    <b>{{ form.total_nonbudget | number }}</b>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

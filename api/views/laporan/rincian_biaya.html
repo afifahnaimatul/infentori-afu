@@ -1,0 +1,80 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+
+    table{
+        /*display: table-cell;*/
+        border-collapse: collapse;width: 100%;}
+    td:empty::after{
+        content: "\00a0";
+    }
+
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center>
+                    <h2 class="header-laporan">LAPORAN RINCIAN {{data.akun}}</h2>
+                    Lokasi : {{ data.lokasi}}
+                    <br/>
+                    Periode : {{ data.tahun}}
+                    <br/>
+                    Disiapkan Tanggal : {{ data.disiapkan}}
+                    <br/>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-laporan-border" style="border-collapse: collapse;">
+                <thead>
+                    <tr align="center">
+                        <th colspan="2"></th>
+                        <th colspan="12">TAHUN</th>
+                        <th class="align-center" rowspan="2">
+                            TOTAL
+                        </th>
+                    </tr>
+                    <tr>
+
+                        <th class="align-center">
+                            No
+                        </th>
+                        <th class="align-center">
+                            AKUN
+                        </th>
+                        {%for val in data.tanggal%}
+                        <th class="align-center">
+                            {{val}}
+                        </th>
+                        {%endfor%}
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for val in detail%}
+                    <tr>
+                        <td align="center" class="text-center" style="vertical-align: top">{{ val.no}}</td>
+                        <td align="center" class="text-center" style="vertical-align: top">{{ val.nama}}</td>
+                        {%for v in data.tanggal%}
+                        <td align="right" style="vertical-align: top">{{ val[v].total | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        <td align="right" class="text-right" style="vertical-align: top">{{ val.total | number_format(2, '.', ',') }}</td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td align="right" class="text-center" colspan="2">
+                            <b>Total</b>
+                        </td>
+                        {%for v in data.tanggal%}
+                        <td align="right" style="vertical-align: top">{{ data.total[v] | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        <td align="right" class="text-right" style="vertical-align: top">{{ data.total.total| number_format(2, '.', ',')}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

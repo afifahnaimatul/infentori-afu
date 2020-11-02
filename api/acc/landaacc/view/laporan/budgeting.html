@@ -1,0 +1,47 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<div class="card-body">
+    <div class="row header-laporan-wrapper">
+        <div class="col-md-12 relative-div">
+            <center>
+                <img src="{{data.img}}" class="absolute-div-center" style="width:200px">
+                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                <h3 class="header-laporan">Laporan Budgeting</h3>
+                <p style="margin-top:3px">Periode {{data.tanggal}}</p>
+                <!--<br/>-->
+            </center>
+            <!--<hr/>-->
+        </div>
+    </div>
+    <div>
+        {%for index, row in detail%}
+        {%if (index is even)%}
+        <div class="col-md-6" style="width: 48%; float: left; margin: 10px">
+         {%else%}
+         <div class="col-md-6" style="width: 48%; float: right; margin: 10px">
+        {%endif%}
+        
+            <table class="table table-laporan-border" style="border-collapse: collapse; width: 100%">
+                <tbody>
+                    <tr class="non-body">
+                        <td colspan="3">
+                            <b>Nama Akun : </b> {{row.kode}} - {{row.nama}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; vertical-align: middle">Bulan</th>
+                        <th style="text-align: center" width="200">Target</th>
+                        <th style="text-align: center" width="200">Realisasi</th>
+                    </tr>
+                    {%for det in row.detail%}
+                    <tr ng-repeat="det in row.detail">
+                        <td style="text-align: left;">{{ det.bulan}}</td>
+                        <td class="text-right">{{ det.target }}</td>
+                        <td class="text-right">{{ det.realisasi }}</td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+        {%endfor%}
+    </div>
+</div>

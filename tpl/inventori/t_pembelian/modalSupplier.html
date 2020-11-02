@@ -1,0 +1,110 @@
+<div class="modal-header bg-primary">
+    <h5 class="modal-title">Master Supplier | Form Tambah Data</h5>
+    <button type="button" class="close" ng-click="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <form name="landaform" novalidate="">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm required">Kode</label>
+                    <div class="col-md-9">
+                        <ui-select class="ui-select-sm ui-select-container" ng-model="form.acc_m_akun_id"
+                                   on-select="cariBarangAll()" theme="bootstrap" ng-disabled="is_view">
+                            <ui-select-match placeholder="Pilih Akun Hutang">
+                                {{ $select.selected.kode}} - {{ $select.selected.nama}}
+                            </ui-select-match>
+                            <ui-select-choices position="down" repeat="val in listAkun | filter : $select.search">
+                                {{ val.kode}} - {{ val.nama}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm required">Tipe</label>
+                    <div class="col-md-9">
+                        <select class="form-control form-control-sm" ng-model="form.type" ng-disabled="is_view">
+                            <option value="supplier">Supplier</option>
+                            <option value="angkutan">Angkutan</option>
+                            <option value="pelabuhan">Pelabuhan</option>
+                            <option value="pengurusan dokumen">Pengurusan Dokumen</option>
+                            <option value="pengelolaan gudang">Pengelolaan Gudang</option>
+                            <option value="lain-lain">Lain-lain</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm required">Nama</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control form-control-sm" ng-model="form.nama" ng-disabled="is_view" required/>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm ">NIK</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control form-control-sm" ng-model="form.nik" ng-disabled="is_view" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm">PPN</label>
+                    <div class="col-md-9">
+                        <div class="btn-group">
+                            <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.is_ppn" uib-btn-radio="1">
+                                <i class="fa fa-check ng-scope" ng-if="form.is_ppn == 1"></i>
+                                Ya
+                            </label>
+                            <label class="btn btn-sm btn-primary" ng-disabled="is_view" ng-model="form.is_ppn" uib-btn-radio="0">
+                                <i class="fa fa-check ng-scope" ng-if="form.is_ppn == 0"></i>
+                                Tidak
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row" ng-if="form.is_ppn == 1">
+                    <label class="col-md-3 col-form-label-sm ">NPWP</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control form-control-sm" ng-model="form.npwp" ng-disabled="is_view" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm">Email</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control form-control-sm" ng-model="form.email" ng-disabled="is_view" required/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm">No Telepon</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control form-control-sm angka align-left" ng-model="form.tlp" ng-disabled="is_view" required/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm">Contact Person</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control form-control-sm" ng-model="form.cp" ng-disabled="is_view"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm">Alamat</label>
+                    <div class="col-md-9">
+                        <textarea style="height:120px" class="form-control form-control-sm" ng-model="form.alamat" ng-disabled="is_view" required/></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary btn-sm" ng-click="save(form)">
+        <i class="fa fa-save"></i>
+        Simpan
+    </button>
+</div>

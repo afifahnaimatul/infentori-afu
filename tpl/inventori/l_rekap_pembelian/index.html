@@ -1,0 +1,161 @@
+<style>
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+
+<div class="animated fadeIn">
+    <div ng-controller="l_rekap_pembelian">
+        <div class="card">
+            <div class="card-header">
+                <strong>Rekap Pembelian</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.lokasi" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.kategori" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Kategori">{{$select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listKategori | filter : $select.search">{{ val.nama}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan_awal"
+                                                   ng-click="toggle($event, 'bulan_awal')" ng-model="form.bulan_awal"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan Awal">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm" is-open="opened.bulan_akhir"
+                                                   ng-click="toggle($event, 'bulan_akhir')" ng-model="form.bulan_akhir"
+                                                   uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}"
+                                                   placeholder="Bulan Akhir">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group row">
+                                            <div class="btn-group">
+                                                <label ng-class="{
+                                                'btn-info': form.is_ppn == 1, 'btn-secondary' : form.is_ppn != 1}" class="btn btn-sm ng-untouched ng-valid ng-not-empty active ng-dirty ng-valid-parse" ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="1" ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 1"></i>PPN</label>
+                                                <label ng-class="{
+                                                'btn-info': form.is_ppn == 0, 'btn-secondary' : form.is_ppn != 0}" class="btn btn-sm ng-untouched ng-valid ng-not-empty ng-dirty" ng-model="form.is_ppn" ng-disabled="is_view" uib-btn-radio="0" ng-click="total()"><i class="fa fa-check" ng-if="form.is_ppn == 0"></i>Non PPN</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h2 class="header-laporan">{{data.lokasi}}</h2>
+                                <h2 class="header-laporan">REKAP PEMBELIAN {{data.periode}}</h2>
+                                <h2 class="header-laporan"> {{data.kategori}} </h2>
+                                </br>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-striped table-hover table-bordered table-print">
+                            <thead>
+                                <tr class="align-center">
+                                    <th width="10px">
+                                        Nomor Urut
+                                    </th>
+                                    <th style="min-width:200px">
+                                        Nama Barang
+                                    </th>
+                                    <th ng-repeat-start="(k, v) in data.list_bulan" ng-hide="true"></th>
+                                    <th style="min-width:100px" ng-repeat="vv in v">{{vv}}</th>
+                                    <th ng-repeat-end="" ng-hide="true"></th>
+                                    <th style="min-width:100px">Jumlah (kwt)</th>
+                                    <th style="min-width:100px">Jumlah (rp)</th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="v in detail">
+                                    <td class="align-center">{{v.no}}</td>
+                                    <td>{{v.nama}}</td>
+                                    <td ng-repeat-start="(kk, vv) in v.detail" ng-hide="true"></td>
+                                    <td class="align-right">{{vv.jumlah_masuk| number}}</td>
+                                    <td class="align-right">{{vv.total| number}}</td>
+                                    <td ng-repeat-end="" ng-hide="true"></td>
+                                    <td class="align-right">{{v.total_akhir | number}}</td>
+                                    <!-- <td class="align-right">{{v.total_akhir * v.harga_beli | number}}</td> -->
+                                    <td class="align-right">{{v.total_akhir_rp | number}}</td>
+                                </tr>
+                                <tr>
+                                  <th></th>
+                                  <th></th>
+                                  <th class="text-right" ng-repeat="val in totalPerBulan track by $index">
+                                    {{ $index % 2 == 1 ? (val | number) : "" }}
+                                    {{ $index % 2 == 0 ? (val | number) : "" }}
+                                  </th>
+                                  <th class="text-right"> {{ allTotal.kwt | number }} </th>
+                                  <th class="text-right"> {{ allTotal.total | number}} </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

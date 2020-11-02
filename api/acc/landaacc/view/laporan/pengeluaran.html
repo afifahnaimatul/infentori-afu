@@ -1,0 +1,173 @@
+<style type="text/css">
+    body{
+        /*font-family: monospace;*/
+    }
+    table.table, table.table td , table.table th {
+        border: 1px solid black;
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        padding: 2px 6px 2px;
+        vertical-align: bottom;
+        display: table-cell;
+    }
+    table.noborder, table.noborder td , table.noborder th {
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        padding: 2px 6px 2px;
+    }
+    table.noborders, table.noborders td , table.noborders th {
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        padding: 2px 6px 2px;
+    }
+
+    table.noborder-l, table.noborder-l td, table.noborder-l tr {
+
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        padding: 2px 6px 2px;
+    }
+    table.noborder-l, table.noborder-l tr:first-child td:first-child {
+        border: 1px solid black;
+        padding: 5px 2px 2px;
+    }
+    .tengah{
+        text-align: center;
+    }
+    .angka{
+        text-align: right;
+    }
+    table{display: table-cell;border-collapse: collapse;width: 100%;}
+    .border th{
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        line-height: 16px;
+    }
+    .border td{
+        /*margin-top: 5px; */
+        /*border-top: 1px solid #000;*/
+    }
+    .borders th{
+        border-bottom: 1px solid #000;
+    }
+    /*.footer table{
+        border-collapse: collapse;
+    }
+    .footer table, .footer td{
+        border: 1px solid black;
+    }*/
+    .footer td{
+        padding: 10px;
+        font-size: 12px;  
+    }
+    .footer .text-2x{
+        font-weight: 500;
+
+
+        vertical-align: top;
+    }
+    .footer .text-3x{
+        text-align: left;
+        font-size: 12px; 
+
+    }
+    .footer .text-1x{
+
+        font-weight: 400;
+
+        vertical-align: bottom;
+    }
+    .footer .text{
+        text-align: left;
+        font-size: 12px;      
+        vertical-align: bottom;
+    }
+
+    tr{
+        padding-bottom: 18px;
+    }
+
+    hr{
+        color: red;
+        background-color: red;
+    }
+</style>
+
+<div>
+    <div>
+        <table style="width: 750px">
+            <tr>
+                <td class="tengah" width="10%">
+                    <img src="{{data.url_img}}logo-ukdc.png" width="100%">
+
+                </td>
+                <td width="24%" class="tengah" style="font-weight: bold">
+                    <span style="letter-spacing: 6px">UNIVERSITAS</span><br/>
+                    <span style="letter-spacing: 2px">DARMA CENDIKA</span><br/>
+                    <span style="letter-spacing: 6px">SURABAYA</span>
+                </td>
+                <td class="tengah">
+                    <span style="border: 1px solid black; font-weight: bold; padding: 3px; letter-spacing: 3px">BUKTI KAS KELUAR</span>
+                </td>
+                <td width="34%">
+                    No : {{data.no_urut}}
+                    <br/>
+                    Tanggal : {{data.tanggal_formated}}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        KODE : {{data.no_transaksi}}
+    </div>
+    <div>
+        <table border="1" style="width:750px; border-collapse: collapse">
+            <tbody style="display: list-item">
+                <tr style="display: flex; padding: 0px">
+                    <th width="60%" style="letter-spacing: 6px">URAIAN</th>
+                    <th width="40%">Banyaknya Uang</th>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+    {% for val in detail %}
+    <div>
+        
+        <table border="1" style="width:750px; border-collapse: collapse">
+            <tbody style="display: list-item">
+                <tr style="display: flex; padding: 0px">
+                    <!--<td class="tengah" style="width: 18%" colspan="3">{{val.m_akun_id.kode}} - {{val.m_akun_id.nama}}</td>-->
+                    <td width="60%">{{val.keterangan}}</td>
+                    <td class="angka" width="40%">{{val.debit}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    {% endfor %}
+    <div>
+        <table border="1" style="border-bottom: 1px solid white;border-left: 1px solid white;width:750px;">
+            <tbody style="display: list-item">
+                <tr style="display: flex; padding: 0px">
+                    <!--<td class="tengah" style="width: 18%" colspan="3">{{val.m_akun_id.kode}} - {{val.m_akun_id.nama}}</td>-->
+                    <td width="60%" class="angka" style="border-left: none">JUMLAH</td>
+                    <td class="angka" width="40%" style="border-bottom: 1px solid;">{{data.total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        TERBILANG : {{data.terbilang}}
+    </div>
+</div>

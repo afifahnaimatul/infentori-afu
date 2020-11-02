@@ -1,0 +1,22 @@
+<nav ng-if="pages.length >= 2">
+	<ul class="pagination">
+		<li>
+			<a ng-click="selectPage(1)" style="border-radius: 10px 0 0 10px;">First</a>
+		</li>
+		<li>
+			<a ng-click="selectPage(currentPage - 1)">&lt;</a>
+		</li>
+		<li>
+			<a style="padding-bottom: 2px; padding: 5px">
+				<page-select></page-select>
+				of {{ numPages }}
+			</a>
+		</li>
+		<li>
+			<a ng-click="selectPage(currentPage + 1)">&gt;</a>
+		</li>
+		<li>
+			<a ng-click="selectPage(numPages)" style="border-radius: 0 10px 10px 0;">Last</a>
+		</li>
+	</ul>
+</nav>

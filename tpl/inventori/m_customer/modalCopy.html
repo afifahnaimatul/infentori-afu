@@ -1,0 +1,40 @@
+<div class="modal-header bg-warning">
+    <h5 class="modal-title">Copy Customer</h5>
+    <button type="button" class="close" ng-click="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <form name="landaform" novalidate="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label-sm">Copy ke Depo</label>
+                    <div class="col-md-8">
+                        <div class="btn-group" style="width: 100%; float: left">
+                            <ui-select class="ui-select-sm ui-select-container" style="width: 100%" ng-model="form.lokasi_tujuan" theme="bootstrap">
+                                <ui-select-match placeholder="Pilih Depo">
+                                  {{ $select.selected.kode}} - {{ $select.selected.nama}}
+                                </ui-select-match>
+                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">
+                                    {{ val.kode}} - {{ val.nama}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <div class="btn-group">
+        <button class="btn btn-warning btn-sm" ng-click="save(form, lokasi_tujuan)">
+            <i class="fa fa-trash"></i>
+            Copy Customer
+        </button>
+    </div>
+
+</div>

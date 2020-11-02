@@ -1,0 +1,81 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+    table {
+/*        display: table-cell;*/
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    <center class="header-smaller">
+                    <h5 class="header-laporan header-smaller" style="margin-bottom: 0px">
+                        {{data.lokasi}}
+                    </h5>
+                    <h5 class="header-laporan header-smaller text-uppercase" style="margin-bottom: 0px; margin-top: 0px">
+                        REKAP PENJUALAN {{ data.bulan_awal | date('F') }} S/D {{ data.bulan_akhir | date('F Y') }}
+                    </h5>
+                    <h5 class="header-laporan header-smaller" style="margin-top: 0px">
+                        BARANG DAGANGAN
+                    </h5>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse;">
+                <thead>
+                <tr>
+                    <th>Nomor Urut</th>
+                    <th style="width: 200px !important;" align="left">Nama Barang</th>
+                    {% for key, val in data.bulan %}
+                    <th>Jual {{ val.nama }}</th>
+                    {% endfor %}
+                    <th>Jumlah Jual Kwantum</th>
+                    <th>Jumlah Jual Harga</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, val in data.list %}
+                <tr>
+                    <td align="center">{{ loop.index }}</td>
+                    <td>{{ val.nama }}</td>
+                    {% for key, vals in val.detail %}
+                    <td align="right">
+                        {{ vals | number_format(2, '.', ',') }}
+                    </td>
+                    {% endfor %}
+                    <td class="align-right" align="right">{{ val.total | number_format(2, '.', ',') }}</td>
+                    <td class="align-right" align="right">{{ val.harga_total | number_format(2, '.', ',') }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tr>
+                  <th></th>
+                  <th>Total</th>
+                  {% for key, val in data.totalPerbulan %}
+                  <th style="text-align:right">
+                    {{ loop.index % 2 == 0 ? (val.subtotal | number_format(2, '.', ',') ) : ""  }}
+                    {{ loop.index % 2 == 1 ? (val.kwt | number_format) : "" }}
+                  </th>
+                  {% endfor %}
+                  <th style="text-align:right"> {{ data.allTotal.kwt | number_format }} </th>
+                  <th style="text-align:right"> {{ data.allTotal.total | number_format(2, '.', ',') }}</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

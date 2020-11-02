@@ -1,0 +1,55 @@
+<div class="modal-header bg-danger">
+    <h5 class="modal-title">Hapus No. Faktur</h5>
+    <button type="button" class="close" ng-click="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <form name="landaform" novalidate="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label-sm">Mulai Dari</label>
+                    <div class="col-md-4">
+                        <div class="btn-group" style="width: 100%; float: left">
+                            <ui-select class="ui-select-sm ui-select-container" style="width: 100%"
+                                       ng-model="form.faktur_mulai" theme="bootstrap">
+                                <ui-select-match placeholder="Pilih Faktur Pajak">{{ $select.selected.nomor}}</ui-select-match>
+                                <ui-select-choices position="down" repeat="val in listFaktur | filter : $select.search">
+                                    {{ val.nomor}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <label class="col-md-2 col-form-label-sm">Sampai</label>
+                    <div class="col-md-4">
+                        <div class="btn-group" style="width: 100%; float: left">
+                            <ui-select class="ui-select-sm ui-select-container" style="width: 100%"
+                                       ng-model="form.faktur_sampai" theme="bootstrap">
+                                <ui-select-match placeholder="Pilih Faktur Pajak">{{ $select.selected.nomor}}</ui-select-match>
+                                <ui-select-choices position="down" repeat="val in listFaktur | filter : $select.search">
+                                    {{ val.nomor}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <div class="btn-group">
+        <button class="btn btn-danger btn-sm" ng-click="delete(1)">
+            <i class="fa fa-trash"></i>
+            Hapus Semua
+        </button>
+        <button class="btn btn-warning btn-sm" ng-click="delete()">
+            <i class="fa fa-trash"></i>
+            Hapus
+        </button>
+    </div>
+
+</div>

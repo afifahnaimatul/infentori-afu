@@ -1,0 +1,176 @@
+<style>
+    .menu-laporan {
+        background-color: #fff;
+        border: none;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        border-radius: 0px!important;
+        font-size: 12px;
+    }
+    .menu-laporan:hover {
+        background-color: #20a8d8;
+        color: white;
+    }
+    .icon-laporan {
+        padding-right: 10px;
+        font-weight: bold;
+    }
+    .ket-laporan {
+        padding-left: 15px;
+    }
+</style>
+<div class="animated fadeIn">
+    <div class="row" ng-controller="laporanCtrl">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong class="">Daftar Laporan</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm 6">
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_jurnal_umum" role="alert">
+                                <a ui-sref="laporan.jurnal_umum" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Jurnal Umum
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_buku_besar" role="alert">
+                                <a ui-sref="laporan.buku_besar" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Buku Besar
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_neraca_saldo" role="alert">
+                                <a ui-sref="laporan.neraca_saldo" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Neraca Saldo
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_neraca" role="alert">
+                                <a ui-sref="laporan.neraca" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Posisi Keuangan
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_laba_rugi" role="alert">
+                                <a ui-sref="laporan.laba_rugi" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Aktifitas
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_budgeting" role="alert">
+                                <a ui-sref="laporan.budgeting" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Budgeting
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_arus_kas" role="alert" >
+                                <a ui-sref="laporan.arus_kas" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Arus Kas
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.monitoring_budget" role="alert">
+                                <a ui-sref="akun.monitoring_budget" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Monitoring Budgeting
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_hutang" role="alert">
+                                <a ui-sref="laporan.hutang" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Hutang
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_rekap_hutang" role="alert">
+                                <a ui-sref="laporan.rekap_hutang" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Rekap Hutang
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_piutang" role="alert">
+                                <a ui-sref="laporan.piutang" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Piutang
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.l_rekap_piutang" role="alert">
+                                <a ui-sref="laporan.rekap_piutang" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Rekap Piutang
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.laporan_rincian_biaya" role="alert">
+                                <a ui-sref="laporan.rincian_biaya" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Rincian Biaya
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.laporan_rekapan_pusat" role="alert">
+                                <a ui-sref="laporan.rekapan_pusat" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Rekapan Pusat
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.laporan_rekapan_depo" role="alert">
+                                <a ui-sref="laporan.rekapan_depo" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Rekapan Depo
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.laporan_rekapan_aliran_hutang" role="alert">
+                                <a ui-sref="laporan.rekapan_aliran_hutang" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Rekapan Aliran Hutang
+                                    </p>
+                                </a>
+                            </div>
+                            <div class="alert alert-primary menu-laporan" ng-if="user.akses.laporan_rekapan_aliran_piutang" role="alert">
+                                <a ui-sref="laporan.rekapan_aliran_piutang" class="nostyle">
+                                    <p class="mb-0px">
+                                        <i class="fa fa-angle-right icon-laporan"></i>
+                                        Rekapan Aliran Piutang
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

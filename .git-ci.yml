@@ -1,0 +1,8 @@
+image: mwienk/docker-git-ftp
+build:
+  script:
+   - git config git-ftp.url "ftp.landa.id/2019/accukdc/"
+   - git config git-ftp.password "Bismillah2019*"
+   - git config git-ftp.user "developer@landa.id"
+   # - git ftp init
+   - git ftp push

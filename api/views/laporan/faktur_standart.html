@@ -1,0 +1,140 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+
+    table{
+        /*display: table-cell;*/
+        border-collapse: collapse;width: 100%;}
+    td:empty::after{
+        content: "\00a0";
+    }
+
+    #pageFooter {
+        display: table-footer-group;
+        position: relative;
+        top: 0;
+        right: 0;
+        counter-increment: page;
+    }
+
+    #pageFooter:after {
+        content: counter(page);
+    }
+
+    footer {
+        position:fixed;
+        bottom:0;
+        left:0;
+    }
+
+    body {
+        counter-reset: page_number;
+    }
+
+    #page-number:after {
+        counter-increment: page_number;
+        content: "Page " counter(page_number);
+    }
+
+
+</style>
+<body>
+    <div class="card-body" id="print">
+
+        <!--<div id="pageFooter">Page </div>-->
+        <div align="left">
+            <div class="row">
+                <div class="col-md-12">
+                    <br/>
+                    <center class="header-smaller">
+                        <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                        <h2 class="header-laporan header-smaller">LAPORAN FAKTUR STANDART</h2>
+
+
+                        Periode : {{data.startDate}} Sampai {{data.endDate}}
+
+                        </br>
+                    </center>
+                    <hr/>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table-smaller" style="border-collapse: collapse;">
+                    <thead>
+                        <tr align="center">
+                            <th style="width:20px">
+                                No. Urut
+                            </th>
+                            <th >
+                                Tanggal
+                            </th>
+                            <th style="width: 45px">
+                                Nomor Surat Jalan
+                            </th>
+                            <th style="width: 90px">
+                                No. Faktur
+                            </th>
+                            <th >
+                                Pembeli
+                            </th>
+                            <th style="width: 90px">
+                                NPWP
+                            </th>
+                            <th >
+                                DPP
+                            </th>
+                            <th >
+                                PPN
+                            </th>
+                            <th >
+                                DPP + PPN
+                            </th>
+                            <th >
+                                Jumlah std
+                            </th>
+                            <th >
+                                Jumlah sederhana
+                            </th>
+                            <th >
+                                TOTAL
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td align="right">{{data.total_dpp| number_format(2, '.', ',')}}</td>
+                            <td align="right">{{data.total_ppn| number_format(2, '.', ',')}}</td>
+                            <td align="right">{{data.total| number_format(2, '.', ',')}}</td>
+                            <td align="right">{{data.total| number_format(2, '.', ',')}}</td>
+                            <td align="right">{{data.total_sederhana| number_format(2, '.', ',')}}</td>
+                            <td align="right">{{(data.total + data.total_sederhana)  | number_format(2, '.', ',')}}</td>
+                        </tr>
+                        {%for key, val in detail%}
+                        <tr class="{{val.class}} padding0">
+                            <td align="center">{{val.no}}</td>
+                            <td align="center">{{val.tanggal}}</td>
+                            <td align="center">{{val.no_surat_jalan}}</td>
+                            <td align="center">{{val.no_faktur}}</td>
+                            <td>{{val.kontak}}</td>
+                            <td align="center">{{val.npwp}}</td>
+                            <td align="right">{{not val.dpp ? '' : val.dpp | number_format(2, '.', ',')}}</td>
+                            <td align="right">{{not val.ppn ? '' : val.ppn| number_format(2, '.', ',')}}</td>
+                            <td align="right">{{not val.total ? '' : val.total| number_format(2, '.', ',')}}</td>
+                            <td align="right">
+                                {%if val.total2 != ''%}
+                                {{val.total2| number_format(2, '.', ',')}}
+                                {%endif%}
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<!--<footer>    
+    <p id='page-number'></p>
+</footer>-->

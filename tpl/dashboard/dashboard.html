@@ -1,0 +1,127 @@
+<div class="animated fadeIn">
+    <div ng-controller="dashboardCtrl">
+        <div class="row">
+            <!--<div class="col-sm-6" >-->
+            <div class="col-sm-6" ng-if="status == 0">
+                <div class="alert alert-warning" role="alert">
+                    <p class="mb-0px">
+                        Ada data pemetaan akun yang belum terisi, segera isi
+                        <a ui-sref="akun.akun_peta" class="btn btn-warning text-white btn-small">Disini</a>
+                    </p>
+                </div>
+            </div>
+            <!--<div class="col-md-6" >-->
+            <div class="col-md-6" ng-show="dd >= 25 && cekPenyusutan == 0">
+                <div class="alert alert-warning" role="alert">
+                    <p class="mb-0px">
+                        Penyusutan Asset Bulan {{ mm }} {{ yy }} Belum dilakukan,
+                        <a ui-sref="asset.penyusutan_asset" class="btn btn-warning text-white btn-small">
+                            <b>Klik di sini</b>
+                        </a>
+                        untuk melakukan penyusutan aset
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row my-flex-card">
+            <div class="col-md-6" ng-if="user.akses.dash_saldo_kas">
+                <div class="card">
+                    <div class="card-header card-header-dark">
+                        <strong>Saldo Kas & Setara Kas</strong>
+                        <strong class="pull-right">Per {{ tanggalSekarang| date:'dd MMMM yyyy' }}</strong>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="align-left">Akun</th>
+                                    <th class="align-right">Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-show="!isLoading">
+                                <tr ng-repeat="row in saldoAkun.detail">
+                                    <td class="align-left">{{ row.nama }}</td>
+                                    <td class="align-right">
+                                        <span>{{ row.debit - row.kredit | currency }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-right">
+                                        <b>TOTAL</b>
+                                    </td>
+                                    <td class="align-right">{{ saldoAkun.total | currency }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" ng-if="user.akses.dash_diagram_pemasukan">
+                <div class="card">
+                    <div class="card-header card-header-dark">
+                        <strong>Diagram Pengeluaran & Pemasukan Bulan Ini</strong>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        <div zingchart id="chartPie" zc-json="dataPie" zc-width="100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-flex-card">
+            <div class="col-md-6" ng-if="user.akses.dash_grafik_pendapatan">
+                <div class="card">
+                    <div class="card-header card-header-dark">
+                        <strong>Grafik Pendapatan Tahun Ini</strong>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        <div zingchart id="diagramPenerimaan" zc-json="dataPenerimaan" zc-width="100%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" ng-if="user.akses.dash_grafik_beban">
+                <div class="card">
+                    <div class="card-header card-header-dark">
+                        <strong>Grafik Beban Tahun Ini</strong>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        <div zingchart id="diagramPengeluaran" zc-json="dataBeban" zc-width="100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-flex-card">
+            <div class="col-md-6" ng-if="user.akses.dash_grafik_piutang">
+                <div class="card">
+                    <div class="card-header card-header-dark">
+                        <strong>Grafik Piutang Tahun Ini</strong>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        <div zingchart id="diagramPiutang" zc-json="dataPiutang" zc-width="100%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" ng-if="user.akses.dash_grafik_hutang">
+                <div class="card">
+                    <div class="card-header card-header-dark">
+                        <strong>Grafik Hutang Tahun Ini</strong>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        <div zingchart id="diagramHutang" zc-json="dataHutang" zc-width="100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12" ng-if="user.akses.dash_rekap_masuk_keluar">
+                <div class="card">
+                    <div class="card-header card-header-dark">
+                        <strong>Rekapitulasi Pengeluaran & Pemasukan Tahun Ini</strong>
+                    </div>
+                    <div class="card-body" style="padding:0">
+                        <div zingchart id="chartLine" zc-json="dataLine" zc-width="100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

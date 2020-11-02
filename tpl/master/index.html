@@ -1,0 +1,287 @@
+<style>
+    .menu-laporan {
+        background-color: #fff;
+        border: none;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        border-radius: 0px!important;
+        font-size: 12px;
+    }
+    .menu-laporan:hover {
+        background-color: #20a8d8;
+        color: white;
+    }
+    .icon-laporan {
+        padding-right: 10px;
+        font-weight: bold;
+    }
+    .ket-laporan {
+        padding-left: 15px;
+    }
+</style>
+<div class="animated fadeIn">
+    <div class="row" ng-controller="masterCtrl">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong class="">Pengaturan</strong>
+                </div>
+                <div class="card-body">
+                    <uib-tabset active="activeForm">
+                        <uib-tab heading="Global" index="0">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card-header col-md-12">
+                                        <h6 class="">Master</h6>
+                                    </div>
+                                    <div class="" ng-if="user.akses.lokasi">
+                                        <a ui-sref="master.lokasi">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Lokasi
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="" ng-if="user.akses.customer">
+                                        <a ui-sref="customer.customer">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Customer
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="" ng-if="user.akses.supplier">
+                                        <a ui-sref="supplier.supplier">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Supplier
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card-header col-md-12">
+                                        <h6 class="">Authentication</h6>
+                                    </div>
+                                    <div class="" ng-if="user.akses.pengguna_akses">
+                                        <a ui-sref="pengguna.akses">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Hak Akses
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="" ng-if="user.akses.pengguna_user">
+                                        <a ui-sref="pengguna.user">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Pengguna
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card-header col-md-12">
+                                        <h6 class="">Setting</h6>
+                                    </div>
+                                    <div class="" ng-if="user.akses.akun_peta">
+                                        <a ui-sref="akun.akun_peta">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Pemetaan Akun
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="" ng-if="user.akses.setting_approval">
+                                        <a ui-sref="master.setting_approval">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Approval Pengajuan
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="" ng-if="user.akses.umurekonomis">
+                                        <a ui-sref="asset.umur_ekonomis">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Umur Ekonomis
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="" ng-if="user.akses.budgeting_akun">
+                                        <a ui-sref="akun.budgeting_akun">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Budgeting
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card-header col-md-12">
+                                        <h6 class="">Saldo Awal</h6>
+                                    </div>
+                                    <div class="" ng-if="user.akses.saldo_awal_akun">
+                                        <a ui-sref="akun.saldo_awal">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Akun
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="" ng-if="user.akses.saldo_awal_hutang">
+                                        <a ui-sref="transaksi.saldo_awal_hutang_persupplier">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Hutang
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="" ng-if="user.akses.saldo_awal_piutang">
+                                        <a ui-sref="transaksi.saldo_awal_piutang_percustomer">
+                                            <div class="alert alert-primary menu-laporan" role="alert">
+                                                <p class="mb-0px">
+                                                    <i class="fa fa-angle-right icon-laporan"></i>
+                                                    Piutang
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </uib-tab>
+                        <uib-tab heading="Format Kode" index="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-info box-shadow">
+                                        <b>Harap Diperhatikan !</b>
+                                        <br/>
+                                        <ol style="padding-left: 15px;">
+                                            <li>
+                                                Variabel yang bisa digunakan yaitu :
+                                                <b>TAHUN, KODEUNIT, NOURUT.</b>
+                                                <br/>
+                                                Untuk kode pertransaksi bisa diketikkan sendiri.
+                                                <br/>
+                                                Contoh :
+                                                <b>PEMASUKAN, PENGELUARAN</b>
+                                            </li>
+                                            <li>
+                                                Contoh kode transaksi:
+                                                <b>TAHUN-KODEUNIT-PEMASUKAN-NOURUT</b>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h6 class="tittle-header">Tanggal</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label-sm required">TANGGAL</label>
+                                            <div class="col-md-8">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control form-control-sm" ng-click="toggle($event, 'tanggal')"  is-open="opened.tanggal" uib-datepicker-popup="dd-MM-yyyy" ng-model="form.tanggal" ng-disabled="is_view" datepicker-options="options"/>
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h6 class="tittle-header">Format Kode</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label-sm required">PEMASUKAN</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control form-control-sm" ng-model="form.format_pemasukan"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label-sm required">PENGELUARAN</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control form-control-sm" ng-model="form.format_pengeluaran"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label-sm required">TRANSFER KAS</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control form-control-sm" ng-model="form.format_transfer"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label-sm required">JURNAL UMUM</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control form-control-sm" ng-model="form.format_jurnal"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label-sm required">PENGAJUAN</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control form-control-sm" ng-model="form.format_pengajuan"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label-sm required">PEMBELIAN</label>
+                                            <div class="col-md-8">
+                                                <input class="form-control form-control-sm" ng-model="form.format_pembelian"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="pull-right">
+                                <button type="submit" class="btn btn-primary btn-sm" ng-hide="is_view" button-spinner="loading" ng-click="save()">
+                                    <i class="fa fa-save"></i>
+                                    &nbsp;Simpan
+                                </button>
+                            </div>
+                            </div>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

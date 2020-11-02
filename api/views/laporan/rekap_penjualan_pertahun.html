@@ -1,0 +1,152 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+
+<style type="text/css">
+    table {
+        display: table;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+    .align-center {
+        text-align: center;
+    }
+
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                    <h2 class="header-laporan header-smaller">LAPORAN REKAP PENJUALAN PER TAHUN</h2>
+
+                    Periode : {{data.tahun}}
+
+                    </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="align-center">
+                        <th rowspan="2">
+                            No
+                        </th>
+                        <th rowspan="2">
+                            Bulan
+                        </th>
+                        {%for val in data.kategori%}
+                        <th colspan="2">{{val.nama}}</th>
+                        {%endfor%}
+                        {%for val in data.kategori%}
+                        <th colspan="2">Retur {{val.nama}}</th>
+                        {%endfor%}
+                        <th colspan="2">Total</th>
+                    </tr>
+                    <tr>
+                        {%for val in data.kategori%}
+                        <th class="align-center">KWT</th>
+                        <th class="align-center">RP</th>
+                        {%endfor%}
+                        {%for val in data.kategori%}
+                        <th class="align-center" style="color:red">KWT</th>
+                        <th class="align-center" style="color:red">RP</th>
+                        {%endfor%}
+                        <th class="align-center">KWT</th>
+                        <th class="align-center">RP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for k, v in detail%}
+                    <tr>
+                        <td class="align-center">{{loop.index}}</td>
+                        <td>{{k}}</td>
+                        {%for vv in v.stok%}
+                        <td class="align-right">{{vv.qty | number_format}}</td>
+                        <td class="align-right">{{vv.total | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        {%for vv in v.retur%}
+                        <td class="align-right" style="color: red">{{vv.qty | number_format}}</td>
+                        <td class="align-right" style="color: red">{{vv.total | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        <td class="align-right">{{v.total.qty | number_format}}</td>
+                        <td class="align-right">{{v.total.total | number_format(2, '.', ',')}}</td>
+                    </tr>
+                    {%endfor%}
+                    <tr>
+                        <td colspan="2"></td>
+                        {%for v in data.qty.stok%}
+                        <td class="align-right">{{v.qty | number_format}}</td>
+                        <td class="align-right">{{v.total | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        {%for v in data.qty.retur%}
+                        <td class="align-right" style="color: red">{{v.qty | number_format}}</td>
+                        <td class="align-right" style="color: red">{{v.total | number_format(2, '.', ',')}}</td>
+                        {%endfor%}
+                        <td class="align-right">{{data.qty.total.qty | number_format}}</td>
+                        <td class="align-right">{{data.qty.total.total | number_format(2, '.', ',')}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div align="right">
+            <table style="width:250px">
+                {%for key, val in data.qty.stok%}
+                {%if loop.last%}
+                <tr style="border: none; border-bottom: 1px solid">
+                    {%else%}
+                <tr style="border: none;">
+                    {%endif%}
+                    <td class="align-right">
+                        {{key == 'Lokal' ? 'Barang Dagangan' : key }}
+                    </td>
+                    <td class="align-right">
+                        {{val.qty | number_format}}
+                    </td>
+                    <td class="align-right">
+                        {{val.total | number_format(2, '.', ',')}}
+                    </td>
+                </tr>
+                {%endfor%}
+                <tr>
+                    <td></td>
+                    <td class="align-right">{{data.qty.total.stok_qty | number_format}}</td>
+                    <td class="align-right">{{data.qty.total.stok_total | number_format(2, '.', ',')}}</td>
+                </tr>
+                <tr style="border: none; border-bottom: 1px solid">
+                    <td style="color:black">Retur Barang Jadi</td>
+                    <td class="align-right" style="color:red">{{data.qty.total.retur_qty | number_format}}</td>
+                    <td class="align-right" style="color:red">{{data.qty.total.retur_total | number_format(2, '.', ',')}}</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td class="align-right">{{data.qty.total.qty | number_format}}</td>
+                    <td class="align-right">{{data.qty.total.total | number_format(2, '.', ',')}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

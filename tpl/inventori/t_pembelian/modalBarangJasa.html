@@ -1,0 +1,60 @@
+<div class="modal-header bg-primary">
+    <h5 class="modal-title">Form Tambah Jasa / Barang Lain-lain</h5>
+    <button type="button" class="close" ng-click="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <form name="landaform" novalidate="">
+        <div class="row">
+            <div class="col-md-12">
+                <!--                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label-sm required">Kode</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control form-control-sm" ng-model="form.kode" ng-disabled="true" required/>
+                                    </div>
+                                </div>-->
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm required">Nama</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control form-control-sm" ng-model="form.nama"
+                               ng-disabled="is_view" required/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label-sm required">Kategori</label>
+                    <div class="col-md-9">
+                        <ui-select class="ui-select-sm ui-select-container" ng-model="form.inv_m_kategori_id"
+                                   theme="bootstrap" ng-disabled="is_view">
+                            <ui-select-match placeholder="Pilih Kategori">{{ $select.selected.nama}}</ui-select-match>
+                            <ui-select-choices position="down" repeat="val in listKategori | filter : $select.search">
+                                {{ val.nama_lengkap}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group row" ng-if="form.jenis_pembelian == 'barang'">
+                    <label class="col-md-3 col-form-label-sm">Satuan</label>
+                    <div class="col-md-9">
+                        <ui-select class="ui-select-sm ui-select-container" ng-model="form.inv_m_satuan_id"
+                                   theme="bootstrap" ng-disabled="is_view">
+                            <ui-select-match placeholder="Pilih Satuan">{{ $select.selected.nama}}</ui-select-match>
+                            <ui-select-choices position="down" repeat="val in listSatuan | filter : $select.search">
+                                {{ val.nama}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary btn-sm" ng-click="save(form)">
+        <i class="fa fa-save"></i>
+        Simpan
+    </button>
+</div>

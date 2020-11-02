@@ -1,0 +1,238 @@
+<?php
+
+$app->get("/l_pembelian_import/laporan", function($request, $response) {
+    $params = $request->getParams();
+    $db = $this->db;
+
+    //bulan
+    $params['bulan_awal'] = $params['bulan_awal'] . "-01";
+    $params['bulan_akhir'] = date("Y-m-t", strtotime($params['bulan_akhir']));
+
+    $pembelian = $db->select("
+      inv_pembelian.*,
+        SUM(inv_pembelian_det_biaya.ppn) as ppn,
+        SUM(inv_pembelian_det_biaya.pph22) as pph22,
+        SUM(inv_pembelian_det_biaya.bea_masuk) as bea_masuk,
+        SUM(inv_pembelian_det_biaya.denda_pabean) as denda_pabean,
+        FROM_UNIXTIME(inv_pembelian.tanggal, '%Y-%m-%d') as tanggal,
+        FROM_UNIXTIME(inv_pembelian.tanggal, '%b') as bulan,
+        CAST(acc_m_kontak.nama AS CHAR) as nama
+      ")
+    ->from("inv_pembelian")
+    ->join('LEFT JOIN', 'inv_pembelian_det_biaya', 'inv_pembelian_det_biaya.inv_pembelian_id = inv_pembelian.id')
+    ->join('LEFT JOIN', 'acc_m_kontak', 'acc_m_kontak.id = inv_pembelian.acc_m_kontak_id')
+    ->where("is_import", "=", 1)
+    ->andWhere("inv_pembelian.tanggal", ">=", strtotime($params['bulan_awal']))
+    ->andWhere("inv_pembelian.tanggal", "<=", strtotime($params['bulan_akhir']))
+    ->andWhere("inv_pembelian.status", "!=", 'draft')
+    ->groupBy("inv_pembelian.id")
+    ->findAll();
+
+    $listPembelianImportID = [];
+    if( !empty($pembelian) ){
+      foreach ($pembelian as $key => $value) {
+        $listPembelianImportID[] = $value->id;
+      }
+
+      $listPembelianImportID = implode(",", $listPembelianImportID);
+    }
+
+    $detail_pembelian = $db->select("
+      inv_pembelian_det.*,
+      inv_m_barang.nama
+    ")
+    ->from("inv_pembelian_det")
+    ->join("LEFT JOIN", "inv_m_barang", "inv_m_barang.id = inv_pembelian_det.inv_m_barang_id")
+    ->join("JOIN", "inv_pembelian", "inv_pembelian.id = inv_pembelian_det.inv_pembelian_id")
+    ->andWhere("inv_pembelian.tanggal", ">=", strtotime($params['bulan_awal']))
+    ->andWhere("inv_pembelian.tanggal", "<=", strtotime($params['bulan_akhir']))
+    ->andWhere("inv_pembelian.is_import", "=", 1)
+    ->andWhere("inv_pembelian.status", "!=", 'draft')
+    ->orderBy("inv_pembelian_det.id")
+    ->findAll();
+
+    $faktur_pembelian = $db->select("
+      inv_pembelian_det_faktur.*,
+      COALESCE(inv_pembelian_det_faktur.total, inv_pembelian.total) as total,
+      inv_pembelian_det_faktur.tanggal as tanggal_faktur,
+      FROM_UNIXTIME(inv_pembelian.tanggal, '%Y-%m-%d') as tanggal,
+      acc_m_kontak.nama as nama_ppn,
+      acc_m_kontak2.nama as nama_non_ppn,
+      inv_m_faktur_pajak.nomor
+    ")
+    ->from('inv_pembelian_det_faktur')
+    ->join('LEFT JOIN', 'inv_pembelian', 'inv_pembelian.id = inv_pembelian_det_faktur.inv_m_faktur_pajak_id')
+    ->join('LEFT JOIN', 'acc_m_kontak acc_m_kontak2', 'acc_m_kontak2.id = inv_pembelian_det_faktur.acc_m_kontak_id')
+    ->join('LEFT JOIN', 'acc_m_kontak', 'acc_m_kontak.id = inv_pembelian.acc_m_kontak_id')
+    ->join('LEFT JOIN', 'inv_m_faktur_pajak', 'inv_m_faktur_pajak.id = inv_pembelian.inv_m_faktur_pajak_id')
+    ->customWhere("inv_pembelian_det_faktur.inv_pembelian_id IN(". $listPembelianImportID .")")
+    // ->andWhere("inv_pembelian.status", "!=", 'draft')
+    ->orderBy("inv_pembelian_det_faktur.id")
+    ->findAll();
+
+    $arr = [];
+    $arr_total = [
+        'qty'               => 0,
+        'usdcif'            => 0,
+        'usdkurs'           => 0,
+        'rupiah'            => 0,
+        'ppn'               => 0,
+        'pph22'             => 0,
+        'bm'                => 0,
+        'denda'             => 0,
+        'pelabuhan_ppn'     => 0,
+        'pelabuhan_non_ppn' => 0,
+    ];
+
+    foreach ($pembelian as $key => $value) {
+        $value->index = $key;
+        $arr[$value->id] = (array) $value;
+
+        $arr_total['ppn']     += $value->ppn;
+        $arr_total['pph22']   += $value->pph22;
+        $arr_total['bm']      += $value->bea_masuk;
+        $arr_total['denda']   += $value->denda_pabean;
+    }
+
+    foreach ($detail_pembelian as $key => $value) {
+        if (isset($arr[$value->inv_pembelian_id])) {
+            $arr[$value->inv_pembelian_id]['detail'][] = (array) $value;
+
+            $arr_total['qty']       += $value->jumlah;
+            $arr_total['usdcif']    += $value->subtotal_edit / $value->kurs;
+            $arr_total['usdkurs']   += $value->kurs;
+            $arr_total['rupiah']    += $value->subtotal_edit;
+        }
+    }
+
+    foreach ($faktur_pembelian as $key => $value) {
+        if (isset($arr[$value->inv_pembelian_id])) {
+            if ($value->type == 'ppn') {
+                $arr[$value->inv_pembelian_id]['faktur_ppn'][] = (array) $value;
+                $arr_total['pelabuhan_ppn'] += $value->total;
+
+            } else {
+              $value_             = (array) $value;
+              $value_['tanggal']  = $value->tanggal_faktur;
+
+              $arr[$value->inv_pembelian_id]['faktur_non_ppn'][]  = $value_;
+              $arr_total['pelabuhan_non_ppn']                     += $value->total;
+            }
+        }
+    }
+
+    foreach ($arr as $key => $value) {
+
+        $detail = isset($value['detail']) ? count($value['detail']) : 0;
+        $faktur_ppn = isset($value['faktur_ppn']) ? count($value['faktur_ppn']) : 0;
+        $faktur_non_ppn = isset($value['faktur_non_ppn']) ? count($value['faktur_non_ppn']) : 0;
+
+        $arr[$key]['rowspan'] = $detail > $faktur_ppn ? $detail : ($faktur_ppn > $faktur_non_ppn ? $faktur_ppn : $faktur_non_ppn);
+
+        if ($faktur_ppn < $arr[$key]['rowspan']) {
+            for ($i = 0; $i < $arr[$key]['rowspan']; $i++) {
+                if (!isset($arr[$key]['faktur_ppn'][$i])) {
+                    $arr[$key]['faktur_ppn'][$i] = [];
+                }
+            }
+        }
+        if ($faktur_non_ppn < $arr[$key]['rowspan']) {
+            for ($i = 0; $i < $arr[$key]['rowspan']; $i++) {
+                if (!isset($arr[$key]['faktur_non_ppn'][$i])) {
+                    $arr[$key]['faktur_non_ppn'][$i] = [];
+                }
+            }
+        }
+        if ($detail < $arr[$key]['rowspan']) {
+            for ($i = 0; $i < $arr[$key]['rowspan']; $i++) {
+                if (!isset($arr[$key]['detail'][$i])) {
+                    $arr[$key]['detail'][$i] = [];
+                }
+            }
+        }
+    }
+
+    $data = [
+        "periode" => date("F Y", strtotime($params['bulan_awal'])) . "-" . date("F Y", strtotime($params['bulan_akhir'])),
+        "total" => $arr_total,
+        "lokasi" => "PT. AMAK FIRDAUS UTOMO",
+    ];
+    $detail = $arr;
+
+    if (isset($params['is_export']) && $params['is_export'] == 1) {
+      ob_start();
+        $xls = PHPExcel_IOFactory::load("format_excel/pembelian_import.xlsx");
+        $sheet = $xls->getSheet(0);
+        $sheet->getCell('A3')->setValue("Periode : " . $data['periode']);
+        $index = 6;
+
+        foreach ($detail as $key => $value) {
+            foreach ($value['detail'] as $k => $v) {
+                $v = (array) $v;
+                $sheet->getCell('A' . $index)->setValue($value['index'] + 1);
+                $sheet->getCell('B' . $index)->setValue($value['nama']);
+                $sheet->getCell('C' . $index)->setValue($value['bulan']);
+                $sheet->getCell('D' . $index)->setValue($value['bulan']);
+                $sheet->getCell('E' . $index)->setValue($v['nama']);
+                $sheet->setCellValueExplicit('F' . $index, $value['pib'], PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->getCell('G' . $index)->setValue($value['tanggal']);
+                $sheet->getCell('H' . $index)->setValue($v['jumlah']);
+                $sheet->getCell('I' . $index)->setValue($v['subtotal_edit'] / $v['kurs']);
+                $sheet->getCell('J' . $index)->setValue($v['kurs']);
+                $sheet->getCell('K' . $index)->setValue($v['subtotal_edit']);
+                $sheet->getCell('L' . $index)->setValue($value['ppn']);
+                $sheet->getCell('M' . $index)->setValue($value['pph22']);
+                $sheet->getCell('N' . $index)->setValue($value['bea_masuk']);
+                $sheet->getCell('O' . $index)->setValue($value['denda_pabean']);
+                $sheet->getCell('P' . $index)->setValue(isset($value['faktur_ppn'][$k]['tanggal']) ? $value['faktur_ppn'][$k]['tanggal'] : '');
+                $sheet->getCell('Q' . $index)->setValue(isset($value['faktur_ppn'][$k]['nama_ppn']) ? $value['faktur_ppn'][$k]['nama_ppn'] : '');
+                $sheet->setCellValueExplicit('R' . $index, isset($value['faktur_ppn'][$k]['nomor']) ? $value['faktur_ppn'][$k]['nomor'] : '', PHPExcel_Cell_DataType::TYPE_STRING);
+                $sheet->getCell('S' . $index)->setValue(isset($value['faktur_ppn'][$k]['total']) ? $value['faktur_ppn'][$k]['total'] : '');
+                $sheet->getCell('T' . $index)->setValue(isset($value['faktur_non_ppn'][$k]['tanggal']) ? $value['faktur_non_ppn'][$k]['tanggal'] : '');
+                $sheet->getCell('U' . $index)->setValue(isset($value['faktur_non_ppn'][$k]['nama_non_ppn']) ? $value['faktur_non_ppn'][$k]['nama_non_ppn'] : '');
+                $sheet->getCell('V' . $index)->setValue(isset($value['faktur_non_ppn'][$k]['total']) ? $value['faktur_non_ppn'][$k]['total'] : '');
+
+                $index++;
+            }
+        }
+
+//        $sheet->getStyle('F6:F' . $index)->getNumberFormat()->setFormatCode("#,##0.00");
+//        $sheet->getStyle('G6:G' . $index)->getNumberFormat()->setFormatCode("#,##0.00");
+//        $sheet->getStyle('H6:H' . $index)->getNumberFormat()->setFormatCode("#,##0.00");
+//        $sheet->getStyle('I6:I' . $index)->getNumberFormat()->setFormatCode("#,##0.00");
+//        $sheet->getStyle('J6:J' . $index)->getNumberFormat()->setFormatCode("#,##0.00");
+//        $sheet->getStyle('K6:K' . $index)->getNumberFormat()->setFormatCode("#,##0.00");
+
+        $sheet->getStyle("A" . 5 . ":V" . $index)->applyFromArray(
+                array(
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        )
+                    )
+                )
+        );
+
+        $writer = PHPExcel_IOFactory::createWriter($xls, 'Excel2007');
+
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        header("Content-Disposition: attachment;Filename=\"Pembelian Import (" . $data['periode'] . ").xlsx\"");
+        ob_end_clean();
+        $writer->save('php://output');
+    } elseif (isset($params['is_print']) && $params['is_print'] == 1) {
+        $view = twigView();
+        $content = $view->fetch("laporan/pembelian_import.html", [
+            'data' => $data,
+            'detail' => $detail,
+            'css' => modulUrl() . '/assets/css/style.css',
+        ]);
+        echo $content;
+        echo '<script type="text/javascript">window.print();setTimeout(function () { window.close(); }, 500);</script>';
+    } else {
+        return successResponse($response, [
+            'data' => $data,
+            'detail' => $detail,
+//            'totalPerbeli' => $totalPerBeli,
+        ]);
+    }
+});

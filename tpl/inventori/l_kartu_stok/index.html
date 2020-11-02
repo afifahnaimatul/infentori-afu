@@ -1,0 +1,222 @@
+<div class="animated fadeIn">
+    <div ng-controller="l_kartu_stok">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Kartu Stok</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input ng-change="clearData()" class="form-control form-control-sm" date-range-picker="" options="dateRangeOptions" ng-model="form.tanggal" placeholder="Periode" type="text"/>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select ng-model="form.barang_id" theme="bootstrap">
+                                                <ui-select-match placeholder="Ketik 3 Huruf">
+                                                    {{$select.selected.kode}} - {{$select.selected.nama}}
+                                                </ui-select-match>
+                                                <ui-select-choices position="down" repeat="vals in getBarang | filter : $select.search">
+                                                    {{vals.kode}} - {{vals.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <!--                                           -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.m_lokasi_id" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <hr>
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="btn-group pull-right">
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm pull-right" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" id="print">
+                <div align="left">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br/>
+                            <center>
+                                <h2 class="header-laporan">LAPORAN KARTU STOK</h2>
+                                Lokasi : {{lokasi}}
+                                <br/>
+                                Barang : {{barang}}
+                                <br/>
+                                Tipe Stok : {{harga_pokok|uppercase}}
+                                <br/>
+                                Periode : {{tanggal_mulai| date:'dd-MM-yyyy'}} Sampai {{data.tanggal_selesai| date:'dd-MM-yyyy'}}
+                                <br/>
+                                Disiapkan Tanggal : {{disiapkan}}
+                                </br>
+                            </center>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table border="1" class="table table-striped table-hover table-bordered table-print">
+                            <thead style="text-align: center">
+                                <tr>
+                                    <th rowspan="2">
+                                        Tanggal
+                                    </th>
+                                    <th rowspan="2">
+                                        Nomor Referensi
+                                    </th>
+                                    <th rowspan="2">
+                                        Keterangan
+                                    </th>
+                                    <th colspan="3">
+                                        Masuk
+                                    </th>
+                                    <th colspan="3">
+                                        Keluar
+                                    </th>
+                                    <th colspan="3">
+                                        Saldo
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Jumlah
+                                    </th>
+                                    <th>
+                                        Harga
+                                    </th>
+                                    <th>
+                                        Saldo
+                                    </th>
+                                    <th>
+                                        Jumlah
+                                    </th>
+                                    <th>
+                                        Harga
+                                    </th>
+                                    <th>
+                                        Saldo
+                                    </th>
+                                    <th>
+                                        Jumlah
+                                    </th>
+                                    <th>
+                                        Harga
+                                    </th>
+                                    <th>
+                                        Saldo
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="val in data.detail">
+                                    <td align="center">
+                                        {{val.tanggal}}
+                                    </td>
+                                    <td align="center">
+                                        {{val.kode}}
+                                    </td>
+                                    <td>
+                                        {{val.catatan}}
+                                    </td>
+                                    <td align="center">
+                                        <span ng-repeat="v in val.jumlah_masuk">
+                                            {{v.nilai}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                    <td align="right">
+                                        <span ng-repeat="v in val.harga_masuk">
+                                            {{v.nilai| currency:undefined:0}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                    <td align="right">
+                                        <span ng-repeat="v in val.total_masuk">
+                                            {{v.nilai| currency:undefined:0}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                    <td align="center">
+                                        <span ng-repeat="v in val.jumlah_keluar">
+                                            {{v.nilai}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                    <td align="right">
+                                        <span ng-repeat="v in val.hargas_keluar">
+                                            {{v.nilai| currency:undefined:0}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                    <td align="right">
+                                        <span ng-repeat="v in val.total_keluar">
+                                            {{v.nilai| currency:undefined:0}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                    <td align="center">
+                                        <span ng-repeat="v in val.jumlah_saldo">
+                                            {{v.nilai}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                    <td align="right">
+                                        <span ng-repeat="v in val.harga_saldo">
+                                            {{v.nilai| currency:undefined:0}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                    <td align="right">
+                                        <span ng-repeat="v in val.total_saldo">
+                                            {{v.nilai| currency:undefined:0}}
+                                            <br/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

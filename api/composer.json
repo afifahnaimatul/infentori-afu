@@ -1,0 +1,24 @@
+{
+    "name": "landa/core",
+    "description": "",
+    "type": "package",
+    "authors": [{
+        "name": "wahyu agung",
+        "email": "agung@landa.co.id"
+    }],
+    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "require": {
+        "slim/slim": "^3.0",
+        "cahkampung/landa-db": "^1.2.3",
+        "cahkampung/landa-migrasi": "*",
+        "cahkampung/landa-php": "*",
+        "slim/twig-view": "dev-master",
+        "phpoffice/phpexcel":"dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "class"
+        }
+    }
+}

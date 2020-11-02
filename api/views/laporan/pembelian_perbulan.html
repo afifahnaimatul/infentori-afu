@@ -1,0 +1,117 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+
+<style type="text/css">
+    table {
+        display: table;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+    .align-center {
+        text-align: center;
+    }
+
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+
+    td {
+        padding-top:1px;
+        padding-bottom:1px;
+        padding-right:2px;   
+        padding-left:2px;   
+    }
+
+    td:first-child {
+        padding-left:2px;
+        padding-right:2px;
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                    <h2 class="header-laporan header-smaller">LAPORAN PEMBELIAN PER BULAN {{data.bulan}}</h2>
+
+                    {{data.kategori}}
+
+                    </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse; line-height: normal; letter-spacing: -1;">
+                <thead>
+                    <tr class="align-center">
+                        <th width="10px">No</th>
+                        <th>Tanggal</th>
+                        <th style="width: 90px">No. Faktur</th>
+                        <th>Nama Penjual</th>
+                        <th style="width: 90px">NPWP</th>
+                        <th>Nama Barang</th>
+                        <th style="width: 65px">Kwt</th>
+                        <th></th>
+                        <th>Harga Satuan</th>
+                        <th>Nilai</th>
+                        <th>Jumlah</th>
+                        <th>DPP</th>
+                        <th>PPN</th>
+                        <th>Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for k,v in detail%}
+                    <tr ng-repeat="v in detail">
+                        <td class="align-center">{{v.nomor_urut}}</td>
+                        <td>{{ (v.inv_pembelian_id != detail[loop.index - 2].inv_pembelian_id) ? v.tanggal_formated : ''}}</td>
+                        <td align="center">{{ (v.inv_pembelian_id != detail[loop.index - 2].inv_pembelian_id) ? v.faktur_pajak : ''}}</td>
+                        <td>{{ (v.inv_pembelian_id != detail[loop.index - 2].inv_pembelian_id) ? (v.kontak) : ''}}</td>
+                        <td align="center">{{ (v.inv_pembelian_id != detail[loop.index - 2].inv_pembelian_id) ? v.npwp : ''}}</td>
+                        <td>{{(v.barang)}}</td>
+                        <td class="align-right">{{v.jumlah_masuk| number_format(2, '.', ',')}}</td>
+                        <td class="align-center">{{v.satuan}}</td>
+                        <td class="align-right">{{v.harga_beli| number_format(2, '.', ',')}}</td>
+                        <td class="align-right">{{v.nilai| number_format(2, '.', ',')}}</td>
+                        <td class="align-right">{{ (v.inv_pembelian_id != detail[k + 1].inv_pembelian_id) ? (v.sum_jumlah | number_format(2, '.', ',')) : ''}}</td>
+                        <td class="align-right">{{ (v.inv_pembelian_id != detail[k + 1].inv_pembelian_id) ? (v.sum_dpp | number_format(2, '.', ',')) : ''}}</td>
+                        <td class="align-right">{{ (v.inv_pembelian_id != detail[k + 1].inv_pembelian_id) ? (v.sum_ppn | number_format(2, '.', ',')) : ''}}</td>
+                        <td class="align-right">{{ (v.inv_pembelian_id != detail[k + 1].inv_pembelian_id) ? (v.sum_total | number_format(2, '.', ',')) : ''}}</td>
+                    </tr>
+                    {%endfor%}
+                    <tr style="font-weight: bold">
+                        <td colspan="5"></td>
+                        <td class="align-center">TOTAL</td>
+                        <td class="align-right">{{data.total_kwt| number_format(2, '.', ',')}}</td>
+                        <td></td>
+                        <td></td>
+                        <td class="align-right">{{data.total_nilai| number_format(2, '.', ',')}}</td>
+                        <td class="align-right">{{data.total_jumlah| number_format(2, '.', ',')}}</td>
+                        <td class="align-right">{{data.total_dpp| number_format(2, '.', ',')}}</td>
+                        <td class="align-right">{{data.total_ppn| number_format(2, '.', ',')}}</td>
+                        <td class="align-right">{{data.total_total| number_format(2, '.', ',')}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

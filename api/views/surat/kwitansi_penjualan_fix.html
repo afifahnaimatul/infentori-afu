@@ -1,0 +1,62 @@
+<style>
+    @page {
+        size: 21cm 33cm;
+        margin: -1cm 0cm -1cm 0cm;
+    }
+    div:nth-of-type(3n) {
+        page-break-after:always;
+    }
+</style>
+
+{%for key, val in data%}
+<div class="card-body font-sm" id="print" style="height: 11.4cm; position: relative">
+    <div style="width:100%; margin: 0;
+         position: absolute;
+         top: 50%;
+         -ms-transform: translateY(-50%);
+         transform: translateY(-50%);">
+        {%if val.no_kuitansi != ''%}
+        <table width="100%" >
+            <tr>
+                <td style="float: left; color: #49abb5; font-family : lucida calligraphy; " width="10%">No :</td>
+                <td style="border-bottom: 1px solid; float: left; text-align: center" width="10%">{{val.no_kuitansi}}</td>
+            </tr>
+        </table>
+        {%endif%}
+        <br/>
+        <table width="100%">
+            <tr>
+                <td width="20%" style="color: #49abb5; font-family : lucida calligraphy; ">Telah terima dari</td>
+                <td style="border-bottom: 1px solid; text-align: center; font-weight: bold">{{val.nama_customer}}</td>
+            </tr>
+            <tr>
+                <td><br/></td>
+            </tr>
+            <tr>
+                <td width="20%" style="color: #49abb5; font-family : lucida calligraphy; ">Uang sejumlah</td>
+                <td style="border-bottom: 1px solid; text-align: center">{{val.terbilang}}</td>
+            </tr>
+            <tr>
+                <td><br/></td>
+            </tr>
+            <tr>
+                <td width="20%" style="color: #49abb5; font-family : lucida calligraphy; ">Untuk pembayaran</td>
+                <td style="border-bottom: 1px solid; text-align: center">Pembayaran Pelunasan Faktur No. {{val.no_faktur}}</td>
+            </tr>
+        </table>
+        <br/>
+        <table width="100%">
+            <tr>
+                <td style="border-bottom: 1px solid; text-align: center; float: right">PROBOLINGGO, {{val.tanggal}}</td>
+            </tr>
+        </table>
+        <br/>
+        <table width="100%">
+            <tr style="line-height: 40px">
+                <td style="border-bottom: 1px solid black; border-top: 1px solid black; float: left; color: #49abb5; font-family : lucida calligraphy; " width="20%">Terbilang Rp. </td>
+                <td style="border-bottom: 1px solid; border-top: 1px solid; float: left; text-align: center" width="15%">{{val.grandtotal | number_format(2, '.', ',')}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{%endfor%}

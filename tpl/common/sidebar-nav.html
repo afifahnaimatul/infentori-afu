@@ -1,0 +1,780 @@
+
+<div class="sidebar">
+    <nav class="sidebar-nav" style="margin-bottom:80px">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" ui-sref-active="active" ui-sref="app.main">
+                    <i class="icon-speedometer"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" ui-sref-active="active" ui-sref="pengguna.migrasi">
+                    <i class="icon-speedometer"></i>
+                    Migrasi
+                </a>
+            </li>
+            <li class="nav-title" ng-if="user.akses.inv_akses ||
+                            user.akses.inv_user ||
+                            user.akses.inv_customer ||
+                            user.akses.inv_supplier ||
+                            user.akses.inv_pelabuhan ||
+                            user.akses.inv_lokasi
+                ">Umum</li>
+            <li class="nav-item" ng-if="user.akses.inv_akses">
+                <a class="nav-link" ui-sref-active="active" ui-sref="pengguna.inv_akses">
+                    <i class="icon-badge"></i>
+                    Hak Akses
+                </a>
+            </li>
+            <li class="nav-item" ng-if="user.akses.inv_user">
+                <a class="nav-link" ui-sref-active="active" ui-sref="pengguna.inv_user">
+                    <i class="icon-user"></i>
+                    Pengguna
+                </a>
+            </li>
+            <li class="nav-item" ng-if="user.akses.inv_customer">
+                <a class="nav-link" ui-sref-active="active" ui-sref="master.inv_customer">
+                    <i class="icon-user"></i>
+                    Customer
+                </a>
+            </li>
+            <li class="nav-item" ng-if="user.akses.inv_supplier">
+                <a class="nav-link" ui-sref-active="active" ui-sref="master.inv_supplier">
+                    <i class="icon-user"></i>
+                    Supplier
+                </a>
+            </li>
+            <li class="nav-item" ng-if="user.akses.inv_pelabuhan">
+                <a class="nav-link" ui-sref-active="active" ui-sref="master.inv_pelabuhan">
+                    <i class="fa fa-truck"></i>
+                    Penyedia Jasa
+                </a>
+            </li>
+            <li class="nav-item" ng-if="user.akses.inv_lokasi">
+                <a class="nav-link" ui-sref-active="active" ui-sref="master.inv_lokasi">
+                    <i class="icon-map"></i>
+                    Lokasi
+                </a>
+            </li>
+            <li class="nav-title" ng-if="
+                    user.akses.inv_akses ||
+                            user.akses.inv_kategori ||
+                            user.akses.inv_satuan ||
+                            user.akses.inv_barang ||
+                            user.akses.inv_po_pembelian ||
+                            user.akses.inv_pembelian ||
+                            user.akses.inv_pengajuan_penjualan ||
+                            user.akses.inv_saldo_awal_piutang ||
+                            user.akses.inv_penjualan ||
+                            user.akses.inv_laporan_kartu_stok ||
+                            user.akses.inv_laporan_penjualan ||
+                            user.akses.inv_laporan_penjualan_perbarang ||
+                            user.akses.inv_laporan_penjualan_perpembeli ||
+                            user.akses.inv_faktur_sederhana ||
+                            user.akses.inv_rekap_penjualan ||
+                            user.akses.inv_laporan_stok_barang_dagang ||
+                            user.akses.inv_laporan_rekap_penjualan_pertahun ||
+                            user.akses.inv_laporan_rekap_penjualan_pertahun_detail ||
+                            user.akses.inv_laporan_rekap_pembelian ||
+                            user.akses.inv_laporan_pembelian_perbulan ||
+                            user.akses.inv_laporan_rekap_pembelian_perbulan ||
+                            user.akses.inv_rekap_pembelian_pertahun ||
+                            user.akses.inv_proses_akhir
+                ">
+                Inventori
+            </li>
+
+            <li class="nav-item nav-dropdown" ng-class="{
+                        open:$state.includes('master')
+                    }" ng-if="
+                            user.akses.inv_akses ||
+                                    user.akses.inv_kategori ||
+                                    user.akses.inv_satuan ||
+                                    user.akses.inv_barang ||
+                                    user.akses.inv_lokasi ||
+                                    user.akses.inv_customer ||
+                                    user.akses.inv_supplier ||
+                                    user.akses.inv_po_pembelian ||
+                                    user.akses.inv_pembelian ||
+                                    user.akses.inv_pengajuan_penjualan ||
+                                    user.akses.inv_saldo_awal_piutang ||
+                                    user.akses.inv_penjualan ||
+                                    user.akses.inv_faktur_penjualan ||
+                                    user.akses.inv_pelabuhan
+                ">
+                <a class="nav-link nav-dropdown-toggle" ng-class="{
+                            active: $state.includes('master')
+                        }" href="#">
+                    <i class="icon-layers"></i>
+                    Master
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if=" user.akses.inv_kategori">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.kategori">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Kategori
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_satuan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.satuan">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Satuan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_barang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.barang">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Barang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_stok_opname">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.stok_opname">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Penyesuaian Persediaan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_transfer_barang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.transfer_barang">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Transfer Barang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_terima_barang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.terima_barang">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Terima Barang
+                        </a>
+                    </li>
+                    <!--                    <li class="nav-item" ng-if="user.akses.inv_lokasi">
+                                            <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.inv_lokasi">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                                Lokasi
+                                            </a>
+                                        </li>
+                                        <li class="nav-item" ng-if="user.akses.inv_customer">
+                                            <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.inv_customer">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                                Customer
+                                            </a>
+                                        </li>
+                                        <li class="nav-item" ng-if="user.akses.inv_supplier">
+                                            <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.inv_supplier">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                                Supplier
+                                            </a>
+                                        </li>-->
+                    <!--                    <li class="nav-item" ng-if="user.akses.inv_pelabuhan">
+                                            <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.inv_pelabuhan">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                                Penyedia Jasa
+                                            </a>
+                                        </li>-->
+
+                    <li class="nav-item" ng-if="user.akses.inv_faktur_pembelian">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.inv_faktur_pembelian">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Faktur Pembelian
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_faktur_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.inv_faktur_penjualan">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Faktur Penjualan
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown" ng-class="{
+                        open: $state.includes('transaksi_pembelian')
+                    }"
+                ng-if="
+                        user.akses.inv_po_pembelian ||
+                                user.akses.inv_pembelian ||
+                                user.akses.inv_retur_pembelian ||
+                                user.akses.inv_pembelian_import ||
+                                user.akses.inv_f_pajak_pelabuhan
+                ">
+                <a class="nav-link nav-dropdown-toggle" ng-class="{
+                            active: $state.includes('transaksi_pembelian')
+                        }" href="#">
+                    <i class="icon-basket"></i>
+                    Pembelian
+                </a>
+                <ul class="nav-dropdown-items">
+                    <!-- <li class="nav-item" ng-if="user.akses.inv_f_pajak_pelabuhan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.inv_f_pajak_pelabuhan">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Faktur Pajak Pelabuhan
+                        </a>
+                    </li> -->
+                    <!--                    <li class="nav-item" ng-if="user.akses.inv_f_pajak_pelabuhan">
+                                            <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.inv_f_pajak_pelabuhan">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                                Faktur Pajak Pelabuhan
+                                            </a>
+                                        </li>-->
+                    <li class="nav-item" ng-if="user.akses.inv_po_pembelian">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_pembelian.po_pembelian">
+                            <i class="fa fa-ellipsis-v"></i>
+                            PO Pembelian
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_pembelian_hutang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_pembelian.pembelian_hutang">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Saldo Awal Hutang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_pembelian">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_pembelian.pembelian">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_pembelian_import">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_pembelian.pembelian_import">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian Import
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_retur_pembelian">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_pembelian.retur_pembelian">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Retur
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown" ng-class="{
+                        open: $state.includes('transaksi_penjualan')
+                    }" ng-if="
+                            user.akses.inv_pengajuan_penjualan ||
+                            user.akses.inv_saldo_awal_piutang ||
+                                    user.akses.inv_penjualan ||
+                                    user.akses.inv_retur_penjualan ||
+                                    user.akses.inv_input_faktur_penjualan
+                ">
+                <a class="nav-link nav-dropdown-toggle" ng-class="{
+                            active: $state.includes('transaksi_penjualan')
+                        }" href="#">
+                    <i class="icon-tag"></i>
+                    Penjualan
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.inv_pengajuan_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_penjualan.pengajuan_penjualan">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pengajuan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_penjualan.penjualan">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Penjualan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_input_faktur_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_penjualan.input_faktur_penjualan">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Nmr Faktur Pajak
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_retur_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_penjualan.retur_penjualan">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Retur
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_saldo_awal_piutang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi_penjualan.saldo_awal_piutang">
+                            <i class="fa fa-ellipsis-v"></i>
+                           Saldo Awal Piutang
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown" ng-class="{
+                        open: $state.includes('laporan')
+                    }" ng-if="
+                            user.akses.inv_laporan_kartu_stok ||
+                                    user.akses.inv_pembelian_perbulan ||
+                                    user.akses.inv_laporan_pembelian_perbulan ||
+                                    user.akses.inv_laporan_penjualan_perbarang ||
+                                    user.akses.inv_laporan_penjualan_perpembeli ||
+                                    user.akses.inv_laporan_stok_barang_dagang ||
+                                    user.akses.inv_laporan_harga_barang_dagang ||
+                                    user.akses.inv_faktur_sederhana ||
+                                    user.akses.inv_faktur_standart ||
+                                    user.akses.inv_laporan_retur_penjualan ||
+                                    user.akses.inv_laporan_retur_pembelian ||
+                                    user.akses.inv_rekap_penjualan ||
+                                    user.akses.inv_laporan_rekap_penjualan_pertahun ||
+                                    user.akses.inv_laporan_rekap_pembelian ||
+                                    user.akses.inv_laporan_rekap_pembelian_perbulan ||
+                                    user.akses.inv_rekap_pembelian_pertahun ||
+                                    user.akses.inv_laporan_pembelian_import_ppn ||
+                                    user.akses.inv_laporan_pembelian_import_pph
+                ">
+                <a class="nav-link nav-dropdown-toggle" ng-class="{
+                            active: $state.includes('laporan')
+                        }" href="#">
+                    <i class="icon-notebook"></i>
+                    Laporan
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_kartu_stok">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.kartu_stok">
+                            <i class="fa fa-ellipsis-v"></i>Kartu Stok
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_pembelian_perbulan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.pembelian_perbulan" title="L12">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian per Bulan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_lpembelian_import">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.pembelian_import" title="L21">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian Import
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_pembelian_import_ppn">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.pembelian_import_ppn" title="L21 (PPN)">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian Import (PPN)
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_pembelian_import_pph">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.pembelian_import_pph" title="L21 (PPh22)">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian Import (PPh22)
+                        </a>
+                    </li>
+<!--                    <li class="nav-item" ng-if="user.akses.inv_laporan_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.penjualan" title="L4">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Penjualan
+                        </a>
+                    </li>-->
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_penjualan_perbarang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.penjualan_perbarang" title="L3">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Penjualan per Barang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_penjualan_perpembeli">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.penjualan_perpembeli" title='L5'>
+                            <i class="fa fa-ellipsis-v"></i>
+                            Buku Penjualan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_template_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.template_penjualan" title='L20'>
+                            <i class="fa fa-ellipsis-v"></i>
+                            Template Penjualan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_stok_barang_dagang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.stok_barang_dagang" title="L6">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Stok B. Dagang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_harga_barang_dagang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.harga_barang_dagang" title="L7">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Stok B. Dagang+Harga
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_faktur_sederhana">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.faktur_sederhana" title="L1">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Faktur Std & Sederhana
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_faktur_standart">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.faktur_standart" title="L17">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Faktur Standart
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_retur_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.retur_penjualan" title="L18">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Retur Penjualan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_retur_pembelian">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.retur_pembelian" title="L19">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Retur Pembelian
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown" ng-class="{
+                        open: $state.includes('laporan')
+                    }" ng-if="
+                            user.akses.inv_rekap_penjualan ||
+                                    user.akses.inv_rekap_penjualan_pertahun ||
+                                    user.akses.inv_rekap_penjualan_pertahun_detail ||
+                                    user.akses.inv_rekap_pembelian ||
+                                    user.akses.inv_rekap_pembelian_perbulan ||
+                                    user.akses.inv_rekap_pembelian_pertahun ||
+                                    user.akses.inv_laporan_penjualan
+                ">
+                <a class="nav-link nav-dropdown-toggle" ng-class="{
+                            active: $state.includes('laporan')
+                        }" href="#">
+                    <i class="icon-notebook"></i>
+                    Rekap
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.inv_rekap_pembelian">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.rekap_pembelian" title="L11">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian Brg. Dagang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_rekap_pembelian_perbulan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.rekap_pembelian_perbulan" title="L13">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian per Bulan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_rekap_pembelian_pertahun">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.rekap_pembelian_pertahun" title="L14">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Pembelian per Tahun
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_rekap_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.rekap_penjualan" title="L2">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Penjualan Brg. Dagang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_rekap_penjualan_pertahun">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.rekap_penjualan_pertahun" title="L8">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Penjualan per Tahun
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_rekap_penjualan_pertahun_detail">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.rekap_penjualan_pertahun_detail" title="L8(Detail)">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Penjualan per Tahun (Detail)
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.inv_laporan_penjualan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="laporan.penjualan" title="L4">
+                            <i class="fa fa-ellipsis-v"></i>
+                            Penjualan B. Jadi & Dagang
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item" ng-if="user.akses.inv_proses_akhir">
+                <a class="nav-link" ui-sref-active="active" ui-sref="master.proses_akhir">
+                    <i class="icon-drop"></i>
+                    Proses Akhir
+                </a>
+            </li>
+            <li class="nav-title" ng-if="
+                    user.akses.pengajuan ||
+                            user.akses.approveatasan ||
+                            user.akses.setting_approval ||
+                            user.akses.monitoring_pengajuan ||
+                            user.akses.penerimaan ||
+                            user.akses.pengeluaran ||
+                            user.akses.transfer_kas ||
+                            user.akses.jurnal_umum ||
+                            user.akses.tutup_bulan ||
+                            user.akses.tutup_tahun ||
+                            user.akses.akun ||
+                            user.akses.umurekonomis ||
+                            user.akses.pencatatanasset ||
+                            user.akses.penyusutanasset ||
+                            user.akses.pelepasanasset ||
+                            user.akses.akun_peta ||
+                            user.akses.setting_approval ||
+                            user.akses.umurekonomis ||
+                            user.akses.budgeting_akun ||
+                            user.akses.saldo_awal_akun ||
+                            user.akses.saldo_awal_hutang ||
+                            user.akses.saldo_awal_piutang ||
+                            user.akses.saldo_awal_piutang
+                ">ACCOUNTING</li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="icon-layers"></i>
+                    Setting ACC
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.akun_peta">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.acc_akun_peta">
+                            <i class="fa fa-ellipsis-v"></i> Pemetaan Akun
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.setting_approval">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.setting_approval">
+                            <i class="fa fa-ellipsis-v"></i> Approval Pengajuan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.umurekonomis">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="asset.umur_ekonomis">
+                            <i class="fa fa-ellipsis-v"></i> Umur Ekonomis
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.budgeting_akun">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="akun.budgeting_akun">
+                            <i class="fa fa-ellipsis-v"></i> Budgeting
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="master.formatkode">
+                            <i class="fa fa-ellipsis-v"></i> Format Kode
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown" ng-if="
+                    user.akses.saldo_awal_akun ||
+                            user.akses.saldo_awal_hutang ||
+                            user.akses.saldo_awal_piutang ||
+                            user.akses.saldo_awal_piutang
+                ">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="icon-layers"></i>
+                    Saldo Awal
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.saldo_awal_akun">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="akun.saldo_awal">
+                            <i class="fa fa-ellipsis-v"></i> Akun
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.saldo_awal_hutang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.saldo_awal_hutang_persupplier">
+                            <i class="fa fa-ellipsis-v"></i> Hutang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.saldo_awal_piutang">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.saldo_awal_piutang_percustomer">
+                            <i class="fa fa-ellipsis-v"></i> Piutang
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown" ng-if="
+                    user.akses.pengajuan ||
+                            user.akses.approveatasan ||
+                            user.akses.setting_approval ||
+                            user.akses.monitoring_pengajuan
+                ">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="icon-layers"></i>
+                    Pengajuan
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.pengajuan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.pengajuan">
+                            <i class="fa fa-ellipsis-v"></i> Pengajuan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.approveatasan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.approveatasan">
+                            <i class="fa fa-ellipsis-v"></i> Approval
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.monitoring_pengajuan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="app.monitoring_pengajuan">
+                            <i class="fa fa-ellipsis-v"></i> Monitoring
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown" ng-if="
+                    user.akses.penerimaan ||
+                            user.akses.pengeluaran ||
+                            user.akses.transfer_kas
+                ">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="icon-layers"></i>
+                    Kas & Bank
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.penerimaan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="keuangan.penerimaan">
+                            <i class="fa fa-ellipsis-v"></i> Penerimaan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.pengeluaran">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="keuangan.pengeluaran">
+                            <i class="fa fa-ellipsis-v"></i> Pengeluaran
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.transfer_kas">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="keuangan.transfer">
+                            <i class="fa fa-ellipsis-v"></i> Transfer Kas
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown" ng-if="
+                    user.akses.jurnal_umum ||
+                            user.akses.tutup_bulan ||
+                            user.akses.tutup_tahun ||
+                            user.akses.akun
+                ">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="icon-layers"></i>
+                    Buku Besar
+                </a>
+                <ul class="nav-dropdown-items">
+
+                    <li class="nav-item" ng-if="user.akses.akun">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="akun.akun">
+                            <i class="fa fa-ellipsis-v"></i> Akun
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.jurnal_umum">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="bukubesar.jurnal_umum">
+                            <i class="fa fa-ellipsis-v"></i> Jurnal Umum
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.tutup_bulan">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="bukubesar.tutup_bulan">
+                            <i class="fa fa-ellipsis-v"></i> Tutup Bulan
+                        </a>
+                    </li>
+
+                    <li class="nav-item" ng-if="user.akses.tutup_tahun">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="bukubesar.tutup_tahun">
+                            <i class="fa fa-ellipsis-v"></i> Tutup Tahun
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown" ng-if="
+                    user.akses.umurekonomis ||
+                            user.akses.pencatatanasset ||
+                            user.akses.penyusutanasset ||
+                            user.akses.pelepasanasset
+                ">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="icon-layers"></i>
+                    Asset
+                </a>
+
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.pencatatanasset">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="asset.asset">
+                            <i class="fa fa-ellipsis-v"></i> Pencatatan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.penyusutanasset">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="asset.penyusutan_asset">
+                            <i class="fa fa-ellipsis-v"></i> Penyusutan
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.pelepasanasset">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="asset.pelepasan_asset">
+                            <i class="fa fa-ellipsis-v"></i> Pelepasan
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+            <li class="nav-item nav-dropdown" ng-if="
+                    user.akses.pembayaran_piutang_percustomer ||
+                            user.akses.pembayaran_hutang_persupplier
+                                ">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="icon-layers"></i>
+                    Pembayaran
+                </a>
+
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item" ng-if="user.akses.pembayaran_piutang_percustomer">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.pembayaran_piutang_percustomer">
+                            <i class="fa fa-ellipsis-v"></i> Piutang
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-if="user.akses.pembayaran_hutang_persupplier">
+                        <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.pembayaran_hutang_persupplier">
+                            <i class="fa fa-ellipsis-v"></i> Hutang
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item" ng-if="
+                    user.akses.pengajuan ||
+                            user.akses.approveatasan ||
+                            user.akses.setting_approval ||
+                            user.akses.monitoring_pengajuan ||
+                            user.akses.penerimaan ||
+                            user.akses.pengeluaran ||
+                            user.akses.transfer_kas ||
+                            user.akses.jurnal_umum ||
+                            user.akses.tutup_bulan ||
+                            user.akses.tutup_tahun ||
+                            user.akses.akun ||
+                            user.akses.umurekonomis ||
+                            user.akses.pencatatanasset ||
+                            user.akses.penyusutanasset ||
+                            user.akses.pelepasanasset
+                ">
+                <a class="nav-link" ui-sref-active="active" ui-sref="app.laporan">
+                    <i class="fa fa-file-excel-o"></i>
+                    Laporan
+                </a>
+            </li>
+            <!--            <li class="nav-title" ng-if="user.akses.budgeting_akun">Budgeting</li>
+                        <li class="nav-item" ng-if="user.akses.budgeting_akun">
+                            <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="akun.budgeting_akun">Budgeting Akun</a>
+                        </li>-->
+<!--            <li class="nav-title" ng-if="user.akses.pembayaran_piutang_percustomer || user.akses.pembayaran_hutang_persupplier">Pembayaran</li>
+            <li class="nav-item" ng-if="user.akses.saldo_awal_hutang_persupplier">
+                <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.saldo_awal_hutang_persupplier">Saldo Awal Hutang</a>
+            </li>
+            <li class="nav-item" ng-if="user.akses.pembayaran_hutang_persupplier">
+                <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.pembayaran_hutang_persupplier">Hutang</a>
+            </li>
+            <li class="nav-item" ng-if="user.akses.pembayaran_piutang_percustomer">
+                <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.pembayaran_piutang_percustomer">Piutang</a>
+            </li>
+            <li class="nav-title" ng-if="user.akses.saldo_awal_piutang_percustomer || user.akses.pembayaran_piutang_percustomer">Piutang</li>
+            <li class="nav-item" ng-if="user.akses.saldo_awal_piutang_percustomer">
+                <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="transaksi.saldo_awal_piutang_percustomer">Saldo Awal Piutang</a>
+            </li>-->
+
+            <li class="nav-title d-lg-none">Tambahan</li>
+            <li class="nav-item d-lg-none">
+                <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="app.master">Pengaturan</a>
+            </li>
+            <li class="nav-item d-lg-none">
+                <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="pengguna.akses">Hak Akses</a>
+            </li>
+            <li class="nav-item d-lg-none">
+                <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ui-sref="pengguna.user">Pengguna</a>
+            </li>
+            <li class="nav-item d-lg-none">
+                <a style="padding-left: 30px;" class="nav-link" ui-sref-active="active" ng-click="logout()">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</div>

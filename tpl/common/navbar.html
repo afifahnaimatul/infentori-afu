@@ -1,0 +1,50 @@
+<header>
+    <div class="app-header navbar">
+        <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">
+            <span class="navbar-toggler-icon"></span>
+            Inventori AFU
+        </button>
+        <div class="navbar-brand d-md-down-none">
+            <!-- <img class="img-fluid img-brand" src="img/{{logoHeader}}" style="max-width: 180px"/> -->
+            <a class="navbar-toggler sidebar-toggler" href="#">
+                <span class="navbar-toggler-icon"></span>
+            </a>
+            <span style="vertical-align: middle">Inventori AFU</span>
+        </div>
+        <ul class="nav navbar-nav d-md-down-none" style="margin-left: 15px;">
+            <ncy-breadcrumb></ncy-breadcrumb>
+        </ul>
+        <ul class="nav navbar-nav ml-auto pr-25px d-md-down-none">
+            <!--            <li ng-if="user.akses.pengguna_user">
+                            <a class="nav-link nav-menu" ui-sref-active="active" ui-sref="app.master">
+                                <i class="icon-settings"></i>
+                                Pengaturan
+                            </a>
+                        </li>-->
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                    <img src="img/user.png" class="img-avatar"/>
+                    <span class="d-md-down-none">
+                        {{ user.nama}}
+                        <span class="caret ml-2"></span>
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" ui-sref="pengguna.profil" ng-if="user.m_roles_id != 4">
+                        <i class="fa fa-bell-o"></i>
+                        Perbarui Profil
+                    </a>
+                    <a class="dropdown-item" ng-click="logout()" style="cursor: pointer;">
+                        <i class="fa fa-lock"></i>
+                        Logout
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+<!--    <a class="navbar-toggler sidebar-toggler collapseBtn d-md-down-none" href="#">
+        <div class="landaMin">
+            <i class="icon-arrow-left-circle" id="tombolMenu"></i>
+        </div>
+    </a>-->
+</header>

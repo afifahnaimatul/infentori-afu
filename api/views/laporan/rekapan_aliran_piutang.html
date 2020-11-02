@@ -1,0 +1,105 @@
+<link href="{{ css }}" rel="stylesheet" type="text/css"/>
+<div class="card-body">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center>
+                    <h2 class="header-laporan">LAPORAN REKAPAN ALIRAN PIUTANG</h2>
+                    <span ng-if="data.lokasi != undefined">Lokasi : {{data.lokasi}}</span>
+                    <span ng-if="data.lokasi == undefined">Lokasi : Semua Lokasi</span>
+                    <br/>
+                    Periode : {{data.tahun}}
+                    <br/>
+                    Disiapkan Tanggal : {{data.disiapkan  | date('d M yy, H:i')}}
+                    <br/>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover table-laporan-border" style="border-collapse: collapse;">
+                <thead>
+                <tr>
+                    <th>KETERANGAN</th>
+                    {%for key, val in data.tanggal%}
+<!--                    <th ng-repeat-start="val in data.tanggal" ng-hide="true"></th>-->
+                    <th class="align-center">
+                        {{ val |upper  }}
+                    </th>
+<!--                    <th ng-repeat-end="" ng-hide="true"></th>-->
+                    {% endfor %}
+                    <th class="align-center">JUMLAH</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td align="left" style="vertical-align: top"><b>{{'SALDO AWAL'}}</b></td>
+                    {%for key, vv in data.tanggal%}
+<!--                    <td ng-repeat-start="vv in data.tanggal" ng-hide="true"></td>-->
+                    <td align="right"></td>
+<!--                    <td ng-repeat-end="" ng-hide="true"></td>-->
+                    {% endfor %}
+                    <td align="right">
+                      {{ saldo_awal | number_format(2, ',', '.') }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="14" class="emptytd"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="14"><b>PENAMBAHAN</b></td>
+                </tr>
+                {%for key, val in detail_tambah%}
+                <tr ng-repeat="val in detail_tambah">
+                    <td align="left" style="vertical-align: top">{{ val.keterangan  }}</td>
+                    {%for keys, value in val.detail%}
+                    <td ng-repeat="(key, value) in val.detail" class="text-right">{{ value.jumlah | number_format(2, ',', '.') }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td align="left" style="vertical-align: top"><b>{{'JUMLAH'}}</b></td>
+                    {%for key, val in total_tambah%}
+                    <td ng-repeat="val in total_tambah" class="text-right">{{ val | number_format(2, ',', '.') }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td colspan="14" class="emptytd"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="14"><b>PENGURANGAN</b></td>
+                </tr>
+                {%for key, val in detail_kurang%}
+                <tr ng-repeat="val in detail_kurang">
+                    <td align="left" style="vertical-align: top">{{ val.keterangan }}</td>
+                    {%for key, value in  val.detail%}
+                    <td ng-repeat="(key, value) in val.detail" class="text-right">{{ value.jumlah | number_format(2, ',', '.') }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td align="left" style="vertical-align: top"><b>JUMLAH</b></td>
+                    {%for key, val in total_kurang%}
+                    <td ng-repeat="(key, val) in total_kurang" class="text-right">{{ val | number_format(2, ',', '.')  }}</td>
+                    {% endfor %}
+                </tr>
+
+                <tr>
+                    <td colspan="14" class="emptytd"></td>
+                </tr>
+
+                <tr>
+                    <td align="left" style="vertical-align: top"><b>SALDO AKHIR</b></td>
+                    {%for key, val in saldo_akhir%}
+                    <td ng-repeat="(key, val) in saldo_akhir" class="text-right">{{ val | number_format(2, ',', '.')  }}</td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

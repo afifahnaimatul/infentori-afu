@@ -1,0 +1,134 @@
+<div class="animated fadeIn">
+    <div ng-controller="formatkodeCtrl">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info box-shadow">
+                    <p>
+                        <b>Harap Diperhatikan !<br/></b>
+                    </p>
+                    <ol style="padding-left: 15px;">
+                        <li>
+                            Variabel yang bisa digunakan yaitu : 
+                            <b>TAHUN, KODEUNIT, NOURUT, BULAN.</b>
+                            <br/>
+                            Untuk kode pertransaksi bisa diketikkan sendiri. 
+                            <br/>
+                            Contoh : <b>PEMASUKAN, PENGELUARAN</b>
+                        </li>
+                        <li>
+                            Contoh kode transaksi: <b>TAHUN-BULAN-KODEUNIT-PEMASUKAN-NOURUT</b>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <strong>{{ master}}</strong>
+            </div>
+            <div class="card-body">
+                <form name="landaform" novalidate="">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h6 class="tittle-header">Tanggal</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label-sm required">TANGGAL</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                    <input type="text" class="form-control form-control-sm" ng-click="toggle($event, 'tanggal')"  is-open="opened.tanggal" uib-datepicker-popup="dd-MM-yyyy" ng-model="form.tanggal" ng-disabled="is_view" datepicker-options="options"/>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h6 class="tittle-header">Setting Kode</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label-sm required">Digit Kode</label>
+                                <div class="col-md-8">
+                                    <input class="form-control form-control-sm" ng-model="form.digit_kode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label-sm required">Reset Kode</label>
+                                <div class="col-md-8">
+                                    <div class="btn-group">
+                                        <label class="btn btn-primary btn-sm ng-pristine ng-untouched ng-valid ng-not-empty" ng-model="form.reset_kode" ng-disabled="is_view"  uib-btn-radio="'tahunan'">
+                                            <i class="fa fa-check ng-scope" ng-if="form.reset_kode == 'tahunan'"></i>
+                                            Tahunan
+                                        </label>
+                                        <label class="btn btn-primary btn-sm ng-pristine ng-untouched ng-valid active ng-not-empty" ng-model="form.reset_kode" ng-disabled="is_view"  uib-btn-radio="'bulanan'">
+                                            <i class="fa fa-check ng-scope" ng-if="form.reset_kode == 'bulanan'"></i>
+                                            Bulanan
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h6 class="tittle-header">Format Kode</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label-sm required">PEMASUKAN</label>
+                                <div class="col-md-8">
+                                    <input class="form-control form-control-sm" ng-model="form.format_pemasukan">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label-sm required">PENGELUARAN</label>
+                                <div class="col-md-8">
+                                    <input class="form-control form-control-sm" ng-model="form.format_pengeluaran">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label-sm required">TRANSFER KAS</label>
+                                <div class="col-md-8">
+                                    <input class="form-control form-control-sm" ng-model="form.format_transfer">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label-sm required">JURNAL UMUM</label>
+                                <div class="col-md-8">
+                                    <input class="form-control form-control-sm" ng-model="form.format_jurnal">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label-sm required">PENGAJUAN</label>
+                                <div class="col-md-8">
+                                    <input class="form-control form-control-sm" ng-model="form.format_pengajuan">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary btn-sm" ng-hide="is_view" button-spinner="loading" ng-click="save()">
+                        <i class="fa fa-save"></i>
+                        &nbsp;Simpan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

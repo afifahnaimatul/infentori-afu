@@ -1,0 +1,111 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+
+    table{
+        /*display: table-cell;*/
+        border-collapse: collapse;width: 100%;}
+    td:empty::after{
+        content: "\00a0";
+    }
+    td {
+        padding-top:1px;
+        padding-bottom:1px;
+        padding-right:2px;
+        padding-left:2px;
+    }
+
+    td:first-child {
+        padding-left:2px;
+        padding-right:2px;
+    }
+
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                    <h2 class="header-laporan header-smaller">LAPORAN RETUR PEMBELIAN</h2>
+
+
+                    Periode : {{data.startDate}} Sampai {{data.endDate}}
+
+                    </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse; line-height: unset;">
+                <thead>
+                    <tr align="center">
+                        <th >
+                            No
+                        </th>
+                        <th >
+                            Tanggal
+                        </th>
+                        <th>
+                            No. Nota Retur
+                        </th>
+                        <th>
+                            No. Faktur
+                        </th>
+                        <th >
+                            Supplier
+                        </th>
+                        <th >
+                            NPWP
+                        </th>
+                        <th >
+                            Barang
+                        </th>
+                        <th >
+                            Kwt
+                        </th>
+                        <th >
+                            Harga
+                        </th>
+                        <th >
+                            DPP
+                        </th>
+                        <th >
+                            PPN
+                        </th>
+                        <th >
+                            Jumlah
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for key, val in detail%}
+                    <tr>
+                        <td align="center">{{val.no_urut}}</td>
+                        <td>{{(val.inv_retur_pembelian_id != detail[loop.index - 2].inv_retur_pembelian_id) ? val.tanggal : ''}}</td>
+                        <td>{{(val.inv_retur_pembelian_id != detail[loop.index - 2].inv_retur_pembelian_id) ? val.kode : ''}}</td>
+                        <td>{{(val.inv_retur_pembelian_id != detail[loop.index - 2].inv_retur_pembelian_id) ? val.no_faktur : ''}}</td>
+                        <td>{{(val.inv_retur_pembelian_id != detail[loop.index - 2].inv_retur_pembelian_id) ? val.kontak : ''}}</td>
+                        <td>{{(val.inv_retur_pembelian_id != detail[loop.index - 2].inv_retur_pembelian_id) ? val.npwp : ''}}</td>
+                        <td>{{val.barang}}</td>
+                        <td align="right">{{val.jumlah_keluar| number_format}}</td>
+                        <td align="right">{{val.harga_keluar| number_format(2, '.', ',')}}</td>
+                        <td align="right">{{(val.inv_retur_pembelian_id != detail[key + 1].inv_retur_pembelian_id) ? (val.sum_dpp | number_format(2, '.', ',')) : ''}}</td>
+                        <td align="right">{{(val.inv_retur_pembelian_id != detail[key + 1].inv_retur_pembelian_id) ? (val.sum_ppn | number_format(2, '.', ',')) : ''}}</td>
+                        <td align="right">{{(val.inv_retur_pembelian_id != detail[key + 1].inv_retur_pembelian_id) ? (val.sum_total | number_format(2, '.', ',')) : ''}}</td>
+                    </tr>
+                    {%endfor%}
+                    <tr>
+                        <td colspan="7" align="right">Total</td>
+                        <td align="right"></td>
+                        <td align="right"></td>
+                        <td align="right">{{data.total_dpp| number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total_ppn| number_format(2, '.', ',')}}</td>
+                        <td align="right">{{data.total| number_format(2, '.', ',')}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

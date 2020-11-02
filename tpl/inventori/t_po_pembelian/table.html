@@ -1,0 +1,70 @@
+<table class="table table-striped table-hover table-mobile">
+    <thead>
+    <tr>
+        <th class="align-left" scope="col">
+            Status
+        </th>
+        <th st-sort="acc_m_lokasi.nama" class="align-left" scope="col">
+            Lokasi
+        </th>
+        <th st-sort="inv_pembelian.kode" class="align-left" scope="col">
+            Kode
+        </th>
+        <th st-sort="inv_pembelian.tanggal" class="align-left" scope="col">
+            Tanggal
+        </th>
+        <th st-sort="inv_m_supplier.nama" class="align-left" scope="col">
+            Supplier
+        </th>
+        <th st-sort="inv_pembelian.total" class="align-left" scope="col">
+            Total
+        </th>
+        <th st-sort="inv_pembelian.created_at" class="align-left" scope="col">
+            Dibuat Pada
+        </th>
+        <th st-sort="inv_pembelian.created_by" class="align-left" scope="col">
+            Dibuat Oleh
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody ng-show="!isLoading">
+    <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+        <td class="align-left">
+            <span class="badge badge-success text-capitalize" ng-if="row.status == 'approved'">
+                {{row.status}}
+            </span>
+            <span class="badge badge-warning text-capitalize" ng-if="row.status == 'pending'">
+                {{row.status}}
+            </span>
+        </td>
+        <td class="align-left">
+            <span>{{ row.acc_m_lokasi_id.nama }}</span>
+        </td>
+        <td class="align-left">
+            <span>{{ row.kode }}</span>
+        </td>
+        <td class="align-left">
+            <span>{{ row.tanggal*1000 | date }}</span>
+        </td>
+        <td class="align-left">
+            <span>{{ row.acc_m_kontak_id.nama }}</span>
+        </td>
+        <td class="align-left">
+            <span>{{ row.total | currency:undifine:"0" }}</span>
+        </td>
+        <td class="align-left">
+            <span>{{ row.created_at*1000 | date }}</span>
+        </td>
+        <td class="align-left">
+            <span>{{ row.pembuat }}</span>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-info" ng-click="update(row)" ng-if="row.status == 'pending'" uib-tooltip="Edit Data">
+                <i class="fa fa-pencil"></i>
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div st-pagination="" st-items-by-page="20" st-template="tpl/common/pagination.custom.html"></div>

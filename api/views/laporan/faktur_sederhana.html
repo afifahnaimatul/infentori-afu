@@ -1,0 +1,215 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+
+    table{
+        /*display: table-cell;*/
+        border-collapse: collapse;width: 100%;}
+    td:empty::after{
+        content: "\00a0";
+    }
+
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">LAPORAN FAKTUR STANDART + SEDERHANA</h2>
+                    Lokasi : {{data.lokasi}}
+                    <br/>
+<!--                    Barang : {{data.barang}}-->
+                    <!--<br/>-->
+                    <!--Tipe Stok : {{data.harga_pokok|upper}}-->
+                    <!--<br/>-->
+                    Periode : {{data.tgl_mulai}} Sampai {{data.tgl_selesai}}
+                    <!--<br/>-->
+                    <!--Disiapkan Tanggal : {{data.disiapkan}}-->
+                    <!--</br>-->
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" border="1" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th >
+                            No
+                        </th>
+                        <th >
+                            Tanggal
+                        </th>
+                        <th>
+                            Nomor Surat Jalan
+                        </th>
+                        <th >
+                            Kota
+                        </th>
+                        <th>
+
+                        </th>
+                        <th>
+                            No. Faktur
+                        </th>
+                        <th >
+                            Pembeli
+                        </th>
+                        <th >
+                            Nama Barang
+                        </th>
+                        <th >
+                            KWT
+                        </th>
+                        <th >
+                            Harga Satuan
+                        </th>
+                        <th >
+                            Nilai
+                        </th>
+                        <th >
+                            DPP
+                        </th>
+                        <th >
+                            PPN
+                        </th>
+                        <th >
+                            DPP + PPN
+                        </th>
+                    </tr>
+
+                </thead>
+                <tbody  >
+                    {%for key, v in data.total%}
+                    <tr>
+                        <td align="center">
+
+                        </td>
+                        <td align="center">
+
+                        </td>
+                        <td align="center">
+                            <!--                                    {{v.kode}}-->
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            <!--                                    {{v.namaCustomer}}-->
+                        </td>
+                        <td>
+
+                        </td>
+
+                        <td>
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td align="right">
+                            {{ v.KWT | number_format(0, ',', '.')}}
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td align="right">
+                            {{ v.DPP | number_format(2, '.', ',')}}
+                        </td>
+                        <td align="right">
+                            {{ v.PPN | number_format(2, '.', ',') }}
+                        </td>
+                        <td align="right">
+                            {{v.DPP_PPN| number_format(2, '.', ',')}}
+                        </td>
+
+                    </tr>
+                    {%endfor%}
+                </tbody>
+                <tbody >
+                    {%for key, val in data.data %}
+                    {%for key, v in val.data %}
+                    <tr>
+                        <td align="center">{{key == 0 ? val.no : ''}}</td>
+                        <td align="center">
+                            {{v.tanggal}}
+                        </td>
+                        <td align="center">
+                                                                {{v.no_surat_jalan}}
+                        </td>
+                        <td>
+                            {{v.lokasi}}
+                        </td>
+                        <td>
+                           {{v.type}}
+                        </td>
+                        <td>
+                            {{v.no_faktur}}
+                        </td>
+
+                        <td>
+                            {{v.namaCustomer}}
+                        </td>
+                        <td>
+                            {{v.namaBarang}}
+                        </td>
+                        <td align="right">
+                            {{v.jumlah}}
+                        </td>
+                        <td align="right">
+                            {{v.harga_satuan| number_format(2, '.', ',') }}
+                        </td>
+                        <td align="right">
+                            {{v.nilai| number_format(2, '.', ',') }}
+                        </td>
+                        <td align="right">
+                            {% if val.data[key].tanggal != val.data[key+1].tanggal  %}
+                            {{  v.DPP | number_format(2, '.', ',')  }}
+                            {% else %}
+
+                            {% endif %}
+                        </td>
+                        <td align="right">
+                            {% if val.data[key].tanggal != val.data[key+1].tanggal  %}
+                            {{  v.PPN | number_format(2, '.', ',') }}
+                            {% else %}
+
+                            {% endif %}
+                        </td>
+                        <td align="right">
+                            {% if val.data[key].tanggal != val.data[key+1].tanggal  %}
+                            {{v.DPP_PPN| number_format(2, '.', ',') }}
+                            {% else %}
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+                    {%if val.data[key].tanggal != val.data[key+1].tanggal%}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {%endif%}
+                    {%endfor%}
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

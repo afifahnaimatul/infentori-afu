@@ -1,0 +1,71 @@
+<div class="animated fadeIn">
+    <div ng-controller="migrasiDataCtrl">
+        <div class="card" ng-if="!isLoading">
+            <div class="card-header">
+                <strong>Migrasi Jurnal</strong>
+            </div>
+            <div class="card-body">
+                <form name="landaform" novalidate="">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                                <div class="form-group row">
+                                    <!-- <label class="col-md-2 col-form-label-sm required">Pilih Transaksi </label> -->
+                                    <div class="col-md-3">
+                                      <select class="form-control form-control-sm" ng-model="form.reff_type">
+                                        <option value="">-- Pilih Jenis Transaksi --</option>
+                                        <option value="inv_pembelian">Pembelian</option>
+                                        <option value="inv_penjualan">Penjualan</option>
+                                      </select>
+                                      <!-- <div class="progress" style="height:30px;">
+                                        <div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{progres_pembelian}}%" aria-valuenow="{{progres_pembelian}}" aria-valuemin="0" aria-valuemax="100">
+                                          {{progres_pembelian || 0}}%
+                                        </div>
+                                      </div> -->
+                                    </div>
+
+                                    <div class="col-md-1">
+                                      <input type="text" class="form-control form-control-sm" ng-model="form.chunks" placeholder="chunks">
+                                      <!-- <div class="input-group input-group-sm">
+                                          <span class="input-group-text"> Chunks </span>
+                                      </div> -->
+                                    </div>
+
+                                    <div class="col-md-2">
+                                      <div class="input-group">
+                                          <input type="text" class="form-control form-control-sm" is-open="opened.bulan_pembelian" ng-click="toggle($event, 'bulan_pembelian')" ng-model="form.bulan_pembelian"
+                                                 uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}" placeholder="Bulan ">
+                                          <div class="input-group-append">
+                                              <span class="input-group-text"> <i class="fa fa-calendar"></i> </span>
+                                          </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                      <button type="submit" class="btn btn-primary btn-sm" ng-hide="is_view" button-spinner="loading" ng-click="migrasiPembelian(form)">
+                                          <i class="fa fa-save"></i>
+                                          &nbsp;Run
+                                      </button>
+                                    </div>
+
+                                </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="pull-right">
+<!--                    <button type="submit" class="btn btn-secondary btn-sm" ng-click="cancel()">
+                        <i class="fa fa-arrow-left"></i>
+                        &nbsp;Kembali
+                    </button>-->
+                      <!-- <button type="submit" class="btn btn-primary btn-sm" ng-hide="is_view" button-spinner="loading" ng-click="save()">
+                          <i class="fa fa-save"></i>
+                          &nbsp;Simpan
+                      </button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

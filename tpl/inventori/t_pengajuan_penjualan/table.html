@@ -1,0 +1,46 @@
+<table class="table table-striped table-hover table-mobile">
+    <thead>
+    <tr>
+        <th class="align-left" scope="col">Status</th>
+        <th st-sort="acc_m_lokasi.nama" class="align-left" scope="col">Lokasi</th>
+        <th st-sort="inv_po_penjualan.kode" class="align-left" scope="col">Kode</th>
+        <th st-sort="inv_po_penjualan.tanggal" class="align-left" scope="col">Tanggal</th>
+        <th st-sort="inv_m_supplier.nama" class="align-left" scope="col">Pelanggan</th>
+        <th st-sort="inv_po_penjualan.total" class="align-left" scope="col">Total</th>
+        <th st-sort="inv_po_penjualan.created_at" class="align-left" scope="col">Dibuat Pada</th>
+        <th st-sort="inv_po_penjualan.created_by" class="align-left" scope="col">Dibuat Oleh</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody ng-show="!isLoading">
+    <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+        <td class="align-left">
+          <span class="badge badge-danger" ng-if="row.status == 'rejected'">
+              Ditolak
+          </span>
+          <span class="badge badge-success" ng-if="row.status == 'approved'">
+              Approved
+          </span>
+          <span class="badge badge-warning" ng-if="row.status == 'pending'">
+              Pending
+          </span>
+        </td>
+        <td class="align-left"><span>{{ row.acc_m_lokasi_id.nama }}</span></td>
+        <td class="align-left"><span>{{ row.kode }}</span></td>
+        <td class="align-left"><span>{{ row.tanggal*1000 | date }}</span></td>
+        <td class="align-left"><span>{{ row.acc_m_kontak_id.nama }}</span></td>
+        <td class="align-left"><span>{{ row.total | currency:undifine:"0" }}</span></td>
+        <td class="align-left"><span>{{ row.created_at*1000 | date }}</span></td>
+        <td class="align-left"><span>{{ row.pembuat }}</span></td>
+        <td>
+          <div class="btn-group d-flex btn-table-mobile" role="group">
+            <button type="button" class="btn btn-info fa fa-eye" ng-click="view(row)" title="Lihat Pengajuan"></button>
+            <button type="button" class="btn btn-info fa fa-pencil" ng-if="row.is_deleted == 0" ng-click="update(row)"></button>
+            <button type="button" class="btn btn-danger fa fa-trash" ng-if="row.is_deleted == 0" ng-click="trash(row);"></button>
+            <button type="button" class="btn btn-warning fa fa-refresh" ng-if="row.is_deleted == 1" ng-click="restore(row);"></button>
+          </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div st-pagination="" st-items-by-page="20" st-template="tpl/common/pagination.custom.html"></div>

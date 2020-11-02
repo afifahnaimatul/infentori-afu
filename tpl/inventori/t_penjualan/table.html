@@ -1,0 +1,94 @@
+<table class="table table-striped table-hover table-mobile">
+    <thead>
+        <tr>
+            <th class="align-center" scope="col" width="5%">No</th>
+            <th ng-if="status == 'draft'">
+                <label class="i-checks" style="padding-top: 10px">
+                    <input class="ng-valid ng-dirty ng-valid-parse ng-touched ng-empty checklist" ng-model="data.checklist" ng-change="fillChecklist()" style="" type="checkbox">
+                </label>
+            </th>
+            <th class="align-left" scope="col" width="9%">Status</th>
+            <th st-sort="acc_m_lokasi.nama" class="align-left" scope="col">Lokasi</th>
+            <th st-sort="inv_penjualan.inv_m_faktur_id" class="align-left" scope="col">Faktur Pajak</th>
+            <th st-sort="inv_penjualan.no_surat_jalan" class="align-left" scope="col">Surat Jalan</th>
+            <th st-sort="inv_penjualan.kode" class="align-left" scope="col">Invoice</th>
+            <!-- <th st-sort="inv_penjualan.inv_po_penjualan_id" class="align-left" scope="col">Pengajuan</th> -->
+            <th st-sort="inv_penjualan.tanggal" class="align-left" scope="col" style="width:100px">Tanggal</th>
+            <!--<th st-sort="inv_penjualan.jatuh_tempo" class="align-left" scope="col">Jatuh Tempo</th>-->
+            <th st-sort="inv_m_supplier.npwp" class="align-left" scope="col">NPWP</th>
+            <th st-sort="inv_m_supplier.nama" class="align-left" scope="col">Pelanggan</th>
+            <th st-sort="inv_penjualan.total" class="align-left" scope="col">Total</th>
+            <th st-sort="inv_penjualan.cash" class="align-left" scope="col">Terbayar</th>
+            <th st-sort="inv_penjualan.hutang" class="align-left" scope="col">Kekurangan</th>
+            <!-- <th st-sort="inv_penjualan.created_at" class="align-left" scope="col">Dibuat Pada</th> -->
+            <!--<th st-sort="inv_penjualan.created_by" class="align-left" scope="col">Dibuat Oleh</th>-->
+            <th width="5%"></th>
+        </tr>
+    </thead>
+    <tbody ng-show="!isLoading">
+        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+            <td class="align-center"><span>{{ row.no}}</span></td>
+            <td ng-if="status == 'draft'">
+                <label class="i-checks" style="padding-top: 10px">
+                    <input class="ng-valid ng-dirty ng-valid-parse ng-touched ng-empty checklist" ng-model="row.checklist" style="" type="checkbox" ng-click="fillChecklist('table')">
+                </label>
+            </td>
+            <td class="text-left">
+                <span class="bg-success p-1" ng-if="row.status == 'lunas'">
+                    <!--Lunas-->
+                    Tersimpan
+                </span>
+                <span class="p-1 bg-warning" ng-if="row.status == 'belum lunas'">
+                    <!--Belum Lunas-->
+                    Tersimpan
+                </span>
+                <span class="p-1 bg-warning " ng-if="row.status == 'draft'">
+                    Draft
+                </span>
+                <span class="p-1 bg-danger " ng-if="row.status == 'dibatalkan'">
+                    Dibatalkan
+                </span>
+            </td>
+            <td class="align-left"><span>{{ row.acc_m_lokasi_id.nama}}</span></td>
+            <td class="align-left"><span>{{ row.inv_m_faktur_pajak_id.nomor}}</span></td>
+            <td class="align-left"><span>{{ row.no_surat_jalan}}</span></td>
+            <td class="align-left"><span>{{ row.no_invoice}}</span></td>
+            <!-- <td class="align-left"><span>{{ row.inv_po_penjualan_id.kode}}</span></td> -->
+            <td class="align-left"><span>{{ row.tanggal * 1000 | date:"dd MMM yyyy" }}</span></td>
+            <!--<td class="align-left"><span>{{ row.jatuh_tempo * 1000 | date }}</span></td>-->
+            <td class="text-left"><span>{{ row.acc_m_kontak_id.npwp || '00.000.000.0-000.000'}}</span></td>
+            <td class="text-left"><span>{{ row.acc_m_kontak_id.nama}}</span></td>
+            <td class="text-right"><span>{{ (row.total + row.ppn) | number}}</span></td>
+            <td class="text-right"><span>{{ row.terbayar | number }}</span></td>
+            <td class="text-right"><span>{{ ((row.piutang-0) - (row.terbayar-0)) | number: 1.0-2 }}</span></td>
+            <!-- <td class="align-left"><span>{{ row.created_at * 1000 | date }}</span></td> -->
+            <!--<td class="align-left"><span>{{ row.pembuat}}</span></td>-->
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-info" ng-click="update(row, 0)" ng-if="row.status == 'draft'" uib-tooltip="Edit Data">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" ng-click="delete(row)" ng-if="row.status == 'draft'" uib-tooltip="Hapus Data">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <button class="btn btn-sm btn-info" ng-click="view(row)" ng-if="row.status != 'draft'" uib-tooltip="Lihat Data">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-warning" ng-click="update(row, 1)" ng-if="(row.status != 'draft' && row.status != 'dibatalkan') && row.inv_proses_akhir_id == undefined" uib-tooltip="Koreksi Data">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-warning" ng-click="update(row, 1)" ng-if="(row.status != 'draft' && row.status != 'dibatalkan') && row.inv_proses_akhir_id != undefined" uib-tooltip="Koreksi Faktur">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+<!--                    <button class="btn btn-sm btn-danger" ng-click="cancel_data(row)" ng-if="row.status != 'draft' && row.status != 'dibatalkan' && row.koreksi > 2" uib-tooltip="Batalkan Transaksi">
+                        <i class="fa fa-remove"></i>
+                    </button>-->
+                    <!--                    <button class="btn btn-sm btn-danger" ng-click="unpost(row)" ng-if="row.status == 'lunas'" uib-tooltip="Unpost Data">
+                                            <i class="fa fa-refresh"></i>
+                                        </button>-->
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div st-pagination="" st-items-by-page="20" st-template="tpl/common/pagination.custom.html"></div>

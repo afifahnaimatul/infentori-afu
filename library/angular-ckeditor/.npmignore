@@ -1,0 +1,5 @@
+example
+*.lock
+*.config.js
+.eslintrc.js
+.eslintignore

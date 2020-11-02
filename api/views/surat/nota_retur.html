@@ -1,0 +1,108 @@
+<link href="{{ css}}" rel="stylesheet" type="text/css"/>
+
+<div class="card-body font-sm" id="print" style="font-family: Verdana, Geneva, sans-serif">
+    <div class="col-md-12">
+        <center style="font-weight: bold">
+            NOTA RETUR<br>
+        </center>
+        <center style="font-size: 11px">
+            NOMOR : {{data.no_nota}}<br>
+        </center>
+        <br>
+        <table>
+            <tr>
+                <td style="width: 200px;">ATAS FAKTUR PAJAK NOMOR </td>
+                <td>: {{data.no_faktur_pajak}}</td>
+            </tr>
+            <tr>
+                <td>TANGGAL </td>
+                <td>: {{data.tanggal_penjualan | date("d F Y")}}</td>
+            </tr>
+            <tr style="font-weight: bold">
+                <td colspan="2">PEMBELI BKP / PENERIMA JKP : </td>
+                <!--<td>:</td>-->
+            </tr>
+            <tr>
+                <td>NAMA </td>
+                <td>: {{data.nama_customer}}</td>
+            </tr>
+            <tr>
+                <td>ALAMAT </td>
+                <td>: {{data.alamat}}</td>
+            </tr>
+            <tr>
+                <td>NPWP </td>
+                <td>: {{data.npwp}}</td>
+            </tr>
+            <tr style="font-weight: bold">
+                <td colspan="2">PENJUAL BKP / PEMBERI JKP : </td>
+                <!--<td>:</td>-->
+            </tr>
+            <tr>
+                <td>NAMA </td>
+                <td>: PT. AMAK FIRDAUS UTOMO</td>
+            </tr>
+            <tr>
+                <td>ALAMAT </td>
+                <td>: JL. ANGGREK 02 MAYANGAN PROBOLINGGO</td>
+            </tr>
+            <tr>
+                <td>NPWP </td>
+                <td>: 01.637.477.9-651.000</td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div class="col-md-12">
+        <table border="1" class="table table-bordered" style="border-collapse: collapse; width: 100%; height: 350px">
+            <tr style="line-height: 20px; height: 20px;">
+                <th>NO</th>
+                <th>MACAM DAN JENIS BARANG KENA PAJAK (BKP)</th>
+                <th>QTY</th>
+                <th>HARGA SATUAN MENURUT FAKTUR PAJAK (Rp.)</th>
+                <th>HARGA JUAL BKP (Rp.)</th>
+            </tr>
+            {%for key, val in detail%}
+            <tr style="line-height: 20px; height: 20px; border-bottom: 1px solid white">
+                <td align="center">{{loop.index}}</td>
+                <td align="left">{{val.nama}}</td>
+                <td align="right">{{val.total | number_format}}</td>
+                <td align="right">{{(val.harga_total / val.total) | number_format(2, ',', '.')}}</td>
+                <td align="right">{{val.harga_total | number_format(2, ',', '.')}}</td>
+            </tr>
+            {%endfor%}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="line-height: 20px; height: 20px;">
+                <td align="right" colspan="4">Jumlah Harga Jual BKP yang dikembalikan</td>
+                <td align="right">{{data.total | number_format(2, ',', '.')}}</td>
+            </tr>
+            <tr style="line-height: 20px; height: 20px;">
+                <td align="right" colspan="4">Pajak Pertambahan Nilai (PPN) yang diminta kembali</td>
+                <td align="right">{{(data.total * 10/100) | number_format(2, ',', '.')}}</td>
+            </tr>
+            <tr style="line-height: 20px; height: 20px;">
+                <td align="right" colspan="4">Pajak Penjualan Atas Barang Mewah (PPnBM) yang diminta kembali</td>
+                <td align="right">{{(data.total * 110/100) | number_format(2, ',', '.')}}</td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <br>
+    <div class="col-md-12" align="right">
+        <table width="100%">
+            <tr>
+                <td width="70%"></td>
+                <td align="center">
+                    {{data.lokasi}}, {{data.tanggal_nota}} <br><br><br><br><br><br><br>
+                    (...........................)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

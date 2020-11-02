@@ -1,0 +1,102 @@
+<style>
+    #print {
+        font-family: sans-serif;
+    }
+
+    @page {
+        /*size: 21cm 33cm;*/
+        /*margin-top: 0cm;*/
+    }
+
+    /*    div:nth-of-type(2n) {
+            page-break-after:always;
+        }*/
+</style>
+
+{%for k, v in data%}
+<div style="page-break-after:always; height: 100%">
+    {%for key, val in v%}
+    <div class="card-body font-sm" id="print" style="position: relative;height: 47.5%; width: 100%;">
+        {%if key == 2%}<div style="position: absolute; bottom: 0">{%else%}<div style="position: absolute;">{%endif%}
+            <table width="100%" style="border-top : 1px solid; border-left : 1px solid; border-right : 1px solid; font-size: 13px; padding-left: 10px; padding-right: 10px">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td style="float: right; text-align: right">{{val.tanggal | date("d/m/Y")}}</td>
+                </tr>
+                <tr>
+                    <td width="40%" valign="bottom">No Invoice : {{val.no_invoice}}</td>
+                    <td width="10%" valign="top" align="right">Kepada : </td>
+                    <td >
+                        {{val.nama_customer}}<br/>
+                        {{val.alamat}}
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" style="border: solid thin; border-bottom: none; height: 9.5cm!important; font-size: 12px">
+                <thead>
+                    <tr style="outline : solid thin">
+                        <th>Nama Barang</th>
+                        <th>Qty</th>
+                        <th>Harga</th>
+                        <th>Netto</th>
+                    </tr>
+                </thead>
+                {%for keys, vals in val.barang%}
+                <tr style="line-height: 20px; height: 20px; border-bottom: 1px white;">
+                    <td style="padding-left: 10px">{{vals.nama}}</td>
+                    <td align="right">{{vals.total | number_format}}</td>
+                    <td align="right">{{vals.harga_jual | number_format}}</td>
+                    <td align="right">{{vals.harga_total | number_format}}</td>
+                </tr>
+                {%endfor%}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <!--<tr><td colspan="4"><br/><br/><br/><br/><br/><br/><br/><br/><br/></td></tr>-->
+                <tr style="outline : solid thin;line-height: 20px; height: 20px; border-bottom: 1px white">
+                    <td colspan="3" style="padding-left: 10px">Harga Jual</td>
+                    <td align="right">{{val.total | number_format}}</td>
+                </tr>
+                <tr style="line-height: 20px; height: 20px; border-bottom: 1px white">
+                    <td colspan="3" style="padding-left: 10px">Dikurangi Potongan Harga</td>
+                    <td align="right">{{val.diskon | number_format}}</td>
+                </tr>
+                <tr style="line-height: 20px; height: 20px; border-bottom: 1px white">
+                    <td colspan="3" style="padding-left: 10px">Dasar Pengenaan Pajak</td>
+                    <td align="right">{{val.total_setelah_diskon | number_format}}</td>
+                </tr>
+                <tr style="line-height: 20px; height: 20px; border-bottom: 1px white">
+                    <td colspan="3" style="padding-left: 10px">PPN = 10% x Dasar Pengenaan Pajak</td>
+                    <td align="right">{{val.ppn | number_format}}</td>
+                </tr>
+                <tr style="line-height: 20px; height: 20px; border-bottom: 1px white">
+                    <td colspan="3" style="padding-left: 10px">Jumlah Harga Termasuk PPN</td>
+                    <td align="right">{{val.grand_total | number_format}}</td>
+                </tr>
+            </table>
+            <table width="100%" style="border-bottom : 1px solid; border-left : 1px solid; border-right : 1px solid; font-size: 12px">
+                <tr style="outline: solid thin">
+                    <td width="15%" valign="top" style="padding-left: 10px">
+                        Terbilang :
+                    </td>
+                    <td style="font-size: 14px">
+                        {{val.terbilang}}
+                        <hr style="width:600px;padding:0;margin:0;visibility:hidden;">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    {%if not loop.last%}
+    <hr id="br" style="height: 0.8cm; border: none">
+    {%endif%}
+
+    {%endfor%}
+</div>
+{%endfor%}

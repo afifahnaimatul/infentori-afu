@@ -1,0 +1,191 @@
+<link href="{{ css}}?t=223" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+
+    table{border-collapse: collapse;width: 100%;}
+    td:empty::after{
+        content: "\00a0";
+    }
+
+    @media print {
+      .bg-green {
+        background-color: #4dbd74!important;
+      }
+      .bg-yellow {
+        background-color: yellow!important;
+      }
+
+      .text-right{
+        text-align: right;
+      }
+      td {
+        padding-top:2px;
+        padding-bottom:2px;
+        padding-left:2px;
+      }
+
+      td:first-child {
+        padding-top:2px;
+        padding-bottom:2px;
+        padding-left:2px;
+      }
+
+      table tbody tr td {
+        font-size: 10px;
+      }
+    }
+
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <h2 class="header-laporan header-smaller">{{data.lokasi}}</h2>
+                    <h2 class="header-laporan header-smaller">LAPORAN PENJUALAN PER NAMA BARANG</h2>
+
+                    <br/>
+                    Periode : {{ data.tgl_mulai }} Sampai {{ data.tgl_selesai }}
+                    <br/>
+
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse; line-height:normal">
+                <thead>
+                    <tr>
+                        <th >
+                            Tanggal
+                        </th>
+                        <th style="width:120px">
+                            Nomor Faktur
+                        </th>
+                        <!-- <th>
+                            Status
+                        </th> -->
+                        <th >
+                            Pembeli
+                        </th>
+                        <th style="width:120px">
+                            NPWP
+                        </th>
+                        <th >
+                            Nama Barang
+                        </th>
+
+                        <th >
+                            KWT
+                        </th>
+                        <th width="50px">
+                            Jumlah<br>Barang
+                        </th>
+                        <th >
+                            Harga Satuan
+                        </th>
+                        <th >
+                            Nilai
+                        </th>
+
+                        <th >
+                            Total
+                        </th>
+                    </tr>
+
+                </thead>
+                {%for key, val in data.data %}
+                <tbody>
+                    {%for barang in val.detail %}
+                      {%for v in barang.data %}
+                        <tr>
+                            <td align="center">
+                                {{v.tanggal}}
+                            </td>
+                            <td align="center">
+                                {{v.no_faktur}}
+                            </td>
+                            <!-- <td align="center">
+                                {{v.status}}
+                            </td> -->
+                            <td>
+                                {{v.namaCustomer}}
+                            </td>
+                            <td>
+                                {{ v.npwp }}
+                            </td>
+                            <td>
+                                {{v.namaBarang}}
+                            </td>
+
+                            <td align="right">
+                                {{v.KWT}}
+                            </td>
+                            <td align="right">
+
+                                {% if v.panjang == barang.data|length  %}
+                                  {{  v.jumlah_barang | number_format }}
+                                {% else %}
+
+
+                                {% endif %}
+                            </td>
+                            </td>
+                            <td  align="right">
+                                {{v.harga_satuan | number_format(2, '.', ',') }}
+                            </td>
+
+                            <td align="right">
+                                {{v.nilai | number_format(2, '.', ',') }}
+                            </td>
+                            <td align="right">
+                                {% if v.panjang == barang.data|length  %}
+                                  {{  v.Total | number_format(2, '.', ',')  }}
+                                {% else %}
+
+
+                                {% endif %}
+                            </td>
+                        </tr>
+                      {%endfor%}
+                      <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                      </tr>
+                    {%endfor%}
+                    <tr class="{{ val.nama == 'Barang Jadi' ? 'bg-green' : 'bg-yellow' }}">
+                          <td class="text-right" colspan="6"><b>JUMLAH {{ val.nama | upper }}</b></td>
+                        <td align="right">{{ val.total.kwt | number_format }}</td>
+                        <td></td>
+                        <td></td>
+                        <td align="right">{{ (val.total.nilai | number_format(2, '.', ',')) }}</td>
+                    </tr>
+                </tbody>
+                {%endfor%}
+                <tbody  >
+                    {%for key, v in data.total%}
+                    <tr>
+                      <td class="text-right" colspan="6">
+                          TOTAL BARANG JADI & DAGANGAN
+                      </td>
+                      <td class="text-right"> {{ v.kwantum | number_format }} </td>
+                      <td></td>
+                      <td></td>
+                      <td class="text-right">
+                          {{ v.Total | number_format(2, '.', ',')}}
+                      </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

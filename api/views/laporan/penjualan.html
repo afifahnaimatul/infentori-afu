@@ -1,0 +1,124 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+    table {
+/*        display: table-cell;*/
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .bg-green {
+        background-color: #4dbd74 !important;
+    }
+
+    .bg-yellow {
+        background-color: #ffc107 !important;
+    }
+
+    @media print {
+        .bg-green {
+            background-color: #4dbd74 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .bg-yellow {
+            background-color: #ffc107 !important;
+            -webkit-print-color-adjust: exact;
+        }
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    <center class="header-smaller">
+                    <h5 class="header-laporan header-smaller" style="margin-bottom: 0px">
+                       {{data.lokasi}}
+                    </h5>
+                    <h5 class="header-laporan header-smaller text-uppercase" style="margin-top: 0px">
+                        REKAP PENJUALAN BARANG JADI & DAGANG {{ data.bulan | date('F Y') }}
+                    </h5>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive table-bordered">
+            <table class="table-smaller" style="border-collapse: collapse; font-size: 13px;">
+                <thead>
+                <tr>
+<!--                    <th align="center">Tgl</th>
+                    <th align="center">Kode</th>
+                    <th align="center">Pembeli</th>
+                    <th align="center">NPWP</th>-->
+                    <th align="center">Nama Barang</th>
+                    <th align="center">QT</th>
+                    <th align="center">DPP</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if data.jadi is defined %}
+                    {% for key, val in data.jadi %}
+                        <tr>
+<!--                            <td>{{ val.tanggal | date("d/m/Y") }}</td>
+                            <td>{{ val.kode }}</td>
+                            <td>{{ val.nama_pembeli }}</td>
+                            <td>{{ val.npwp }}</td>-->
+                            <td>{{ val.nama }}</td>
+                            <td align="right">{{ val.jumlah | number_format }}</td>
+                            <td align="right">{{ val.harga_total | number_format(2, '.', ',') }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+<!--                        <td class="bg-green"></td>
+                        <td class="bg-green"></td>
+                        <td class="bg-green"></td>
+                        <td class="bg-green"></td>-->
+                        <td class="bg-green" align="right">
+                            JUMLAH BARANG JADI
+                        </td>
+                        <td class="bg-green" align="right">{{ data.qt_jadi | number_format }}</td>
+                        <td class="bg-green" align="right">{{ data.dpp_jadi | number_format(2, '.', ',') }}</td>
+                    </tr>
+                {% endif %}
+                {% if data.dagangan is defined %}
+                    {% for key, val in data.dagangan %}
+                    <tr>
+<!--                        <td>{{ val.tanggal | date("d/m/Y") }}</td>
+                        <td>{{ val.kode }}</td>
+                        <td>{{ val.nama_pembeli }}</td>
+                        <td>{{ val.npwp }}</td>-->
+                        <td>{{ val.nama }}</td>
+                        <td align="right">{{ val.jumlah | number_format }}</td>
+                        <td align="right">{{ val.harga_total | number_format(2, '.', ',') }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+<!--                        <td class="bg-yellow"></td>
+                        <td class="bg-yellow"></td>
+                        <td class="bg-yellow"></td>
+                        <td class="bg-yellow"></td>-->
+                        <td class="bg-yellow" align="right">
+                            JUMLAH BARANG DAGANGAN
+                        </td>
+                        <td class="bg-yellow" align="right">{{ data.qt_dagangan | number_format }}</td>
+                        <td class="bg-yellow" align="right">{{ data.dpp_dagangan | number_format(2, '.', ',') }}</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+                {% if (data.dagangan is defined) and (data.jadi is defined) %}
+                <tr>
+                    <td class="" align="right">
+                        JUMLAH SEMUA BARANG
+                    </td>
+                    <td class="" align="right">{{ data.qt_total | number_format }}</td>
+                    <td class="" align="right">{{ data.dpp_total | number_format(2, '.', ',') }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>

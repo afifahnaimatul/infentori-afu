@@ -1,0 +1,153 @@
+<link href="{{ css}}?t=123" rel="stylesheet" type="text/css"/>
+
+<style type="text/css">
+    table {
+        display: table;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+    .align-center {
+        text-align: center;
+    }
+
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                  <b>{{data.lokasi}}</b> <br>
+                  <b>LAPORAN STOK AKHIR BARANG DAGANGAN (DENGAN HARGA)</b> <br>
+                  <b>Periode : {{data.periode}}</b>
+                    </br>
+                </center>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-smaller" style="border-collapse: collapse; line-height: 8px;">
+                <thead>
+                    <tr class="align-center">
+                        <!-- <th width="10px">
+                            Nomor Urut
+                        </th> -->
+                        <th style="min-width:150px">
+                            Nama Barang
+                        </th>
+                        {%for k, v in data.list_bulan%}
+                        {%for vv in v%}
+                        <th style="min-width:50px" ng-repeat="vv in v">{{vv}}</th>
+                        {%endfor%}
+                        {%endfor%}
+                        <!-- <th style="min-width:50px">Saldo Awal</th> -->
+                        <th style="min-width:50px">
+                          Saldo Akhir
+                        </th>
+                        <th style="min-width:50px">Total Harga</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    {%for v2 in detail%}
+                    <tr>
+                        <!--<td class="align-center">{{v.no}}</td>-->
+                        <td>{{v2.nama}}</td>
+                        <!-- <td class="align-right">{{v2.qty_awal | number_format(2, '.', ',')}}</td> -->
+
+                        {%for kk, vv in v2.detail%}
+                        <td class="align-right">
+                            {%if (vv.sisa > 0)%}
+                            <span>{{vv.sisa | number_format(2, '.', ',')}}</span>
+                            {%endif%}
+                        </td>
+                        <td style="min-width: 75px;">
+                            {%if (vv.sisa > 0)%}
+                            <span>{{vv.format_bulan}}</span>
+                            {%endif%}
+                        </td>
+                        <td class="align-right">
+                            {%if (vv.sisa > 0)%}
+                            <span>{{vv.harga_masuk_avg | number_format(2, '.', ',')}}</span>
+                            {%endif%}
+                        </td>
+                        <td class="align-right">
+                            {%if (vv.sisa > 0)%}
+                            <span>{{(vv.saldo_rp) | number_format(2, '.', ',')}}</span>
+                            {%endif%}
+                        </td>
+                        {%endfor%}
+                        <td class="align-right">
+                          {{v2.saldo_akhir | number_format(2, '.', ',')}}
+                        </td>
+                        <td class="align-right">
+                          {{(v2.saldo_rp) | number_format(2, '.', ',')}}
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+                  <tr>
+                    <th class="align-right">Total</th>
+                  {% for footer in data.total_footer %}
+                    <th class="align-right">{{ footer.sisa | number_format }}</th>
+                    <th> </th>
+                    <th> </th>
+                    <th class="align-right">{{ footer.saldo_rp | number_format(2, '.', ',') }}</th>
+                  {% endfor %}
+                  <th class="align-right">{{ data.total_all.saldo_akhir | number_format }}</th>
+                  <th class="align-right">{{ data.total_all.saldo_rp | number_format(2, '.', ',') }}</th>
+                  </tr>
+            </table>
+        </div>
+        <div align="right">
+            <table style="width:250px">
+                <tr style="border: none">
+                    <td colspan="6"></td>
+                    <td class="align-right">
+                        S.AWAL<br/>
+                        BELI<br/>
+                        <hr>
+                        <br/>
+                        JUAL<br/>
+                        <hr>
+                        <br/>
+                        RETUR<br/>
+                        S.AKHIR
+                    </td>
+                    <td class="align-right">
+                        {{data.total_qty_awal}}<br/>
+                        {{data.total_qty_beli}}<br/>
+                        <hr>
+                        {{data.total_qty_awal + data.total_qty_beli}}
+                        <br/>
+                        {{data.total_qty_jual}}<br/>
+                        <hr>
+                        {{data.total_qty_akhir}}
+                        <br/>
+                        {{data.total_qty_retur_pembelian}}<br/>
+                        {{data.total_qty_akhir_retur}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

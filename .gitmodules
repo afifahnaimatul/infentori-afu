@@ -1,0 +1,3 @@
+[submodule "api/acc/landaacc"]
+	path = api/acc/landaacc
+	url = https://aremaniac:b12b12b12@github.com/cahkampung052/landaacc

@@ -1,0 +1,160 @@
+<div class="animated fadeIn">
+    <div ng-controller="l_bukubesarCtrl">
+        <div class="card">
+            <div class="card-header">
+                <strong>Laporan Buku Besar</strong>
+            </div>
+            <div class="card-body p-0px">
+                <div class="pl-15px pr-15px">
+                    <div class="row mt-15px">
+                        <div class="col-md-12">
+                            <form name="landaform" novalidate="">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <input ng-change="clearData()" class="form-control form-control-sm" date-range-picker="" options="dateRangeOptions" ng-model="form.tanggal" placeholder="Periode" type="text"/>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.m_lokasi_id" theme="bootstrap" ng-disabled="is_view">
+                                                <ui-select-match placeholder="Pilih Lokasi">{{ $select.selected.kode + " - " + $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listLokasi | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="btn-group" style="width:100%;">
+                                            <ui-select class="ui-select-sm ui-select-container" ng-model="form.m_akun_id" theme="bootstrap" ng-disabled="is_view" style="width: 100%">
+                                                <ui-select-match placeholder="Pilih Akun">{{ $select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices position="down" repeat="val in listAkun | filter : $select.search">{{ val.nama_lengkap}}</ui-select-choices>
+                                            </ui-select>
+                                            <button class="btn btn-sm btn-danger" ng-click="resetFilter('m_akun_id')" ng-if="!is_view">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <button class="btn btn-primary btn-sm center" ng-click="view(0, 0)">
+                                                <i class="fa fa-search"></i>
+                                                Tampilkan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card" ng-show="tampilkan">
+            <div class="card-header card-header-white">
+                <div class="pull-right">
+                    <button class="btn btn-outline-success btn-sm" ng-click="view(1, 0)">
+                        <i class="fa fa-file"></i>
+                        Excel
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" ng-click="view(0, 1)">
+                        <i class="fa fa-print"></i>
+                        Print
+                    </button> 
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row header-laporan-wrapper">
+                    <div class="col-md-12 relative-div">
+                        <center>
+                            <img src="{{data.img}}" class="absolute-div-center" style="height: 90px">
+                            <h2 class="header-laporan">{{data.lokasi}}</h2>
+                            <h3 class="header-laporan">Laporan Buku Besar</h3>
+                            <p class="mt-15px">Periode {{ data.tanggal}}</p>
+                        </center>
+                    </div>
+                </div>
+                <div ng-repeat="val in detail" style="margin-bottom: 25px;">
+                    <table style="width: 100%">
+                        <tr>
+                            <td colspan="2" style="text-align: left">
+                                <b>Nama Akun :</b>
+                                {{ val.akun}}
+                            </td>
+                            <td colspan="3" style="text-align: right">
+                                <b>{{ val.klasifikasi}}</b>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-laporan-border" style="border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th width="80" class="align-center">
+                                        <b>TANGGAL</b>
+                                    </th>
+                                    <th width="80" class="align-center">
+                                        <b>REFF</b>
+                                    </th>
+                                    <th class="align-center">
+                                        <b>KETERANGAN</b>
+                                    </th>
+                                    <th width="90"  class="align-center">
+                                        <b>DEBIT</b>
+                                    </th>
+                                    <th width="90"  class="align-center">
+                                        <b>KREDIT</b>
+                                    </th>
+                                    <th width="90"  class="align-center">
+                                        <b>SALDO</b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">Saldo Awal</td>
+                                    <td align="right" class="text-right">{{ }}</td>
+                                    <td align="right" class="text-right">{{ }}</td>
+                                    <td align="right" class="text-right" ng-if="val.saldo_awal < 0">{{ '(' + ((val.saldo_awal * -1) | number) + ')'}}</td>
+                                    <td align="right" class="text-right" ng-if="val.saldo_awal >= 0">{{ val.saldo_awal | number }}</td>
+                                </tr>
+                                <tr ng-repeat="valdetail in val.detail">
+                                    <td align="center" class="text-center" style="vertical-align: top">{{ valdetail.tanggal|date }}</td>
+                                    <td align="center" style="vertical-align: top">{{ valdetail.kode}}</td>
+                                    <td style="vertical-align: top" ng-bind-html="valdetail.keterangan"></td>
+                                    <td align="right" class="text-right" style="vertical-align: top">{{ valdetail.debit | number }}</td>
+                                    <td align="right" class="text-right" style="vertical-align: top">{{ (valdetail.kredit | number)}}</td>
+                                    <td align="right" class="text-right" style="vertical-align: top">
+                                        <span ng-if="valdetail.saldo_sekarang < 0">{{ '(' + ((valdetail.saldo_sekarang * -1) | number) + ')'}}</span>
+                                        <span ng-if="valdetail.saldo_sekarang >= 0">{{ valdetail.saldo_sekarang | number}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">
+                                        <b>Saldo Akhir</b>
+                                    </td>
+                                    <td align="right" class="text-right">
+                                        <b>{{ val.total_debit | number }}</b>
+                                    </td>
+                                    <td align="right" class="text-right">
+                                        <b>{{ (val.total_kredit | number)}}</b>
+                                    </td>
+                                    <td align="right" class="text-right">
+                                        <b ng-if="val.total_saldo < 0">{{ '(' + ((val.total_saldo * -1) | number) + ')'}}</b>
+                                        <b ng-if="val.total_saldo >= 0">{{ val.total_saldo | number }}</b>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="modal-header bg-warning">
+    <h5 class="modal-title">Proses Akhir</h5>
+    <button type="button" class="close" ng-click="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+
+    <form name="landaform" novalidate="">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label-sm required">Periode</label>
+              <div class="col-md-8">
+                <div class="input-group">
+                  <input type="text" class="form-control form-control-sm" is-open="opened.bulan_akhir"
+                  ng-click="toggle($event, 'bulan_akhir')" ng-model="form.tanggal" ng-change="getSummary(form.tanggal)"
+                  uib-datepicker-popup="MMMM yyyy" datepicker-options="{minMode: 'month'}" placeholder="Bulan">
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 text-center" ng-show="showSummary">
+            <br>
+            <h5>
+              PENJUALAN DAN PEMBELIAN <br>
+              Periode {{ form.tanggal | date:"MMMM yyyy" }}
+            </h5>
+            <hr>
+            <table class="table table-bordered table-hover">
+              <tr>
+                <th style="width:15px;">No. </th>
+                <th class="text-center">Jenis</th>
+                <th class="text-center">Total DPP</th>
+              </tr>
+              <tr>
+                <td>1.</td>
+                <td class="text-left">Penjualan</td>
+                <td class="text-right">{{ summary.penjualan | currency }}</td>
+              </tr>
+              <tr>
+                <td>2.</td>
+                <td class="text-left">Pembelian</td>
+                <td class="text-right">{{ summary.pembelian | currency }}</td>
+              </tr>
+            </table>
+
+            <br>
+            <h5>
+              JURNAL BEBAN <br>
+              Periode {{ form.tanggal | date:"MMMM yyyy" }}
+            </h5>
+            <hr>
+            <table class="table table-bordered table-hover">
+              <tr>
+                <th>Nama Akun </th>
+                <th class="text-center">Debit</th>
+                <th class="text-center">Kredit</th>
+              </tr>
+              <tr ng-repeat="val in summary.listJurnal">
+                <td class="text-left">
+                  <span ng-if="(val.kredit-0)>0" style="margin-right:40px"></span>
+                  {{val.m_akun_nama}}
+                </td>
+                <td class="text-right">{{ val.debit | currency:"":2 }}</td>
+                <td class="text-right">{{ val.kredit | currency:"":2 }}</td>
+              </tr>
+              <tr>
+                <th>Total</th>
+                <th class="text-right">{{ totalJurnal | currency:"":2 }}</th>
+                <th class="text-right">{{ totalJurnal | currency:"":2 }}</th>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-warning btn-sm" ng-click="save(summary.listJurnal)">
+        <i class="fa fa-lock"></i>
+        Tutup Periode
+    </button>
+</div>

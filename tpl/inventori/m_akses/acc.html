@@ -1,0 +1,480 @@
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panels panel-primary">
+            <div class="panel-heading">
+                <label class="i-checks">
+                    <input ng-disabled="is_view" ng-model="form.akses.acc_master" type="checkbox" ng-click="checkAll('acc_master', form.akses.acc_master)"/>
+                    <i></i>
+                    Master
+                </label>
+            </div>
+            <div class="list-group bg-white acc_master">
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.setting_approval" type="checkbox"/>
+                        <i></i>
+                        Setting Approval
+                    </label>
+                </div>
+
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.akun" type="checkbox"/>
+                        <i></i>
+                        Akun
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.budgeting_akun" type="checkbox"/>
+                        <i></i>
+                        Budgeting Akun
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.akun_peta" type="checkbox"/>
+                        <i></i>
+                        Pemetaan Akun
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panels panel-primary">
+            <div class="panel-heading">
+                <label class="i-checks">
+                    <input ng-disabled="is_view" ng-model="form.akses.acc_transaksi" type="checkbox" ng-click="checkAll('acc_transaksi', form.akses.acc_transaksi)"/>
+                    <i></i>
+                    Transaksi
+                </label>
+            </div>
+            <div class="list-group bg-white acc_transaksi">
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.saldo_awal_akun" type="checkbox"/>
+                        <i></i>
+                        Saldo Awal Akun
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.inv_pembelian_hutang" type="checkbox"/>
+                        <i></i>
+                        Saldo Awal Hutang Pembelian
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.saldo_awal_hutang" type="checkbox"/>
+                        <i></i>
+                        Saldo Awal Hutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.saldo_awal_hutang_persupplier" type="checkbox"/>
+                        <i></i>
+                        Hutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pembayaran_hutang_persupplier" type="checkbox"/>
+                        <i></i>
+                        Pembayaran Hutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.saldo_awal_piutang" type="checkbox"/>
+                        <i></i>
+                        Saldo Awal Piutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.saldo_awal_piutang_percustomer" type="checkbox"/>
+                        <i></i>
+                        Piutang Percustomer
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pembayaran_piutang_percustomer" type="checkbox"/>
+                        <i></i>
+                        Pembayaran Piutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.penerimaan" type="checkbox"/>
+                        <i></i>
+                        Penerimaan
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.penerimaan_create" type="checkbox"/>
+                        <i></i>
+                        Create
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.penerimaan_update" type="checkbox"/>
+                        <i></i>
+                        Update
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.penerimaan_delete" type="checkbox"/>
+                        <i></i>
+                        Delete
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.penerimaan_template" type="checkbox"/>
+                        <i></i>
+                        Setting Print
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengeluaran" type="checkbox"/>
+                        <i></i>
+                        Pengeluaran
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengeluaran_create" type="checkbox"/>
+                        <i></i>
+                        Create
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengeluaran_update" type="checkbox"/>
+                        <i></i>
+                        Update
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengeluaran_delete" type="checkbox"/>
+                        <i></i>
+                        Delete
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengeluaran_template" type="checkbox"/>
+                        <i></i>
+                        Setting Print
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.transfer_kas" type="checkbox"/>
+                        <i></i>
+                        Transfer Kas
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.transfer_kas_create" type="checkbox"/>
+                        <i></i>
+                        Create
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.transfer_kas_update" type="checkbox"/>
+                        <i></i>
+                        Update
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.transfer_kas_delete" type="checkbox"/>
+                        <i></i>
+                        Delete
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.transfer_kas_template" type="checkbox"/>
+                        <i></i>
+                        Setting Print
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.jurnal_umum" type="checkbox"/>
+                        <i></i>
+                        Jurnal Umum
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.jurnal_umum_create" type="checkbox"/>
+                        <i></i>
+                        Create
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.jurnal_umum_update" type="checkbox"/>
+                        <i></i>
+                        Update
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.jurnal_umum_delete" type="checkbox"/>
+                        <i></i>
+                        Delete
+                    </label>
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.jurnal_umum_template" type="checkbox"/>
+                        <i></i>
+                        Setting Print
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.tutup_bulan" type="checkbox"/>
+                        <i></i>
+                        Tutup Bulan
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.tutup_tahun" type="checkbox"/>
+                        <i></i>
+                        Tutup Tahun
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengajuan" type="checkbox"/>
+                        <i></i>
+                        Pengajuan Proposal
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengajuan_detail" type="checkbox"/>
+                        <i></i>
+                        Detail Pengajuan
+                    </label>
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengajuan_bs" type="checkbox"/>
+                        <i></i>
+                        Bon Sementara
+                    </label>
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengajuan_pengeluaran" type="checkbox"/>
+                        <i></i>
+                        Pembayaran
+                    </label>
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengajuan_realisasi" type="checkbox"/>
+                        <i></i>
+                        Input Realisasi
+                    </label>
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengajuan_template" type="checkbox"/>
+                        <i></i>
+                        Setting Print
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.approveatasan" type="checkbox"/>
+                        <i></i>
+                        Approve Atasan
+                    </label>
+                </div>
+                <!-- <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pertanggungjawaban" type="checkbox"/>
+                        <i></i>
+                        Pertanggungjawaban Pembayaran
+                    </label>
+                </div> -->
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.umurekonomis" type="checkbox"/>
+                        <i></i>
+                        Umur Ekonomis
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pencatatanasset" type="checkbox"/>
+                        <i></i>
+                        Pencatatan Asset
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.penyusutanasset" type="checkbox"/>
+                        <i></i>
+                        Penyusutan Asset
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.pelepasanasset" type="checkbox"/>
+                        <i></i>
+                        Pelepasan Asset
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panels panel-primary">
+            <div class="panel-heading">
+                <label class="i-checks">
+                    <input ng-disabled="is_view" ng-model="form.akses.acc_laporan" type="checkbox" ng-click="checkAll('acc_laporan', form.akses.acc_laporan)"/>
+                    <i></i>
+                    Laporan
+                </label>
+            </div>
+            <div class="list-group bg-white acc_laporan">
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_budgeting" type="checkbox"/>
+                        <i></i>
+                        Budgeting
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_buku_besar" type="checkbox"/>
+                        <i></i>
+                        Buku Besar
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_neraca" type="checkbox"/>
+                        <i></i>
+                        Neraca
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks" style="padding-left: 15px;">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengecualian_neraca" type="checkbox"/>
+                        <i></i>
+                        Pengecualian Akun
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_neraca_saldo" type="checkbox"/>
+                        <i></i>
+                        Neraca Saldo
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_jurnal_umum" type="checkbox"/>
+                        <i></i>
+                        Jurnal Umum
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_arus_kas" type="checkbox"/>
+                        <i></i>
+                        Arus Kas
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_laba_rugi" type="checkbox"/>
+                        <i></i>
+                        Laba Rugi
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks" style="padding-left: 15px;">
+                        <input ng-disabled="is_view" ng-model="form.akses.pengecualian_labarugi" type="checkbox"/>
+                        <i></i>
+                        Pengecualian Akun
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_hutang" type="checkbox"/>
+                        <i></i>
+                        Hutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_rekap_hutang" type="checkbox"/>
+                        <i></i>
+                        Rekap Hutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_piutang" type="checkbox"/>
+                        <i></i>
+                        Piutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.l_rekap_piutang" type="checkbox"/>
+                        <i></i>
+                        Rekap Piutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.monitoring_budget" type="checkbox"/>
+                        <i></i>
+                        Monitoring Budget
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.monitoring_pengajuan" type="checkbox"/>
+                        <i></i>
+                        Monitoring Pengajuan
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks" style="padding-left: 15px">
+                        <input ng-disabled="is_view" ng-model="form.akses.monitoring_pengajuan_transfer" type="checkbox"/>
+                        <i></i>
+                        Drop Kas
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.laporan_rincian_biaya" type="checkbox"/>
+                        <i></i>
+                        Rincian Biaya
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.laporan_rekapan_pusat" type="checkbox"/>
+                        <i></i>
+                        Rekapan Pusat
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.laporan_rekapan_depo" type="checkbox"/>
+                        <i></i>
+                        Rekapan Depo
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.laporan_rekapan_aliran_hutang" type="checkbox"/>
+                        <i></i>
+                        Rekapan Aliran Hutang
+                    </label>
+                </div>
+                <div class="list-group-item">
+                    <label class="i-checks">
+                        <input ng-disabled="is_view" ng-model="form.akses.laporan_rekapan_aliran_piutang" type="checkbox"/>
+                        <i></i>
+                        Rekapan Aliran Piutang
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

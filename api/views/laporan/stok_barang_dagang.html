@@ -1,0 +1,159 @@
+<link href="{{ css }}" rel="stylesheet" type="text/css"/>
+
+<style type="text/css">
+    table {
+        display: table;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    @media print {
+        @page {
+            size: landscape
+        }
+        body {
+          margin-top: -0mm;
+          margin-bottom: 0mm;
+          margin-left: 0mm;
+          margin-right: 0mm;
+          font-size:7px;
+        }
+
+        td {
+          padding-top:4px;
+          padding-bottom:4px;
+          padding-left:4px;
+        }
+
+        td:first-child {
+          padding-top:4px;
+          padding-bottom:4px;
+          padding-left:4px;
+        }
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+    .align-center {
+        text-align: center;
+    }
+
+    hr {
+        margin: 0
+    }
+    td:empty::after{
+        content: "\00a0";
+    }
+</style>
+<div class="card-body" id="print">
+    <div align="left">
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                <center class="header-smaller">
+                    <b class="">{{data.lokasi}}</b><br>
+                    <b class="">LAPORAN STOK AKHIR BARANG DAGANGAN</b><br>
+                    Periode : {{data.bulan}} {{data.tahun}}
+                    </br>
+                </center>
+                <hr/>
+            </div>
+        </div>
+        <table class="table-smaller" style="border-collapse: collapse; width: 100%;font-size:8px;">
+            <thead>
+                <tr class="align-center">
+                    <th width="10px">
+                        Nomor Urut
+                    </th>
+                    <th>
+                        Nama Barang
+                    </th>
+                    <th>
+                        Saldo Awal<br/>
+                        <small>{{data.bulan}}</small>
+                    </th>
+                    <th>
+                        Beli<br/>
+                        <small>{{data.bulan}}</small>
+                    </th>
+                    <th>
+                        Jual<br/>
+                        <small>{{data.bulan}}</small>
+                    </th>
+                    <th>
+                        Saldo Akhir<br/>
+                        <small>{{data.bulan}}</small>
+                    </th>
+                    <th>
+                        Retur Pembelian<br/>
+                        <small>{{data.bulan}}</small>
+                    </th>
+                    <th>
+                        Saldo Sesudah Retur<br/>
+                        <small>{{data.bulan}}</small>
+                    </th>
+                </tr>
+
+            </thead>
+            <tbody>
+                {%for key, v in detail%}
+                <tr>
+                    <td class="align-center">{{v.no}}</td>
+                    <td>{{v.nama}}</td>
+                    <td class="align-right">{{v.qty_awal}}</td>
+                    <td class="align-right">{{v.qty_beli}}</td>
+                    <td class="align-right">{{v.qty_jual}}</td>
+                    <td class="align-right">{{v.qty_akhir}}</td>
+                    <td class="align-right">{{v.qty_retur_pembelian}}</td>
+                    <td class="align-right">{{v.qty_akhir_retur}}</td>
+                </tr>
+                {%endfor%}
+                <tr>
+                    <td colspan="2"></td>
+                    <td class="align-right">{{data.total_qty_awal}}</td>
+                    <td class="align-right">{{data.total_qty_beli}}</td>
+                    <td class="align-right">{{data.total_qty_jual}}</td>
+                    <td class="align-right">{{data.total_qty_akhir}}</td>
+                    <td class="align-right">{{data.total_qty_retur_pembelian}}</td>
+                    <td class="align-right">{{data.total_qty_akhir_retur}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div align="right">
+            <table style="width:250px">
+                <tr style="border: none">
+                    <td colspan="6"></td>
+                    <td class="align-right">
+                        S.AWAL<br/>
+                        BELI<br/>
+                        <hr>
+                        <br/>
+                        JUAL<br/>
+                        <hr>
+                        <br/>
+                        RETUR<br/>
+                        S.AKHIR
+                    </td>
+                    <td class="align-right">
+                        {{data.total_qty_awal}}<br/>
+                        {{data.total_qty_beli}}<br/>
+                        <hr>
+                        {{data.total_qty_awal + data.total_qty_beli}}
+                        <br/>
+                        {{data.total_qty_jual}}<br/>
+                        <hr>
+                        {{data.total_qty_akhir}}
+                        <br/>
+                        {{data.total_qty_retur_pembelian}}<br/>
+                        {{data.total_qty_akhir_retur}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
